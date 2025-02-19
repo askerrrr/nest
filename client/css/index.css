@@ -1,0 +1,121 @@
+body {
+  background-color: #212529;
+  color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+table {
+  width: 80%;
+  margin: 110px auto;
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: #343a40;
+  color: #f8f9fa;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #495057;
+  text-align: center;
+  vertical-align: middle;
+}
+
+th {
+  background-color: #495057;
+  font-weight: bold;
+}
+
+th:first-child,
+td:first-child {
+  text-align: center;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #3e444a;
+}
+
+tbody tr:hover {
+  background-color: #4a4f55;
+}
+
+button {
+  background-color: transparent;
+  color: #ffffff;
+  border: 2px solid #212529;
+  padding: 5px 10px;
+  font-family: Arial, sans-serif;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+  background-color: #212529;
+  color: white;
+}
+
+.form-for-delete-order {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}
+
+button.change-order-status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background-color: #6f42c1;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.change-order-status:hover {
+  background-color: #8e44ad;
+}
+
+#user-info {
+  width: 90%;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #343a40;
+  color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid #495057;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#user-info div {
+  font-size: 28px; /* Увеличиваем размер текста для div */
+}
+
+.backToOrders {
+  position: fixed;
+  top: 60px;
+  left: 10px;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
