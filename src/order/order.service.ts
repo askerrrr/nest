@@ -2,18 +2,15 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class OrderService {
-
-  getUser(userId){}
+  getUser(userId) {}
 
   getOrder(orderId) {}
 
-  getOrderFile(orderId){}
+  getOrderFile(orderId) {}
 
   getOrderList(userId) {}
 
   deleteUser(userId) {}
 
   deleteOrder(userId, orderId) {}
-
-
 }

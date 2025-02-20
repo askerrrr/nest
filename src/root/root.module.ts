@@ -2,6 +2,7 @@ import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { RootService } from './root.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { XlsxModule } from 'src/xlsx/xlsx.module';
 import { RootController } from './root.controller';
 import { OrderModule } from 'src/order/order.module';
@@ -12,7 +13,6 @@ import { ItemStatusModule } from 'src/item-status/item-status.module';
 import { DownloadImgModule } from 'src/download-img/download-img.module';
 import { DownloadFileModule } from 'src/download-docs/download-docs.module';
 
-
 @Module({
   controllers: [RootController],
   providers: [RootService],
@@ -21,20 +21,14 @@ import { DownloadFileModule } from 'src/download-docs/download-docs.module';
     OrderModule,
     ItemIdModule,
     BotApiModule,
-    ItemStatusModule, 
+    ItemStatusModule,
     DownloadImgModule,
     DownloadFileModule,
     ServeStaticModule.forRoot({
       serveRoot: '/',
-      rootPath: join(__dirname, '..', '..', 'client', 'html'),
+      rootPath: join(__dirname, '..', '..', 'client'),
     }),
-    TypeOrmModule.forRoot({
-      type: 'mongodb',
-      host: 'localhost',
-      url: "",
-      port: 27017,
-      database: 'database',
-    }),
+    MongooseModule.forRoot('mongodb://localhost/mongoose'),
   ],
 })
 export class RootModule {}

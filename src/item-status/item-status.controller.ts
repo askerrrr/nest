@@ -1,4 +1,4 @@
-import { Get, Param, Patch, HttpCode, Controller } from '@nestjs/common';
+import { Get, Param, Bind, Patch, HttpCode, Controller } from '@nestjs/common';
 import { ItemStatusService } from './item-status.service';
 
 @Controller('item-status')
@@ -8,13 +8,12 @@ export class ItemStatusController {
   @Patch()
   @HttpCode(200)
   async changeItemStatus() {
-    return this.itemStatusService.getItemStatus();
+    return this.itemStatusService.changeItemStatus();
   }
 
-
-  @Get(':userid/:orderid')
+  @Get(':userId/:orderId')
   @Bind(Param())
-  async getItemStatus(param){
-    return this.itemStatusService(param)
+  async getItemStatus(param) {
+    return this.itemStatusService.getItemStatus(param.userid, param.orderId);
   }
 }

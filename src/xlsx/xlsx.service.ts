@@ -1,13 +1,8 @@
-import {Injectable} from '@nestjs/common'
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class XlsxService {
-    getXLSXFile(userId, orderId){
+  getXLSXFile(userId, orderId) {}
 
-    }
-
-
-    getXLSXData(userId, orderId){
-
-    }
+  getXLSXData(userId, orderId) {}
 }

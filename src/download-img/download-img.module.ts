@@ -1,10 +1,9 @@
-import {Module} from '@nestjs/common'
-import { DownloadImgService } from './download-img.service'
-import { DownloadImgController } from './download-img.controller'
+import { Module } from '@nestjs/common';
+import { DownloadImgService } from './download-img.service';
+import { DownloadImgController } from './download-img.controller';
 
 @Module({
-    controllers: [DownloadImgController],
-    providers: [DownloadImgService]
+  controllers: [DownloadImgController],
+  providers: [DownloadImgService],
 })
-
-export class DownloadImgModule{}
+export class DownloadImgModule {}

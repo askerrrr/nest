@@ -1,5 +1,6 @@
-import {Injectable} from '@nestjs/common'
+import { Injectable } from '@nestjs/common';
 
-export class DownloadImgService{
-    downloadImg(){}
+@Injectable()
+export class DownloadImgService {
+  downloadImg(userId, orderId) {}
 }
