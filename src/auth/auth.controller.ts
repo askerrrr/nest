@@ -16,8 +16,7 @@ import {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  
-  @Get()
+  @HttpCode(HttpStatus.OK)
   @Post('login/check')
   @Bind(Body())
   async checkLogin(body) {
