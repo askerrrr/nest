@@ -1,4 +1,4 @@
-import { Get, Bind, Body, Post, Controller } from '@nestjs/common';
+import { Bind, Body, Post, Controller } from '@nestjs/common';
 import { BotApiService } from './bot-api.service';
 
 @Controller('bot')
@@ -8,7 +8,7 @@ export class BotApiController {
   @Post('api/users')
   @Bind(Body())
   async createUser(body) {
-    return this.botApiService.createUser(body);
+    return await this.botApiService.createUser(body.userId);
   }
 
   @Post('api/order')
