@@ -5,6 +5,7 @@ import {
   Post,
   Bind,
   Body,
+  Req,
   Request,
   UseGuards,
   HttpCode,
@@ -18,8 +19,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login/check')
-  @Bind(Body())
-  async checkLogin(body) {
-    return await this.authService.checkLogin(body);
+  async checkLogin(@Req() res: Response, @Body() body: any) {
+    return await this.authService.checkLogin(res, body);
   }
 }
