@@ -16,6 +16,7 @@ export class RootController {
   @UseGuards(AuthGuard)
   @Get('/api/users')
   async getUsers() {
-    return await this.rootService.getUsers();
+    var users = await this.rootService.getUsers();
+    return users;
   }
 }

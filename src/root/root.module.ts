@@ -27,11 +27,11 @@ import { DownloadFileModule } from 'src/download-docs/download-docs.module';
     DownloadImgModule,
     DownloadFileModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forRoot('mongodb://localhost/database'),
     ServeStaticModule.forRoot({
       serveRoot: '/',
       rootPath: join(__dirname, '..', '..', 'client'),
     }),
-    MongooseModule.forRoot('mongodb://localhost/database'),
   ],
 })
 export class RootModule {}

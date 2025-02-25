@@ -12,8 +12,7 @@ export class ItemStatusController {
   }
 
   @Get(':userId/:orderId')
-  @Bind(Param())
-  async getItemStatus(param) {
+  async getItemStatus(@Param() param) {
     return this.itemStatusService.getItemStatus(param.userid, param.orderId);
   }
 }
