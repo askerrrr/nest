@@ -1,25 +1,25 @@
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import {
-  Get,
-  Post,
-  Bind,
-  Body,
-  Req,
-  Request,
-  UseGuards,
-  HttpCode,
-  HttpStatus,
-  Controller,
-} from '@nestjs/common';
+import { UseGuards, Post, Body, Req, Res, Controller } from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
   @Post('login/check')
-  async checkLogin(@Req() res: Response, @Body() body: any) {
-    return await this.authService.checkLogin(res, body);
+  async checkLogin(
+    @Req() req,
+    @Body() body: Object,
+    @Res({ passthrough: true }) res,
+  ) {
+    var token = await this.authService.checkLogin(body);
+    var user = req.user;
+    console.log('user: ', user);
+    return res
+      .cookie('token', token, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+      })
+      .json({ redirect: true });
   }
 }

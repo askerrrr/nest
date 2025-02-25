@@ -1,7 +1,7 @@
 async function formHandler() {
-  var form = document.getElementById("auth-form");
+  var form = document.getElementById('auth-form');
 
-  return form.addEventListener("submit", async (e) => {
+  return form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     var formDataObj = {};
@@ -10,23 +10,21 @@ async function formHandler() {
       formDataObj[key] = value;
     });
 
-    var response = await fetch("/auth/login/check", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+    var response = await fetch('/auth/login/check', {
+      method: 'POST',
       body: JSON.stringify(formDataObj),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
-    if (!response.ok) {
-      throw new Error("Ошибка авторизации");
-    }
+    if (!response.ok) throw new Error('Ошибка авторизации');
 
     var json = await response.json();
 
     return json.redirect
-      ? (window.location.href = "/")
-      : (window.location.href = "/auth/login");
+      ? (window.location.href = '/')
+      : (window.location.href = '/auth/login');
   });
 }
 

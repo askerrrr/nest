@@ -7,7 +7,7 @@ import { User, UserDocument } from '../schemas/user.schema';
 export class RootService {
   constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
 
-  getUsers() {
-    return this.user.find({}).exec();
+  async getUsers() {
+    return await this.user.find({}).exec();
   }
 }

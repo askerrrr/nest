@@ -29,7 +29,7 @@ import { DownloadFileModule } from 'src/download-docs/download-docs.module';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     ServeStaticModule.forRoot({
       serveRoot: '/',
-      rootPath: join(__dirname, '../../client'),
+      rootPath: join(__dirname, '..', '..', 'client'),
     }),
     MongooseModule.forRoot('mongodb://localhost/database'),
   ],
