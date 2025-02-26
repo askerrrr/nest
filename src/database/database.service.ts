@@ -103,13 +103,9 @@ export class DatabaseService {
   }
 
   async findUser(user) {
-    try {
-      var document = await this.user.findOne({ user: user }).exec();
+    var document = await this.user.findOne({ user: user }).exec();
 
-      return document.user;
-    } catch (err) {
-      console.log(err);
-    }
+    return document.user;
   }
 
   async getCurrentOrderStatus(userId, orderId) {

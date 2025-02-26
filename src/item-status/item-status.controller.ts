@@ -1,4 +1,4 @@
-import { Get, Param, Bind, Patch, HttpCode, Controller } from '@nestjs/common';
+import { Get, Param, Patch, HttpCode, Controller } from '@nestjs/common';
 import { ItemStatusService } from './item-status.service';
 
 @Controller('item-status')
