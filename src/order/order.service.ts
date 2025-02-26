@@ -1,40 +1,33 @@
 import { rm } from 'fs/promises';
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from 'src/schemas/user.schema';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class OrderService {
-  constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
+  constructor(private databaseService: DatabaseService) {}
   async getUserData(userId) {
-    return await this.user.findOne({ userId }).exec();
+    return await this.databaseService.getUser(userId);
   }
 
   async getOrderData(orderId) {
-    var document = await this.user.findOne({ 'orders.order.id': orderId });
+    var document = await this.databaseService.getOrderData(orderId);
     var order = document?.orders.find((e) => e.order.id == orderId);
     return order;
   }
 
   async getOrderList(userId) {
-    var existingDocument = await this.user.findOne({ userId }).exec();
+    var existingDocument = await this.databaseService.getUser(userId);
 
     return existingDocument?.orders.length;
   }
 
   async deleteUser(userId) {
-    await this.user.deleteOne({ userId });
+    await this.databaseService.deleteUser(userId);
     await rm('/var/www/userFiles/' + userId);
   }
 
   async deleteUserOrder(userId, orderId) {
-    await this.user.updateOne(
-      { userId, 'orders.order.id': orderId },
-      {
-        $pull: { orders: { 'order.id': orderId } },
-      },
-    );
+    await this.databaseService.deleteOrder(userId, orderId);
 
     var filePath = await this.findFilePath(userId, orderId);
     await rm(filePath);
@@ -42,10 +35,7 @@ export class OrderService {
   }
 
   async findFilePath(userId, orderId) {
-    var document = await this.user.findOne({
-      userId,
-      'orders.order.id': orderId,
-    });
+    var document = await this.databaseService.getUserData(userId, orderId);
 
     var filePath = document?.orders.filter((e) => e.order.id == orderId)[0]
       .order.file.path;

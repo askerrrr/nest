@@ -1,18 +1,14 @@
-import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from 'src/schemas/user.schema';
+//import { Model } from 'mongoose';
+import { Inject, Injectable } from '@nestjs/common';
+//import { InjectModel } from '@nestjs/mongoose';
+//import { User, UserDocument } from 'src/schemas/user.schema';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class OrderStatusService {
-  constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
-
+  constructor(private databaseService: DatabaseService) {}
   async getOrderStatus(userId, orderId) {
-    var document = await this.user.findOne({
-      userId,
-      'orders.order.id': orderId,
-    });
-
+    var document = await this.databaseService.getUserData(userId, orderId);
     var orderData = document?.orders.find((e) => e.order.id == orderId);
     var orderStatus = orderData?.order.orderStatus;
     return orderStatus;
@@ -25,12 +21,7 @@ export class OrderStatusService {
 
     var orderStatus = statusValue + ':' + statusId;
     await this.sendOrderStatusUpdate(userId, orderId, orderStatus);
-    await this.user.updateOne(
-      { userId, 'orders.order.id': orderId },
-      {
-        $set: { 'orders.$.order.orderStatus': status },
-      },
-    );
+    await this.databaseService.updateOrderStatus(userId, orderId, status);
   }
 
   async sendOrderStatusUpdate(userId, orderId, orderStatus) {

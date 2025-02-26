@@ -1,13 +1,11 @@
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from '../schemas/user.schema';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class RootService {
-  constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
+  constructor(private databaseService: DatabaseService) {}
 
   async getUsers() {
-    return await this.user.find({}).exec();
+    return await this.databaseService.getAllUsers();
   }
 }

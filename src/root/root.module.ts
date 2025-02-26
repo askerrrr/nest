@@ -10,6 +10,7 @@ import { User, UserSchema } from '../schemas/user.schema';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ItemIdModule } from 'src/item-id/item-id.module';
 import { BotApiModule } from 'src/bot-api/bot-api.module';
+import { DatabaseModule } from 'src/database/database.module';
 import { ItemStatusModule } from 'src/item-status/item-status.module';
 import { DownloadImgModule } from 'src/download-img/download-img.module';
 import { DownloadFileModule } from 'src/download-docs/download-docs.module';
@@ -23,6 +24,7 @@ import { DownloadFileModule } from 'src/download-docs/download-docs.module';
     OrderModule,
     ItemIdModule,
     BotApiModule,
+    DatabaseModule,
     ItemStatusModule,
     DownloadImgModule,
     DownloadFileModule,
