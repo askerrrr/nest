@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { OrderService } from './order.service';
 import { Get, Res, Param, Delete, Controller } from '@nestjs/common';
 
-@Controller('order')
+@Controller('orderinfo')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
@@ -27,16 +27,15 @@ export class OrderController {
   @Get('orders/:userId')
   async getOrderList(@Param() param, @Res() res: Response) {
     var userId = param.userId;
-    var existingDocument; //= await collection.findOne({ userId });
+    var orders = await this.orderService.getOrderList(userId);
 
-    if (existingDocument.orders.length > 0)
-      return res.sendFile(
-        join(__dirname, '..', '..', 'client', 'html', 'ordersList.html'),
-      );
-
-    return res.sendFile(
-      join(__dirname, '..', '..', 'client', 'html', 'noOrders.html'),
-    );
+    return orders
+      ? res.sendFile(
+          join(__dirname, '..', '..', 'client', 'html', 'ordersList.html'),
+        )
+      : res.sendFile(
+          join(__dirname, '..', '..', 'client', 'html', 'noOrders.html'),
+        );
   }
 
   @Delete('api/delete/:userId')

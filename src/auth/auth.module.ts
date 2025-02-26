@@ -16,7 +16,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     }),
     ServeStaticModule.forRoot({
       serveRoot: '/auth',
-      rootPath: join(__dirname, '..', '..', 'client', 'html', 'authForm.html'),
+      rootPath: join(__dirname, '..', '..', 'client'),
     }),
   ],
 })
