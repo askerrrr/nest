@@ -1,7 +1,7 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export type ItemStatusDocument = HydratedDocument<ItemStatus>;
+export type ItemDocument = HydratedDocument<Item>;
 
 @Schema({ _id: false })
 class Order {
@@ -20,7 +20,7 @@ class OrderWrapper {
 }
 
 @Schema()
-export class ItemStatus {
+export class Item {
   @Prop()
   userId: string;
 
@@ -28,4 +28,4 @@ export class ItemStatus {
   orders: OrderWrapper[];
 }
 
-export var ItemStatusSchema = SchemaFactory.createForClass(ItemStatus);
+export var ItemSchema = SchemaFactory.createForClass(Item);

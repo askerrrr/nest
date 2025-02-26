@@ -1,15 +1,15 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ItemStatus, ItemStatusDocument } from 'src/schemas/item.schema';
+import { Item, ItemDocument } from 'src/schemas/item.schema';
 
-export class ItemStatusCollectionService {
+export class ItemCollectionService {
   constructor(
-    @InjectModel(ItemStatus.name) private itemStatus: Model<ItemStatusDocument>,
+    @InjectModel(Item.name) private item: Model<ItemDocument>,
   ) {}
 
   async getItemId(userId, orderId) {
-    var user = await this.itemStatus
+    var user = await this.item
       .findOne({
         userId,
         'orders.order.id': orderId,
@@ -22,7 +22,7 @@ export class ItemStatusCollectionService {
   }
 
   async getItemStatus(userId, orderId) {
-    var document = await this.itemStatus
+    var document = await this.item
       .findOne({
         userId,
         'orders.order.id': orderId,
@@ -35,7 +35,7 @@ export class ItemStatusCollectionService {
   }
 
   async updateItemId(userId, orderId, index, itemId) {
-    var document = await this.itemStatus.findOne({
+    var document = await this.item.findOne({
       userId,
       'orders.order.id': orderId,
     });
@@ -47,7 +47,7 @@ export class ItemStatusCollectionService {
 
     itemsId[index] = itemId;
 
-    return await this.itemStatus.updateOne(
+    return await this.item.updateOne(
       { userId, 'orders.order.id': orderId },
       {
         $set: { 'orders.$.order.itemId': itemsId },
@@ -56,7 +56,7 @@ export class ItemStatusCollectionService {
   }
 
   async updateItemStatus(userId, orderId, newItem) {
-    var document = await this.itemStatus
+    var document = await this.item
       .findOne({
         userId,
         'orders.order.id': orderId,
@@ -74,7 +74,7 @@ export class ItemStatusCollectionService {
 
     items[itemIndex] = newItem;
 
-    return await this.itemStatus.updateOne(
+    return await this.item.updateOne(
       { userId, 'orders.order.id': orderId },
       {
         $set: { 'orders.$.order.items': items },
