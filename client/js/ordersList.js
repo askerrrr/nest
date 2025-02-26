@@ -1,13 +1,13 @@
-import rowForListOfActiveOrders from "./services/row/rowForListOfActiveOrders.js";
+import rowForListOfActiveOrders from './services/row/rowForListOfActiveOrders.js';
 
 async function getOrderList() {
   try {
-    var pathParts = window.location.pathname.split("/");
+    var pathParts = window.location.pathname.split('/');
     var userId = pathParts.at(-1);
 
     var response = await fetch(`/orderinfo/api/${userId}`, {
-      method: "GET",
-      headers: { Accept: "application/json" },
+      method: 'GET',
+      headers: { Accept: 'application/json' },
     });
 
     if (!response.ok) {

@@ -6,10 +6,8 @@ import { User, UserDocument } from 'src/schemas/user.schema';
 @Injectable()
 export class OrderService {
   constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
-  async getUser(userId) {
-    var orders = await this.user.findOne({userId}).exec()
-
-    return orders?.orders
+  async getUserData(userId) {
+    return await this.user.findOne({ userId }).exec();
   }
 
   getOrder(orderId) {}

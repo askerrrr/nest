@@ -9,7 +9,7 @@ export class OrderController {
 
   @Get('api/:userId')
   async getUser(@Param() param) {
-    return this.orderService.getUser(param.userId);
+    return await this.orderService.getUserData(param.userId);
   }
 
   @Get('api/order/:orderId')
