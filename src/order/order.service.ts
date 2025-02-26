@@ -10,9 +10,13 @@ export class OrderService {
     return await this.user.findOne({ userId }).exec();
   }
 
-  getOrder(orderId) {}
+  async getOrderData(orderId) {
+    var document = await this.user.findOne({ 'orders.order.id': orderId });
+    var order = document?.orders.find((e) => e.order.id == orderId);
+    return order;
+  }
 
-  getOrderFile(orderId) {}
+  async getOrderFile(orderId) {}
 
   async getOrderList(userId) {
     var existingDocument = await this.user.findOne({ userId }).exec();
@@ -20,7 +24,7 @@ export class OrderService {
     return existingDocument?.orders.length;
   }
 
-  deleteUser(userId) {}
+  async deleteUser(userId) {}
 
-  deleteOrder(userId, orderId) {}
+  async deleteOrder(userId, orderId) {}
 }

@@ -14,11 +14,11 @@ export class OrderController {
 
   @Get('api/order/:orderId')
   async getOrder(@Param() param) {
-    return this.orderService.getOrder(param.orderId);
+    return this.orderService.getOrderData(param.orderId);
   }
 
   @Get('/orders/order/:orderId')
-  async getOrderFile(@Param() param, @Res() res: Response) {
+  async getOrderFile(@Res() res: Response) {
     return res.sendFile(
       join(__dirname, '..', '..', 'client', 'html', 'userOrder.html'),
     );
