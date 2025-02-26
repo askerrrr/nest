@@ -1,6 +1,6 @@
 import { rm } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from 'src/database/user.collection.service';
 
 @Injectable()
 export class OrderService {

@@ -2,7 +2,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 //import { InjectModel } from '@nestjs/mongoose';
 //import { User, UserDocument } from 'src/schemas/user.schema';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from 'src/database/user.collection.service';
 
 @Injectable()
 export class OrderStatusService {

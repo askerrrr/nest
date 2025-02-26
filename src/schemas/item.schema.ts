@@ -13,13 +13,19 @@ class Order {
   itemId: string[];
 }
 
+@Schema({ _id: false })
+class OrderWrapper {
+  @Prop({ type: Order })
+  order: Order;
+}
+
 @Schema()
-class ItemStatus {
+export class ItemStatus {
   @Prop()
   userId: string;
 
-  @Prop({ type: [Order] })
-  orders: Order[];
+  @Prop({ type: [OrderWrapper] })
+  orders: OrderWrapper[];
 }
 
 export var ItemStatusSchema = SchemaFactory.createForClass(ItemStatus);

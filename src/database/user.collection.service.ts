@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
-export class DatabaseService {
+export class UserCollectionService {
   constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
 
   async getAllUsers() {
@@ -122,74 +122,6 @@ export class DatabaseService {
 
     return orderStatus[0];
   }
-
-  //   async getItemId(userId, orderId) {
-  //     var user = await this.itemStatus.findOne({
-  //       userId,
-  //       'orders.order.id': orderId,
-  //     }).exec();
-
-  //     var itemId = user.orders.map((order) => order.order.itemId).flat();
-
-  //     return itemId;
-  //   }
-
-  //   async getItemStatus(userId, orderId) {
-  //     var document = await this.itemStatus.findOne({
-  //       userId,
-  //       'orders.order.id': orderId,
-  //     });
-
-  //     var items = document.orders.flatMap((orders) => orders.order.items);
-
-  //     return items;
-  //   }
-
-  //   async updateItemId(userId, orderId, index, itemId) {
-  //     var document = await this.itemStatus.findOne({
-  //       userId,
-  //       'orders.order.id': orderId,
-  //     });
-
-  //     var itemsId = document.orders
-  //       .filter((orders) => orders.order.id == orderId)
-  //       .map((order) => order.order.itemId)
-  //       .flat();
-
-  //     itemsId[index] = itemId;
-
-  //     return await this.user.updateOne(
-  //       { userId, 'orders.order.id': orderId },
-  //       {
-  //         $set: { 'orders.$.order.itemId': itemsId },
-  //       },
-  //     );
-  //   }
-
-  //   async updateItemStatus(userId, orderId, newItem) {
-  //     var document = await this.itemStatus.findOne({
-  //       userId,
-  //       'orders.order.id': orderId,
-  //     }).exec();
-
-  //     var items = document.orders
-  //       .filter((orders) => orders.order.id == orderId)
-  //       .map((order) => order.order.items)
-  //       .flat();
-
-  //     var value = newItem.split(':::')[0];
-  //     var item = items.find((elem) => elem.startsWith(value));
-  //     var itemIndex = items.indexOf(item);
-
-  //     items[itemIndex] = newItem;
-
-  //     return await this.user.updateOne(
-  //       { userId, 'orders.order.id': orderId },
-  //       {
-  //         $set: { 'orders.$.order.items': items },
-  //       },
-  //     );
-  //   }
 
   async updateOrderStatus(userId, orderId, status) {
     return await this.user.updateOne(
