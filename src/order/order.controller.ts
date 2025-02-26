@@ -40,11 +40,11 @@ export class OrderController {
 
   @Delete('api/delete/:userId')
   async deleteUser(@Param() param) {
-    return this.orderService.deleteUser(param.userId);
+    return await this.orderService.deleteUser(param.userId);
   }
 
   @Delete('api/delete/:userId/:orderId')
   async deleteOrder(@Param() param) {
-    return this.orderService.deleteOrder(param.userId, param.orderId);
+    return await this.orderService.deleteUserOrder(param.userId, param.orderId);
   }
 }
