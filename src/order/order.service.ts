@@ -30,7 +30,7 @@ export class OrderService {
     await this.userCollection.deleteOrder(userId, orderId);
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
-    await rm(filePath);
+    await rm(filePath!);
     await this.deleteUserDataFromBot(userId, orderId);
   }
 

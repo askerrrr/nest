@@ -5,8 +5,8 @@ import { Controller, Patch, Body } from '@nestjs/common';
 export class ItemIdController {
   constructor(private readonly itemIdService: ItemIdService) {}
   @Patch()
-  async changeItemId(@Body() body) {
-    await this.itemIdService.changeItemId(
+  async updateItemId(@Body() body) {
+    await this.itemIdService.updateItemId(
       body.userId,
       body.orderId,
       body.index,

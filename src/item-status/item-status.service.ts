@@ -48,7 +48,7 @@ export class ItemStatusService {
 
     var value = item?.split(':::')[0];
     var itemIndex = items?.findIndex((e) => e.startsWith(value));
-    items[itemIndex] = item;
+    items![itemIndex!] = item;
 
     await this.itemCollection.updateItemStatus(userId, orderId, items);
 
