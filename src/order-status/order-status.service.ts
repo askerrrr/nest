@@ -1,14 +1,11 @@
-//import { Model } from 'mongoose';
-import { Inject, Injectable } from '@nestjs/common';
-//import { InjectModel } from '@nestjs/mongoose';
-//import { User, UserDocument } from 'src/schemas/user.schema';
-import { DatabaseService } from 'src/database/user.collection.service';
+import { Injectable } from '@nestjs/common';
+import { UserCollectionService } from 'src/database/user.collection.service';
 
 @Injectable()
 export class OrderStatusService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private userCollection: UserCollectionService) {}
   async getOrderStatus(userId, orderId) {
-    var document = await this.databaseService.getUserData(userId, orderId);
+    var document = await this.userCollection.getUserData(userId, orderId);
     var orderData = document?.orders.find((e) => e.order.id == orderId);
     var orderStatus = orderData?.order.orderStatus;
     return orderStatus;
@@ -21,11 +18,11 @@ export class OrderStatusService {
 
     var orderStatus = statusValue + ':' + statusId;
     await this.sendOrderStatusUpdate(userId, orderId, orderStatus);
-    await this.databaseService.updateOrderStatus(userId, orderId, status);
+    await this.userCollection.updateOrderStatus(userId, orderId, status);
   }
 
   async sendOrderStatusUpdate(userId, orderId, orderStatus) {
-    var response = await fetch('env.bot_server_ip', {
+    await fetch('env.bot_server_ip', {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
@@ -38,11 +35,5 @@ export class OrderStatusService {
         orderStatus,
       }),
     });
-
-    if (!response.ok) {
-      var err = await response.text();
-      console.log('Ошибка при отправлении статуса боту: ', err);
-      return;
-    }
   }
 }

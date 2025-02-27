@@ -1,53 +1,32 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Item, ItemDocument } from 'src/schemas/item.schema';
 
 export class ItemCollectionService {
   constructor(
-    @InjectModel(Item.name) private item: Model<ItemDocument>,
+    @InjectModel(Item.name) private itemCollection: Model<ItemDocument>,
   ) {}
 
   async getItemId(userId, orderId) {
-    var user = await this.item
-      .findOne({
-        userId,
-        'orders.order.id': orderId,
-      })
-      .exec();
+    var user = await this.itemCollection.findOne({ userId }).exec();
 
-    var itemId = user?.orders.map((order) => order.order.itemId).flat();
+    var order = user?.orders.find((e) => e.order.id == orderId);
+    var itemId = order?.order.itemId;
 
     return itemId;
   }
 
   async getItemStatus(userId, orderId) {
-    var document = await this.item
-      .findOne({
-        userId,
-        'orders.order.id': orderId,
-      })
-      .exec();
+    var document = await this.itemCollection.findOne({ userId }).exec();
+    var order = document?.orders.find((e) => e.order.id == orderId);
 
-    var items = document?.orders.flatMap((orders) => orders.order.items);
+    var items = order?.order.items;
 
     return items;
   }
 
-  async updateItemId(userId, orderId, index, itemId) {
-    var document = await this.item.findOne({
-      userId,
-      'orders.order.id': orderId,
-    });
-
-    var itemsId = document?.orders
-      .filter((orders) => orders.order.id == orderId)
-      .map((order) => order.order.itemId)
-      .flat();
-
-    itemsId[index] = itemId;
-
-    return await this.item.updateOne(
+  async updateItemId(userId, orderId, itemsId) {
+    await this.itemCollection.updateOne(
       { userId, 'orders.order.id': orderId },
       {
         $set: { 'orders.$.order.itemId': itemsId },
@@ -55,27 +34,41 @@ export class ItemCollectionService {
     );
   }
 
-  async updateItemStatus(userId, orderId, newItem) {
-    var document = await this.item
-      .findOne({
-        userId,
-        'orders.order.id': orderId,
-      })
-      .exec();
-
-    var items = document?.orders
-      .filter((orders) => orders.order.id == orderId)
-      .map((order) => order.order.items)
-      .flat();
-
-    var value = newItem.split(':::')[0];
-    var item = items.find((elem) => elem.startsWith(value));
-    var itemIndex = items.indexOf(item);
-
-    items[itemIndex] = newItem;
-
-    return await this.item.updateOne(
+  async updateItemStatus(userId, orderId, items) {
+    await this.itemCollection.updateOne(
       { userId, 'orders.order.id': orderId },
+      {
+        $set: { 'orders.$.order.items': items },
+      },
+    );
+  }
+
+  async createItemStatus(user) {
+    await this.itemCollection.insertOne({ userId: user.userId, orders: [] });
+  }
+
+  async addItems(userId, orderId, xlsxData) {
+    var url = xlsxData[0];
+
+    await this.itemCollection.updateOne(
+      { userId: userId },
+      {
+        $push: { orders: { order: { id: orderId, items: [], itemId: [] } } },
+      },
+    );
+
+    var items = url.map((item, index) => {
+      {
+        if (item?.startsWith('http')) {
+          return item.split('://')[1] + ':::' + 0;
+        } else {
+          return 'неопознанная ссылка' + index + ':::' + 0;
+        }
+      }
+    });
+
+    return await this.itemCollection.updateOne(
+      { userId: userId, 'orders.order.id': orderId },
       {
         $set: { 'orders.$.order.items': items },
       },

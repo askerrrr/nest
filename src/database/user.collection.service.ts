@@ -25,34 +25,7 @@ export class UserCollectionService {
   }
 
   async getUser(userId) {
-    return await this.user.findOne(userId).exec();
-  }
-  async addItems(userId, orderId, xlsxData) {
-    var url = xlsxData[0];
-
-    await this.user.updateOne(
-      { userId: userId },
-      {
-        $push: { orders: { order: { id: orderId, items: [], itemId: [] } } },
-      },
-    );
-
-    var items = url.map((item, index) => {
-      {
-        if (item?.startsWith('http')) {
-          return item.split('://')[1] + ':::' + 0;
-        } else {
-          return 'неопознанная ссылка' + index + ':::' + 0;
-        }
-      }
-    });
-
-    return await this.user.updateOne(
-      { userId: userId, 'orders.order.id': orderId },
-      {
-        $set: { 'orders.$.order.items': items },
-      },
-    );
+    return await this.user.findOne({ userId }).exec();
   }
 
   async addNewOrder(order) {
@@ -62,12 +35,8 @@ export class UserCollectionService {
     );
   }
 
-  async createItemStatus(user) {
-    (await this.user.insertOne({ userId: user.userId, orders: [] })).save();
-  }
-
   async createNewUser(order) {
-    return await this.user.insertOne({
+    await this.user.insertOne({
       userId: order.userId,
       firstName: order.firstName,
       userName: order.userName,
@@ -89,38 +58,25 @@ export class UserCollectionService {
   }
 
   async findFilePath(userId, orderId) {
-    var data = await this.user
-      .findOne({
-        userId,
-        'orders.order.id': orderId,
-      })
-      .exec();
+    var document = await this.user.findOne({ userId }).exec();
 
-    var filePath = data.orders.filter((item) => item.order.id === orderId)[0]
-      .order.file.path;
+    var filePath = document?.orders.find((e) => e.order.id == orderId)?.order
+      ?.file?.path;
 
     return filePath;
   }
 
-  async findUser(user) {
-    var document = await this.user.findOne({ user: user }).exec();
-
-    return document.user;
+  async findUser(userId) {
+    return await this.user.findOne({ userId }).exec();
   }
 
   async getCurrentOrderStatus(userId, orderId) {
-    var document = await this.user
-      .findOne({
-        userId,
-        'orders.order.id': orderId,
-      })
-      .exec();
+    var document = await this.user.findOne({ userId }).exec();
 
-    var orderStatus = document.orders.flatMap(
-      (orders) => orders.order.orderStatus,
-    );
+    var orderStatus = document?.orders.find((e) => e.order.id == orderId)?.order
+      ?.orderStatus;
 
-    return orderStatus[0];
+    return orderStatus;
   }
 
   async updateOrderStatus(userId, orderId, status) {

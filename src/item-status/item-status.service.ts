@@ -5,8 +5,8 @@ import { ItemCollectionService } from 'src/database/item-status.collection.servi
 @Injectable()
 export class ItemStatusService {
   constructor(
-    private item: ItemCollectionService,
-    private user: UserCollectionService,
+    private itemCollection: ItemCollectionService,
+    private userCollection: UserCollectionService,
   ) {}
 
   async sendOrderStatusUpdate(userId, orderId, orderStatus) {
@@ -32,19 +32,25 @@ export class ItemStatusService {
   }
 
   async allItemsArePurchased(userId, orderId) {
-    var items = await this.item.getItemStatus(userId, orderId);
+    var items = await this.itemCollection.getItemStatus(userId, orderId);
 
-    var itemStatus = items.map((item) => item.split(':::')[1]);
+    var itemStatus = items?.map((e) => e.split(':::')[1]);
 
-    return itemStatus.every((e) => e == '2');
+    return itemStatus?.every((e) => e == '2');
   }
 
   async getItemStatus(userId, orderId) {
-    return await this.item.getItemStatus(userId, orderId);
+    return await this.itemCollection.getItemStatus(userId, orderId);
   }
 
-  async changeItemStatus(userId, orderId, item) {
-    await this.item.updateItemStatus(userId, orderId, item);
+  async updateItemStatus(userId, orderId, item) {
+    var items = await this.itemCollection.getItemId(userId, orderId);
+
+    var value = item?.split(':::')[0];
+    var itemIndex = items?.findIndex((e) => e.startsWith(value));
+    items[itemIndex] = item;
+
+    await this.itemCollection.updateItemStatus(userId, orderId, items);
 
     var isAllItemsArePurchased = await this.allItemsArePurchased(
       userId,
@@ -52,21 +58,19 @@ export class ItemStatusService {
     );
 
     if (isAllItemsArePurchased) {
-      var currentOrderStatus = await this.user.getCurrentOrderStatus(
+      var currentOrderStatus = await this.userCollection.getCurrentOrderStatus(
         userId,
         orderId,
       );
 
       if (currentOrderStatus == 'in-processing:1') {
-        await this.user.updateOrderStatus(userId, orderId, 'purchased:2');
-
-        var isStatusUpdated = await this.sendOrderStatusUpdate(
+        await this.userCollection.updateOrderStatus(
           userId,
           orderId,
           'purchased:2',
         );
 
-        if (!isStatusUpdated) return;
+        await this.sendOrderStatusUpdate(userId, orderId, 'purchased:2');
       }
     }
   }

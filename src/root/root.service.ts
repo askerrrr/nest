@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from 'src/database/user.collection.service';
+import { UserCollectionService } from 'src/database/user.collection.service';
 
 @Injectable()
 export class RootService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private user: UserCollectionService) {}
 
   async getUsers() {
-    return await this.databaseService.getAllUsers();
+    return await this.user.getAllUsers();
   }
 }

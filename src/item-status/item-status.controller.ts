@@ -1,5 +1,5 @@
-import { Get, Param, Body, Patch, HttpCode, Controller } from '@nestjs/common';
 import { ItemStatusService } from './item-status.service';
+import { Get, Param, Body, Patch, HttpCode, Controller } from '@nestjs/common';
 
 @Controller('item-status')
 export class ItemStatusController {
@@ -8,7 +8,7 @@ export class ItemStatusController {
   @Patch()
   @HttpCode(200)
   async changeItemStatus(@Body() body) {
-    return this.itemStatusService.changeItemStatus(
+    return this.itemStatusService.updateItemStatus(
       body.userId,
       body.orderId,
       body.item,

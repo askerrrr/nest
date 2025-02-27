@@ -1,11 +1,16 @@
-import { Controller, Patch, Body } from '@nestjs/common';
 import { ItemIdService } from './item-id.service';
+import { Controller, Patch, Body } from '@nestjs/common';
 
-@Controller('item-id')
+@Controller('itemid')
 export class ItemIdController {
   constructor(private readonly itemIdService: ItemIdService) {}
   @Patch()
   async changeItemId(@Body() body) {
-    return;
+    await this.itemIdService.changeItemId(
+      body.userId,
+      body.orderId,
+      body.index,
+      body.itemId,
+    );
   }
 }
