@@ -5,12 +5,14 @@ import { User, UserSchema } from 'src/schemas/user.schema';
 import { Item, ItemSchema } from 'src/schemas/item.schema';
 import { DatabaseModule } from 'src/database/database.module';
 import { ItemStatusController } from './item-status.controller';
+import { UtilsForItemStatus } from 'src/services/utilsForItemStatus';
 
 @Module({
   controllers: [ItemStatusController],
   providers: [ItemStatusService],
   imports: [
     DatabaseModule,
+    UtilsForItemStatus,
     MongooseModule.forRoot('mongodb://localhost/database'),
     MongooseModule.forFeature([
       {

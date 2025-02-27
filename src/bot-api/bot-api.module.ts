@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { Utils } from 'src/services/Utils';
 import { BotApiService } from './bot-api.service';
 import { BotApiController } from './bot-api.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -9,6 +10,7 @@ import { DatabaseModule } from 'src/database/database.module';
   controllers: [BotApiController],
   providers: [BotApiService],
   imports: [
+    Utils,
     DatabaseModule,
     MongooseModule.forRoot('mongodb://localhost/database'),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
