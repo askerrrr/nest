@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { Utils } from 'src/services/Utils';
+import { UtilsModule } from 'src/services/Utils';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { OrderStatusService } from './order-status.service';
@@ -10,7 +10,7 @@ import { OrderStatusController } from './order-status.controller';
   controllers: [OrderStatusController],
   providers: [OrderStatusService],
   imports: [
-    Utils,
+    UtilsModule,
     DatabaseModule,
     MongooseModule.forRoot('mongodb://localhost/database'),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),

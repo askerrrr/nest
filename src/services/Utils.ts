@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UtiltForOrder } from './utilsForOrder';
+import { UtilsForOrder } from './utilsForOrder';
 import { UtilsForBotApi } from './utilsForBotApi';
 import { UtilsForItemStatus } from './utilsForItemStatus';
 
 @Module({
-  providers: [UtiltForOrder, UtilsForBotApi, UtilsForItemStatus],
-  exports: [UtiltForOrder, UtilsForBotApi, UtilsForItemStatus],
+  providers: [UtilsForOrder, UtilsForBotApi, UtilsForItemStatus],
+  exports: [UtilsForOrder, UtilsForBotApi, UtilsForItemStatus],
 })
-export class Utils {}
+export class UtilsModule {}

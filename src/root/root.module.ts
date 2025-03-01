@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { RootService } from './root.service';
+import { UtilsModule } from 'src/services/Utils';
 import { AuthModule } from 'src/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { XlsxModule } from 'src/xlsx/xlsx.module';
