@@ -1,14 +1,14 @@
 import { join } from 'path';
 import { Module } from '@nestjs/common';
-import { RootService } from './root.service';
-import { UtilsModule } from 'src/services/Utils';
-import { AuthModule } from 'src/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
+import { RootService } from './root.service';
+import { AuthModule } from 'src/auth/auth.module';
 import { XlsxModule } from 'src/xlsx/xlsx.module';
 import { RootController } from './root.controller';
 import { OrderModule } from 'src/order/order.module';
 import { User, UserSchema } from '../schemas/user.schema';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { ItemIdModule } from 'src/item-id/item-id.module';
 import { BotApiModule } from 'src/bot-api/bot-api.module';
 import { DatabaseModule } from 'src/database/database.module';

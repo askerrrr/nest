@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UtilsForBotApi } from 'src/services/utilsForBotApi';
 import { UserCollectionService } from 'src/database/user.collection.service';
 import { ItemCollectionService } from 'src/database/item-status.collection.service';
@@ -56,5 +56,19 @@ export class BotApiService {
     );
 
     return { activeOrders, completedOrders };
+  }
+
+  async validateAuthHeader(authHeader) {
+    if (!authHeader) {
+      throw new UnauthorizedException();
+    }
+
+    var [authType, token] = authHeader.split(' ');
+
+    if (authType !== 'Bearer' && token !== 'env.auth_token') {
+      throw new UnauthorizedException();
+    }
+
+    return true;
   }
 }

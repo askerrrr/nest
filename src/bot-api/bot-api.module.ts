@@ -5,6 +5,7 @@ import { BotApiController } from './bot-api.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { DatabaseModule } from 'src/database/database.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   controllers: [BotApiController],

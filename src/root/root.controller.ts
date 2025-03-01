@@ -1,8 +1,9 @@
 import { join } from 'path';
 import { Response } from 'express';
+import { Get, Res, Controller, UseGuards } from '@nestjs/common';
+
 import { RootService } from './root.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { Get, Res, Controller, UseGuards } from '@nestjs/common';
 
 @Controller()
 export class RootController {
