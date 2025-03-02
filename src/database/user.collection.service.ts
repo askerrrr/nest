@@ -61,7 +61,7 @@ export class UserCollectionService {
     var document = await this.user.findOne({ userId }).exec();
 
     var result = document?.orders.find((e) => e.order.id == orderId);
-    var filePath = result?.order.file.path;
+    var filePath: any = result?.order.file.path;
 
     return filePath;
   }
