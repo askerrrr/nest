@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { RootModule } from './root/root.module';
 import * as cookieParser from 'cookie-parser';
+import { RootModule } from './root/root.module';
 
 (async () => {
   const app = await NestFactory.create(RootModule);

@@ -60,8 +60,8 @@ export class UserCollectionService {
   async findFilePath(userId, orderId) {
     var document = await this.user.findOne({ userId }).exec();
 
-    var filePath = document?.orders.find((e) => e.order.id == orderId)?.order
-      ?.file?.path;
+    var result = document?.orders.find((e) => e.order.id == orderId);
+    var filePath = result?.order.file.path;
 
     return filePath;
   }
@@ -73,8 +73,9 @@ export class UserCollectionService {
   async getCurrentOrderStatus(userId, orderId) {
     var document = await this.user.findOne({ userId }).exec();
 
-    var orderStatus = document?.orders.find((e) => e.order.id == orderId)?.order
-      ?.orderStatus;
+    var result = document?.orders.find((e) => e.order.id == orderId);
+
+    var orderStatus = result?.order.orderStatus;
 
     return orderStatus;
   }

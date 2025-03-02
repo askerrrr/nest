@@ -15,6 +15,7 @@ import { DatabaseModule } from 'src/database/database.module';
 import { ItemStatusModule } from 'src/item-status/item-status.module';
 import { DownloadImgModule } from 'src/download-img/download-img.module';
 import { DownloadFileModule } from 'src/download-docs/download-docs.module';
+import { OrderStatusModule } from 'src/order-status/order-status.module';
 
 @Module({
   controllers: [RootController],
@@ -26,6 +27,7 @@ import { DownloadFileModule } from 'src/download-docs/download-docs.module';
     ItemIdModule,
     BotApiModule,
     DatabaseModule,
+    OrderStatusModule,
     ItemStatusModule,
     DownloadImgModule,
     DownloadFileModule,

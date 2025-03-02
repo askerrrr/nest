@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+
+import { AuthGuard } from 'src/auth/auth.guard';
 import { OrderService } from './order.service';
 import { UtilsModule } from 'src/services/Utils';
 import { MongooseModule } from '@nestjs/mongoose';

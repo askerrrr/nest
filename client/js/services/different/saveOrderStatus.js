@@ -1,32 +1,23 @@
-function renderUnmarkedCheckBoxForFirstStatus(array) {
-  return array
-    .slice(1)
-    .map((elem) => (document.getElementById(elem.statusId).disabled = true));
-}
+import renderNextUnmarkedPendingStatus from './renderNextPendingStatus.js';
+import renderUnmarkedCheckBoxForFirstStatus from './renderCheckBoxForFirstStatus.js';
 
-function renderNextUnmarkedPendingStatus(array, statusId) {
-  return array
-    .filter((elem) => elem.statusId !== +statusId + 1)
-    .map((elem) => (document.getElementById(elem.statusId).disabled = true));
-}
-
-export default async function saveAndRenderCurrentOrderStatus(userId, orderId) {
+var saveAndRenderCurrentOrderStatus = async (userId, orderId) => {
   try {
-    var response = await fetch(`/status/api/${userId}/${orderId}`, {
-      method: "GET",
-    });
+    var url = '/status/api/' + userId + '/' + orderId;
+    var response = await fetch(url);
 
     if (!response.ok) {
       var err = await response.text();
-      console.log("response err", err);
+      console.log('response err', err);
     }
 
-    var status = await response.json();
+    var json = await response.json();
+    var orderStatus = json.orderStatus;
 
-    let statusId = status.split(":")[1];
+    let statusId = orderStatus.split(':')[1];
 
     var checkBoxCollection = document.querySelectorAll(
-      `input[name=order-status]`
+      `input[name=order-status]`,
     );
 
     var arrayOfCheckBoxesID = [];
@@ -35,10 +26,12 @@ export default async function saveAndRenderCurrentOrderStatus(userId, orderId) {
       arrayOfCheckBoxesID.push({ statusId: +checkBoxCollection[i].id });
     }
 
-    return status == "not-accepted-for-processing:0"
+    return orderStatus == 'not-accepted-for-processing:0'
       ? renderUnmarkedCheckBoxForFirstStatus(arrayOfCheckBoxesID)
       : renderNextUnmarkedPendingStatus(arrayOfCheckBoxesID, statusId);
   } catch (err) {
     console.log(err);
   }
-} //export to formForSetOrderStatus.js
+};
+
+export default saveAndRenderCurrentOrderStatus;

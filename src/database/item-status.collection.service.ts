@@ -11,21 +11,26 @@ export class ItemCollectionService {
     var user = await this.itemCollection.findOne({ userId }).exec();
 
     var order = user?.orders.find((e) => e.order.id == orderId);
-    var itemId = order?.order.itemId;
+    var itemId: any[string] = order?.order.itemId;
 
     return itemId;
   }
 
-  async getItemStatus(userId, orderId) {
+  async getItems(userId, orderId) {
     var document = await this.itemCollection.findOne({ userId }).exec();
-    var order = document?.orders.find((e) => e.order.id == orderId);
+    var result = document?.orders.find((e) => e.order.id == orderId);
 
-    var items = order?.order.items;
+    var items: any[string] = result?.order.items;
 
+    
     return items;
   }
 
-  async updateItemId(userId, orderId, itemsId) {
+  async updateItemId(userId, orderId, index, newItemId) {
+    var itemsId = await this.getItemId(userId, orderId);
+
+    itemsId[index] = newItemId;
+
     await this.itemCollection.updateOne(
       { userId, 'orders.order.id': orderId },
       {

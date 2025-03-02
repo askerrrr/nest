@@ -1,15 +1,17 @@
 import { OrderStatusService } from './order-status.service';
 import { Get, Patch, Param, Controller } from '@nestjs/common';
 
-@Controller('order-status')
+@Controller('status')
 export class OrderStatusController {
   constructor(private readonly orderStatusService: OrderStatusService) {}
   @Get('api/:userId/:orderId')
   async getOrderStatus(@Param() param) {
-    return await this.orderStatusService.getOrderStatus(
+    var currentOrderStatus = await this.orderStatusService.getOrderStatus(
       param.userId,
       param.orderId,
     );
+
+    return currentOrderStatus;
   }
 
   @Patch('/:userId/:orderId/:status')

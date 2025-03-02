@@ -11,16 +11,16 @@ export class ItemStatusService {
     private userCollection: UserCollectionService,
   ) {}
 
-  async getItemStatus(userId, orderId) {
-    return await this.itemCollection.getItemStatus(userId, orderId);
+  async getCurrentOrderStatus(userId, orderId) {
+    return await this.userCollection.getCurrentOrderStatus(userId, orderId);
   }
 
-  async updateItemStatus(userId, orderId, item) {
-    var items = await this.itemCollection.getItemStatus(userId, orderId);
+  async changeItemStatus(userId, orderId, item) {
+    var items = await this.itemCollection.getItems(userId, orderId);
 
-    var value = item?.split(':::')[0];
-    var itemIndex = items?.findIndex((e) => e.startsWith(value));
-    items![itemIndex!] = item;
+    var itemValue = item?.split(':::')[0];
+    var itemIndex = items?.findIndex((e) => e.startsWith(itemValue));
+    items[itemIndex] = item;
 
     await this.itemCollection.updateItemStatus(userId, orderId, items);
 

@@ -10,9 +10,11 @@ export class OrderStatusService {
   ) {}
   async getOrderStatus(userId, orderId) {
     var document = await this.userCollection.getUserData(userId, orderId);
+
     var orderData = document?.orders.find((e) => e.order.id == orderId);
     var orderStatus = orderData?.order.orderStatus;
-    return orderStatus;
+
+    return { orderStatus };
   }
 
   async changeOrderStatus(userId, orderId, status) {
@@ -21,6 +23,7 @@ export class OrderStatusService {
     statusId = statusId.split('').reverse()[0];
 
     var orderStatus = statusValue + ':' + statusId;
+
     await this.utilsForItemStatus.sendOrderStatusUpdate(
       userId,
       orderId,
