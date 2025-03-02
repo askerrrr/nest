@@ -1,35 +1,30 @@
-import getUserId from "./services/link.js";
-import getUserName from "./services/userName.js";
-import getFirstName from "./services/firstName.js";
-import getOrderInfo from "./services/orderInfo.js";
-//import buttonForDeleteUser from "./services/buttonForDeleteUser.js";
+import getUserId from './services/link.js';
+import getUserName from './services/userName.js';
+import getFirstName from './services/firstName.js';
+import getOrderInfo from './services/orderInfo.js';
 
 export default async function rowForUserList(order) {
   var userId = order.userId;
   var firstName = order.firstName;
   var userName = order.userName;
 
-  var tr = document.createElement("tr");
+  var tr = document.createElement('tr');
 
-  //var tdButton = await buttonForDeleteUser(userId);
+  var firstNames = await getFirstName(firstName);
+  var userNames = await getUserName(userName);
+  var userIDs = await getUserId(userId);
+  var userInfo = await getOrderInfo(order);
 
-  tr.append(
-    getFirstName(firstName),
-    getUserName(userName),
-    getUserId(userId),
-    getOrderInfo(order)
-  );
+  tr.append(firstNames, userNames, userIDs, userInfo);
 
-  // tr.append(tdButton);
-
-  var tbody = document.createElement("tbody");
+  var tbody = document.createElement('tbody');
   tbody.append(tr);
   tbody.id = userId;
 
-  var table = document.getElementById("homepage");
+  var table = document.getElementById('homepage');
   table.append(tbody);
 
-  var body = document.getElementById("body");
+  var body = document.getElementById('body');
   body.append(table);
 
   return body;
