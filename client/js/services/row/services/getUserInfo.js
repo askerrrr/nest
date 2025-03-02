@@ -1,11 +1,11 @@
-export default async (userId) => {
-  var userInfo = document.createElement("div");
-  userInfo.id = "user-info";
+var getUserInfo = async (userId) => {
+  var userInfo = document.createElement('div');
+  userInfo.id = 'user-info';
 
-  var btn = document.createElement("button");
+  var btn = document.createElement('button');
   btn.append(`ID пользователя: ${userId}`);
 
-  var formForUserId = document.createElement("form");
+  var formForUserId = document.createElement('form');
   formForUserId.action = `/orderinfo/orders/${userId}`;
   formForUserId.append(btn);
 
@@ -13,3 +13,5 @@ export default async (userId) => {
 
   return userInfo;
 };
+
+export default getUserInfo;

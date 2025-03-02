@@ -1,8 +1,8 @@
-export default async (size) => {
-  var td = document.createElement("td");
+var getQuantityFromXLSX = async (size) => {
+  var td = document.createElement('td');
 
   if (size.length == 0) {
-    td.append("Пусто");
+    td.append('Пусто');
 
     return td;
   }
@@ -10,3 +10,5 @@ export default async (size) => {
 
   return td;
 };
+
+export default getQuantityFromXLSX;
