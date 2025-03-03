@@ -12,7 +12,7 @@ async function GetUsers() {
 
     var users = await response.json();
 
-    users.forEach((user) => rowForUserList(user));
+    users.forEach(async (user) => await rowForUserList(user));
   } catch (err) {
     console.log(err);
   }

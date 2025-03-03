@@ -17,7 +17,7 @@ async function getOrderList() {
 
     var orders = await response.json();
 
-    return await rowForListOfActiveOrders(orders);
+    await rowForListOfActiveOrders(orders);
   } catch (err) {
     console.log(err);
   }
