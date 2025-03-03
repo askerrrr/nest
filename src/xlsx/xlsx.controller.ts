@@ -25,8 +25,6 @@ export class XlsxController {
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
 
-    if (!filePath) return;
-
     var items = await this.itemCollection.getItems(userId, orderId);
     var itemId = await this.itemCollection.getItemId(userId, orderId);
     var imgData = await this.xlsxService.getImageFromXLSX(filePath);
@@ -40,5 +38,17 @@ export class XlsxController {
     );
 
     return combinedData;
+  }
+
+  @Get('check/:userId/:orderId')
+  async checkFileExists(@Param() param) {
+    var filePath = await this.userCollection.findFilePath(
+      param.userId,
+      param.orderId,
+    );
+
+    var fileIsExists = await this.xlsxService.checkFileExists(filePath);
+
+    return { fileIsExists };
   }
 }

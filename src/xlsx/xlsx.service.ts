@@ -1,6 +1,6 @@
 import * as JSZip from 'jszip';
 import * as Exceljs from 'exceljs';
-import { readFile } from 'fs/promises';
+import { access, readFile, constants } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -75,5 +75,13 @@ export class XlsxService {
     }
 
     return fileData;
+  }
+
+  async checkFileExists(filePath) {
+    var fileIsExists = await access(filePath, constants.F_OK)
+      .then(() => true)
+      .catch(() => false);
+
+    return fileIsExists;
   }
 }

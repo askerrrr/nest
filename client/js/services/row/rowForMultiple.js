@@ -1,5 +1,4 @@
 import getPhone from './services/getPhone.js';
-import renderXLSX from './services/renderXLSX.js';
 import getOrderId from './services/getOrderId.js';
 import closePopUp from '../different/closePopUp.js';
 import getUserInfo from './services/getUserInfo.js';
@@ -7,10 +6,11 @@ import getOrderDate from './services/getOrderDate.js';
 import createTableHead from './services/tableHead.js';
 import createDownloadLink from './services/downloadLink.js';
 import formForOpenPopUp from '../different/formForOpenPopUp.js';
+import createXlsxFileLink from './services/createXlsxFileLink.js';
 import createDeleteOrderForm from '../different/formForDeleteOrder.js';
 import getCurrentOrderStatus from './services/getCurrentOrdeStatus.js';
 import formForSetOrderStatus from '../different/formForSetOrderStatus.js';
-import createBackToOrderButton from './services/createBackToOrdersButton .js';
+import createBackToOrdersButton from './services/createBackToOrdersButton.js';
 
 var rowForMultiple = async (orders) => {
   var orderId = orders.order.id;
@@ -24,7 +24,7 @@ var rowForMultiple = async (orders) => {
   tr.append(
     await getOrderId(orderId),
     await getOrderDate(orderDate),
-    await renderXLSX(userId, orderId),
+    await createXlsxFileLink(userId, orderId),
     await getPhone(phone),
     await getCurrentOrderStatus(status),
     await createDownloadLink(userId, orderId),
@@ -43,7 +43,7 @@ var rowForMultiple = async (orders) => {
   await formForSetOrderStatus(userId, orderId);
 
   var userInfo = await getUserInfo(userId);
-  var backToOrdersButton = await createBackToOrderButton(userId);
+  var backToOrdersButton = await createBackToOrdersButton(userId);
 
   var openPopUp = await formForOpenPopUp(userId, orderId);
   var formForDeleteOrder = await createDeleteOrderForm(userId, orderId);

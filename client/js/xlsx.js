@@ -1,3 +1,4 @@
+import e from 'express';
 import rowForXLSX from './services/row/rowForXLSX.js';
 
 async function getXlsxDataInTable() {
@@ -19,12 +20,23 @@ async function getXlsxDataInTable() {
 
     var json = await response.json();
 
+    // if (json.msg == 'ENOENT: no such file or directory') {
+    //   alert('Не удалось открыть файл.\nОшибка: ' + err.message);
+    //   console.log(err.message);
+    //   window.location.href = '/orderinfo/orders/order/' + orderId;
+    // }
+
     await rowForXLSX(json, userId, orderId);
   } catch (err) {
-    if (err.message === 'Unexpected end of JSON input')
-      alert(`Не удалось прочитать файл\nОшибка: ${err.message}`);
-
-    window.location.href = '/orderinfo/orders/order/' + orderId;
+    if (err.message === 'Unexpected end of JSON input') {
+      alert('Не удалось прочитать файл\nОшибка: ' + err.message);
+      window.location.href = '/orderinfo/orders/order/' + orderId;
+    }
+    // else if (err.message === 'ENOENT: no such file or directory') {
+    //   alert('Не удалось открыть файл.\nОшибка: ' + err.message);
+    //   console.log(err.message);
+    //   window.location.href = '/orderinfo/orders/order/' + orderId;
+    //  }
   }
 }
 

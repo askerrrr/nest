@@ -30,7 +30,7 @@ var createTableHead = (orders) => {
 
   var tr = document.createElement('tr');
 
-  if (orders.order?.type) {
+  if (orders.order?.type == 'single') {
     tr.append(
       orderId,
       orderDate,
