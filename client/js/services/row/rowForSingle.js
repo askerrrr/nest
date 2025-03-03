@@ -1,18 +1,18 @@
-import renderDate from "./services/date.js";
-import renderPhone from "./services/phone.js";
-import openImage from "./services/openImage.js";
-import renderOrderId from "./services/orderId.js";
-import renderItemUrl from "./services/itemUrl.js";
-import getUserInfo from "./services/getUserInfo.js";
-import closePopUp from "../different/closePopUp.js";
-import backToOrders from "./services/backToOrders.js";
-import renderTableHead from "./services/tableHead.js";
-import renderDescription from "./services/description.js";
-import renderDownloadLink from "./services/downloadLink.js";
-import formForOpenPopUp from "../different/formForOpenPopUp.js";
-import createDeleteOrderForm from "../different/formForDeleteOrder.js";
-import renderCurrentOrderStatus from "./services/currentOrdeStatus.js";
-import formForSetOrderStatus from "../different/formForSetOrderStatus.js";
+import getPhone from './services/getPhone.js';
+import openImage from './services/openImage.js';
+import getItemUrl from './services/getItemUrl.js';
+import getOrderId from './services/getOrderId.js';
+import getUserInfo from './services/getUserInfo.js';
+import closePopUp from '../different/closePopUp.js';
+import backToOrders from './services/backToOrders.js';
+import createTableHead from './services/tableHead.js';
+import getOrderDate from './services/getOrderDate.js';
+import getDescription from './services/getDescription.js';
+import createDownloadLink from './services/downloadLink.js';
+import formForOpenPopUp from '../different/formForOpenPopUp.js';
+import getCurrentOrderStatus from './services/getCurrentOrdeStatus.js';
+import createDeleteOrderForm from '../different/formForDeleteOrder.js';
+import formForSetOrderStatus from '../different/formForSetOrderStatus.js';
 
 export default async function rowForSingle(orders) {
   var orderId = orders.order.id;
@@ -23,25 +23,26 @@ export default async function rowForSingle(orders) {
   var status = orders.order.orderStatus;
   var description = orders.order.description;
 
-  var tr = document.createElement("tr");
+  var tr = document.createElement('tr');
+
   tr.append(
-    renderOrderId(orderId),
-    renderDate(orderDate),
-    renderPhone(phone),
-    openImage(userId, orderId),
-    renderItemUrl(itemUrl),
-    renderDescription(description),
-    renderCurrentOrderStatus(status),
-    renderDownloadLink(userId, orderId)
+    await getOrderId(orderId),
+    await getOrderDate(orderDate),
+    await getPhone(phone),
+    await openImage(userId, orderId),
+    await getItemUrl(itemUrl),
+    await getDescription(description),
+    await getCurrentOrderStatus(status),
+    await createDownloadLink(userId, orderId),
   );
 
-  var tbody = document.createElement("tbody");
+  var tbody = document.createElement('tbody');
   tbody.append(tr);
   tbody.id = orderId;
 
-  var thead = renderTableHead(orders);
+  var thead = createTableHead(orders);
 
-  var table = document.getElementById("table");
+  var table = document.getElementById('table');
   table.append(thead, tbody);
 
   await closePopUp(orderId);
@@ -52,13 +53,13 @@ export default async function rowForSingle(orders) {
   var openPopUp = await formForOpenPopUp(userId, orderId);
   var formForDeleteOrder = await createDeleteOrderForm(userId, orderId);
 
-  var body = document.getElementById("orderInfo");
+  var body = document.getElementById('orderInfo');
   body.append(
     userInfo,
     buttonForbackToOrders,
     openPopUp,
     table,
-    formForDeleteOrder
+    formForDeleteOrder,
   );
 
   return body;

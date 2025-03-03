@@ -6,7 +6,7 @@ var getUserInfo = async (userId) => {
   btn.append(`ID пользователя: ${userId}`);
 
   var formForUserId = document.createElement('form');
-  formForUserId.action = `/orderinfo/orders/${userId}`;
+  formForUserId.action = '/orderinfo/orders/' + userId;
   formForUserId.append(btn);
 
   userInfo.append(formForUserId);

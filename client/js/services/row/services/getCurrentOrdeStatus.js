@@ -1,4 +1,4 @@
-var renderCurrentOrderStatus = async (status) => {
+var getCurrentOrderStatus = async (status) => {
   var td = document.createElement('td');
 
   let currentStatus = status.split(':')[0];
@@ -14,8 +14,8 @@ var renderCurrentOrderStatus = async (status) => {
       td.append('Взят в обработку');
       td.style.color = '#00c4ff';
       break;
-    case `purchased`:
-      currentStatus === `purchased`;
+    case 'purchased':
+      currentStatus === 'purchased';
       td.append('Выкуплен');
       td.style.color = '#edff01';
       break;
@@ -24,13 +24,13 @@ var renderCurrentOrderStatus = async (status) => {
       td.append('Прибыл на склад в Китае');
       td.style.color = '#edff01';
       break;
-    case `on-the-way`:
-      currentStatus === `on-the-way`;
+    case 'on-the-way':
+      currentStatus === 'on-the-way';
       td.append('В пути в Москву');
       td.style.color = '#c19aff';
       break;
-    case `awaiting-receipt`:
-      currentStatus === `awaiting-receipt`;
+    case 'awaiting-receipt':
+      currentStatus === 'awaiting-receipt';
       td.append('Ожидает получения');
       td.style.color = '#d201ff';
       break;
@@ -43,4 +43,4 @@ var renderCurrentOrderStatus = async (status) => {
   return td;
 };
 
-export default renderCurrentOrderStatus;
+export default getCurrentOrderStatus;

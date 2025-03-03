@@ -19,16 +19,15 @@ var formForSetOrderStatus = async (userId, orderId) => {
 
       document.getElementById('submit-order-status').disabled = true;
 
-      var response = await fetch(
-        '/status/' + userId + '/' + orderId + '/' + orderStatus,
-        {
-          method: 'PATCH',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
+      var url = '/status/' + userId + '/' + orderId + '/' + orderStatus;
+
+      var response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      );
+      });
 
       if (!response.ok) {
         var err = await response.text();

@@ -1,4 +1,4 @@
-var renderDownloadLink = async (userId, orderId) => {
+var createDownloadLink = async (userId, orderId) => {
   var btn = document.createElement('button');
   btn.append('Скачать файл');
 
@@ -6,7 +6,7 @@ var renderDownloadLink = async (userId, orderId) => {
 
   form.id = orderId;
   form.append(btn);
-  form.action = `/download/${userId}/${orderId}`;
+  form.action = '/download/' + userId + '/' + orderId;
 
   var td = document.createElement('td');
   td.append(form);
@@ -14,4 +14,4 @@ var renderDownloadLink = async (userId, orderId) => {
   return td;
 };
 
-export default renderDownloadLink;
+export default createDownloadLink;

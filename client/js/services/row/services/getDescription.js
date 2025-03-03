@@ -1,4 +1,4 @@
-var renderDescription = async (description) => {
+var getDescription = async (description) => {
   var qty = document.createElement('div');
   var size = document.createElement('div');
 
@@ -12,4 +12,4 @@ var renderDescription = async (description) => {
   return td;
 };
 
-export default renderDescription;
+export default getDescription;

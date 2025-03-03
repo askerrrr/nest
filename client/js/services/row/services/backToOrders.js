@@ -6,8 +6,7 @@ var backToOrders = async (userId) => {
 
   form.append(btn);
   form.className = 'backToOrders';
-  form.action = `/orderinfo/orders/${userId}`;
-
+  form.action = '/orderinfo/orders/' + userId;
   return form;
 };
 

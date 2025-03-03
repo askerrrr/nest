@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
-import { MongooseModule, Schema } from '@nestjs/mongoose';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { Item, ItemSchema } from 'src/schemas/item.schema';
 import { UserCollectionService } from './user.collection.service';
