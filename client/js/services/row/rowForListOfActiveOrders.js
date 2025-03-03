@@ -2,7 +2,7 @@ import getOrderId from './services/getOrderId.js';
 import getOrderDate from './services/getOrderDate.js';
 import getCurrentOrderStatus from './services/getCurrentOrdeStatus.js';
 
-export default async function rowForListOfActiveOrders(data) {
+var rowForListOfActiveOrders = async (data) => {
   document.title = 'Пользователь ' + data.userId;
   var tbody = document.createElement('tbody');
   var table = document.getElementById('active');
@@ -30,7 +30,7 @@ export default async function rowForListOfActiveOrders(data) {
   );
 
   if (completedOrders.length > 0) await showCompletedOrders(completedOrders);
-}
+};
 
 var showCompletedOrders = async (completedOrders) => {
   var btn = document.createElement('button');
@@ -93,3 +93,5 @@ var deleteCompeledOrders = async () => {
     form.remove();
   });
 };
+
+export default rowForListOfActiveOrders;

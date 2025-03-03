@@ -6,10 +6,9 @@ async function getOrderInfo() {
     var pathParts = window.location.pathname.split('/');
     var userId = pathParts.at(-1);
 
-    var response = await fetch(`/orderinfo/api/order/${userId}`, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-    });
+    var url = '/orderinfo/api/order/' + userId;
+
+    var response = await fetch(url);
 
     if (!response.ok) {
       var err = await response.text();

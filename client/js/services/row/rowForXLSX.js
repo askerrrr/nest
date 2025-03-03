@@ -1,16 +1,16 @@
 import getTotalSum from './services/getTotalSum.js';
-import backToOrder from './services/backToOrder.js';
-import getPriceOfEach from './services/getPriceOfEach.js';
+import getPriceOfEach from './services/getItemPrice.js';
 import getUrlFromXLSX from './services/getUrlFromXLSX.js';
-import tableHeadToXLSX from './services/tableHeadToXLSX.js';
 import getSizeFromXLSX from './services/getSizeFromXLSX.js';
 import { getItemId, setItemId } from './services/ItemId.js';
 import changeItemStatus from './services/changeItemStatus.js';
 import getImageFromXLSX from './services/getImageFromXLSX.js';
 import getQuantityFromXLSX from './services/getQuantityFromXLSX.js';
+import createTableHeadToXLSX from './services/createTableHeadToXLSX.js';
+import createBackToOrderButton from './services/createBackToOrderButton.js';
 
-export default async function rowForXLSX(sheetData, userId, orderId) {
-  var thead = tableHeadToXLSX();
+var rowForXLSX = async (sheetData, userId, orderId) => {
+  var thead = createTableHeadToXLSX();
   var tbody = document.createElement('tbody');
   var table = document.createElement('table');
 
@@ -20,7 +20,7 @@ export default async function rowForXLSX(sheetData, userId, orderId) {
     var qty = await getQuantityFromXLSX(item.qty);
     var size = await getSizeFromXLSX(item.size);
     var itemId = await getItemId(item.id);
-    var priceOfEach = await getPriceOfEach(item.priceOfEach);
+    var itemPrice = await getPriceOfEach(item.itemPrice);
     var totalSum = await getTotalSum(item.totalSum);
     var itemStatus = await changeItemStatus(userId, orderId, item.item);
 
@@ -30,7 +30,7 @@ export default async function rowForXLSX(sheetData, userId, orderId) {
       url,
       qty,
       size,
-      priceOfEach,
+      itemPrice,
       totalSum,
       itemStatus,
       itemId,
@@ -43,9 +43,13 @@ export default async function rowForXLSX(sheetData, userId, orderId) {
 
   table.append(thead, tbody);
 
+  var backToOrderButton = await createBackToOrderButton(userId, orderId);
+
   var body = document.getElementById('body');
 
-  body.append(backToOrder(userId, orderId), table);
+  body.append(backToOrderButton, table);
 
   return body;
-}
+};
+
+export default rowForXLSX;

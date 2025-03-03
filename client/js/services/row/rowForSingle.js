@@ -4,7 +4,7 @@ import getItemUrl from './services/getItemUrl.js';
 import getOrderId from './services/getOrderId.js';
 import getUserInfo from './services/getUserInfo.js';
 import closePopUp from '../different/closePopUp.js';
-import backToOrders from './services/backToOrders.js';
+import createBackToOrdersButton from './services/createBackToOrdersButton .js';
 import createTableHead from './services/tableHead.js';
 import getOrderDate from './services/getOrderDate.js';
 import getDescription from './services/getDescription.js';
@@ -49,14 +49,14 @@ export default async function rowForSingle(orders) {
   await formForSetOrderStatus(userId, orderId);
 
   var userInfo = await getUserInfo(userId);
-  var buttonForbackToOrders = await backToOrders(userId);
   var openPopUp = await formForOpenPopUp(userId, orderId);
+  var backToOrdersButton = await createBackToOrdersButton(userId);
   var formForDeleteOrder = await createDeleteOrderForm(userId, orderId);
 
   var body = document.getElementById('orderInfo');
   body.append(
     userInfo,
-    buttonForbackToOrders,
+    backToOrdersButton,
     openPopUp,
     table,
     formForDeleteOrder,

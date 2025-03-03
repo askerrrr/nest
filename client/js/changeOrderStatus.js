@@ -1,8 +1,10 @@
-export default async function changeOrderStatus(userId, orderId, status) {
+var changeOrderStatus = async (userId, orderId, status) => {
   try {
-    var response = await fetch(`/status/${userId}/${orderId}/${status}`, {
-      method: "POST",
-      headers: { Accept: "application/json" },
+    var url = '/status/' + userId + '/' + orderId + '/' + status;
+
+    var response = await fetch(url, {
+      method: 'PATCH',
+      headers: { Accept: 'application/json' },
     });
 
     if (!response.ok) {
@@ -15,4 +17,6 @@ export default async function changeOrderStatus(userId, orderId, status) {
   } catch (err) {
     console.log(err);
   }
-}
+};
+
+export default changeOrderStatus;

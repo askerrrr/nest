@@ -3,7 +3,7 @@ import getUserName from './services/userName.js';
 import getFirstName from './services/firstName.js';
 import getOrderInfo from './services/orderInfo.js';
 
-export default async function rowForUserList(order) {
+var rowForUserList = async (order) => {
   var userId = order.userId;
   var firstName = order.firstName;
   var userName = order.userName;
@@ -28,4 +28,6 @@ export default async function rowForUserList(order) {
   body.append(table);
 
   return body;
-}
+};
+
+export default rowForUserList;

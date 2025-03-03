@@ -7,7 +7,9 @@ async function getXlsxDataInTable() {
     var userId = pathParts[2];
     var orderId = pathParts[3];
 
-    var response = await fetch(`/xlsx/api/${userId}/${orderId}`);
+    var url = '/xlsx/api/' + userId + '/' + orderId;
+
+    var response = await fetch(url);
 
     if (!response.ok) {
       var err = await response.text();

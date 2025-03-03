@@ -40,25 +40,25 @@ export class XlsxService {
     var qty: any = [];
     var size: any = [];
     var totalSum: any = [];
-    var priceOfEach: any = [];
+    var itemPrice: any = [];
 
     ws.getColumn(2).eachCell((b) => url.push(b.text || ''));
     ws.getColumn(3).eachCell((c) => qty.push(c.text || ''));
     ws.getColumn(4).eachCell((d) => size.push(d.text || ''));
-    ws.getColumn(5).eachCell((e) => priceOfEach.push(e.text || 0));
+    ws.getColumn(5).eachCell((e) => itemPrice.push(e.text || 0));
     ws.getColumn(7).eachCell((g) => totalSum.push(g.text || 0));
 
     url.shift();
     qty.shift();
     size.shift();
     totalSum = totalSum.slice(0, 1);
-    priceOfEach.shift();
+    itemPrice.shift();
 
-    return [url, qty, size, totalSum, priceOfEach];
+    return [url, qty, size, totalSum, itemPrice];
   }
 
   async combineData(data, image, items, itemId) {
-    var [url, qty, size, totalSum, priceOfEach] = data;
+    var [url, qty, size, totalSum, itemPrice] = data;
     var fileData: any = [];
 
     for (let i = 0; i < url.length; i++) {
@@ -69,7 +69,7 @@ export class XlsxService {
         size: size[i],
         img: image[i],
         item: items[i],
-        priceOfEach: priceOfEach[i],
+        itemPrice: itemPrice[i],
         totalSum: totalSum[i],
       });
     }

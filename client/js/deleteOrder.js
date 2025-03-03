@@ -1,8 +1,10 @@
 export default async function deleteOrder(userId, orderId) {
   try {
-    var response = await fetch(`/orderinfo/api/delete/${userId}/${orderId}`, {
-      method: "DELETE",
-      headers: { Accept: "application/json" },
+    var url = '/orderinfo/api/delete/' + userId + '/' + orderId;
+
+    var response = await fetch(url, {
+      method: 'DELETE',
+      headers: { Accept: 'application/json' },
     });
 
     if (!response.ok) {
@@ -11,7 +13,7 @@ export default async function deleteOrder(userId, orderId) {
       return;
     }
 
-    window.location.href = `/orderinfo/orders/${userId}`;
+    window.location.href = '/orderinfo/orders/' + userId;
   } catch (err) {
     console.log(err);
   }

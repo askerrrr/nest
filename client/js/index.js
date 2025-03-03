@@ -2,10 +2,7 @@ import rowForUserList from './services/row/rowForUserList.js';
 
 async function GetUsers() {
   try {
-    var response = await fetch('/api/users', {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-    });
+    var response = await fetch('/api/users');
 
     if (!response.ok) {
       var err = await response.text();
