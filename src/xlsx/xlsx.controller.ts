@@ -1,7 +1,8 @@
 import { join } from 'path';
 import { Response } from 'express';
-import { XlsxService } from './xlsx.service';
 import { Get, Controller, Res, Param } from '@nestjs/common';
+
+import { XlsxService } from './xlsx.service';
 import { UserCollectionService } from 'src/database/user.collection.service';
 import { ItemCollectionService } from 'src/database/item-status.collection.service';
 
@@ -27,8 +28,12 @@ export class XlsxController {
 
     var items = await this.itemCollection.getItems(userId, orderId);
     var itemId = await this.itemCollection.getItemId(userId, orderId);
-    var imgData = await this.xlsxService.getImageFromXLSX(filePath);
-    var xlsxData = await this.xlsxService.getDataFromXLSX(filePath);
+    var imgData = await this.xlsxService.getImageFromXLSX(
+      'C:\\Users\\Adm\\Desktop\\510709571140.xlsx',
+    );
+    var xlsxData = await this.xlsxService.getDataFromXLSX(
+      'C:\\Users\\Adm\\Desktop\\510709571140.xlsx',
+    );
 
     var combinedData = this.xlsxService.combineData(
       xlsxData,
@@ -46,6 +51,8 @@ export class XlsxController {
       param.userId,
       param.orderId,
     );
+
+    //'C:\\Users\\Adm\\Desktop\\510709571140.xlsx',
 
     var fileIsExists = await this.xlsxService.checkFileExists(filePath);
 

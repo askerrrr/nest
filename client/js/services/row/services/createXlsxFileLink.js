@@ -14,9 +14,9 @@ var createXlsxFileLink = async (userId, orderId) => {
     if (!fileIsExists) {
       alert('Не удалось найти файл');
       return;
+    } else {
+      window.location.href = '/xlsx/' + userId + '/' + orderId;
     }
-
-    window.location.href = '/xlsx/' + userId + '/' + orderId;
   });
 
   var td = document.createElement('td');
