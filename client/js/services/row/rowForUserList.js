@@ -1,7 +1,7 @@
-import getUserId from './services/link.js';
 import getUserName from './services/userName.js';
 import getFirstName from './services/firstName.js';
 import getOrderInfo from './services/orderInfo.js';
+import createAllOrdersLink from './services/createAllOrdersLink.js';
 
 var rowForUserList = async (order) => {
   var userId = order.userId;
@@ -12,7 +12,7 @@ var rowForUserList = async (order) => {
 
   var firstNames = await getFirstName(firstName);
   var userNames = await getUserName(userName);
-  var userIDs = await getUserId(userId);
+  var userIDs = await createAllOrdersLink(userId);
   var userInfo = await getOrderInfo(order);
 
   tr.append(firstNames, userNames, userIDs, userInfo);

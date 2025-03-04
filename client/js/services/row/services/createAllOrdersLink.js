@@ -1,4 +1,4 @@
-var getUserId = async (userId) => {
+var createAllOrdersLink = async (userId) => {
   var btn = document.createElement('button');
   btn.append(userId);
 
@@ -14,4 +14,4 @@ var getUserId = async (userId) => {
   return td;
 };
 
-export default getUserId;
+export default createAllOrdersLink;
