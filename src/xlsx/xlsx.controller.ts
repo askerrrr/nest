@@ -28,12 +28,8 @@ export class XlsxController {
 
     var items = await this.itemCollection.getItems(userId, orderId);
     var itemId = await this.itemCollection.getItemId(userId, orderId);
-    var imgData = await this.xlsxService.getImageFromXLSX(
-      'C:\\Users\\Adm\\Desktop\\510709571140.xlsx',
-    );
-    var xlsxData = await this.xlsxService.getDataFromXLSX(
-      'C:\\Users\\Adm\\Desktop\\510709571140.xlsx',
-    );
+    var imgData = await this.xlsxService.getImageFromXLSX(filePath);
+    var xlsxData = await this.xlsxService.getDataFromXLSX(filePath);
 
     var combinedData = this.xlsxService.combineData(
       xlsxData,
