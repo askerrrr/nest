@@ -7,10 +7,10 @@ import closePopUp from '../different/closePopUp.js';
 import createTableHead from './services/tableHead.js';
 import getOrderDate from './services/getOrderDate.js';
 import getDescription from './services/getDescription.js';
-import createDownloadLink from './services/downloadLink.js';
 import formForOpenPopUp from '../different/formForOpenPopUp.js';
 import getCurrentOrderStatus from './services/getCurrentOrdeStatus.js';
 import createDeleteOrderForm from '../different/formForDeleteOrder.js';
+import createDownloadFileLink from './services/createDownloadFileLink.js';
 import formForSetOrderStatus from '../different/formForSetOrderStatus.js';
 import createBackToOrdersButton from './services/createBackToOrdersButton.js';
 
@@ -33,7 +33,7 @@ export default async function rowForSingle(orders) {
     await getItemUrl(itemUrl),
     await getDescription(description),
     await getCurrentOrderStatus(status),
-    await createDownloadLink(userId, orderId),
+    await createDownloadFileLink(userId, orderId),
   );
 
   var tbody = document.createElement('tbody');

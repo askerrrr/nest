@@ -1,13 +1,13 @@
 import checkFileExists from './checkFileExists.js';
 
-var createXlsxFileLink = async (userId, orderId) => {
+var createDownloadFileLink = async (userId, orderId) => {
   var btn = document.createElement('button');
-  btn.append('Открыть файл');
+  btn.append('Скачать файл');
 
   btn.addEventListener('click', async (e) => {
     e.preventDefault();
 
-    var requestAddress = '/xlsx/check/' + userId + '/' + orderId;
+    var requestAddress = '/download/check/' + userId + '/' + orderId;
 
     var fileIsExists = await checkFileExists(requestAddress);
 
@@ -16,7 +16,7 @@ var createXlsxFileLink = async (userId, orderId) => {
       return;
     }
 
-    window.location.href = '/xlsx/' + userId + '/' + orderId;
+    window.location.href = '/download/' + userId + '/' + orderId;
   });
 
   var td = document.createElement('td');
@@ -25,4 +25,4 @@ var createXlsxFileLink = async (userId, orderId) => {
   return td;
 };
 
-export default createXlsxFileLink;
+export default createDownloadFileLink;

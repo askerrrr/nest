@@ -13,7 +13,7 @@ import { ItemIdModule } from 'src/item-id/item-id.module';
 import { BotApiModule } from 'src/bot-api/bot-api.module';
 import { DatabaseModule } from 'src/database/database.module';
 import { ItemStatusModule } from 'src/item-status/item-status.module';
-import { DownloadImgModule } from 'src/download-img/download-img.module';
+import { OpenImgModule } from 'src/open-img/open-img.module';
 import { DownloadFileModule } from 'src/download-docs/download-docs.module';
 import { OrderStatusModule } from 'src/order-status/order-status.module';
 
@@ -26,10 +26,10 @@ import { OrderStatusModule } from 'src/order-status/order-status.module';
     OrderModule,
     ItemIdModule,
     BotApiModule,
+    OpenImgModule,
     DatabaseModule,
-    OrderStatusModule,
     ItemStatusModule,
-    DownloadImgModule,
+    OrderStatusModule,
     DownloadFileModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forRoot('mongodb://localhost/database'),

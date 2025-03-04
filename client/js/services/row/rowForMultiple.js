@@ -4,11 +4,11 @@ import closePopUp from '../different/closePopUp.js';
 import getUserInfo from './services/getUserInfo.js';
 import getOrderDate from './services/getOrderDate.js';
 import createTableHead from './services/tableHead.js';
-import createDownloadLink from './services/downloadLink.js';
 import formForOpenPopUp from '../different/formForOpenPopUp.js';
 import createXlsxFileLink from './services/createXlsxFileLink.js';
 import createDeleteOrderForm from '../different/formForDeleteOrder.js';
 import getCurrentOrderStatus from './services/getCurrentOrdeStatus.js';
+import createDownloadFileLink from './services/createDownloadFileLink.js';
 import formForSetOrderStatus from '../different/formForSetOrderStatus.js';
 import createBackToOrdersButton from './services/createBackToOrdersButton.js';
 
@@ -27,7 +27,7 @@ var rowForMultiple = async (orders) => {
     await createXlsxFileLink(userId, orderId),
     await getPhone(phone),
     await getCurrentOrderStatus(status),
-    await createDownloadLink(userId, orderId),
+    await createDownloadFileLink(userId, orderId),
   );
 
   var tbody = document.createElement('tbody');

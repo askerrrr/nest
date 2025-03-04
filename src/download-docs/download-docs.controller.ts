@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { access, constants } from 'fs/promises';
 import { Get, Param, Res, Controller } from '@nestjs/common';
 import { DownloadFileService } from './download-docs.service';
 
@@ -14,10 +13,18 @@ export class DownloadFileController {
       param.orderId,
     );
 
-    await access(filePath, constants.F_OK)
-      .then(() => res.download(filePath))
-      .catch(() => {
-        res.status(404).send({ msg: filePath + 'the file does not exist' });
-      });
+    res.download(filePath);
+  }
+
+  @Get('check/:userId/:orderId')
+  async checkFileExists(@Param() param) {
+    var filePath = await this.downloadFileService.downloadFile(
+      param.userId,
+      param.orderId,
+    );
+
+    var fileIsExists = await this.downloadFileService.checkFileExists(filePath);
+
+    return { fileIsExists };
   }
 }

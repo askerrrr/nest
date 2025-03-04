@@ -1,7 +1,5 @@
-var checkFileExists = async (userId, orderId) => {
-  var url = '/xlsx/check/' + userId + '/' + orderId;
-
-  var response = await fetch(url);
+var checkFileExists = async ( requestAddress) => {
+  var response = await fetch(requestAddress);
 
   var json = await response.json();
 
