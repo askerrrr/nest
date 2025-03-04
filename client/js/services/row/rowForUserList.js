@@ -1,6 +1,6 @@
 import getUserName from './services/userName.js';
-import getFirstName from './services/firstName.js';
 import getOrderInfo from './services/orderInfo.js';
+import getFirstName from './services/getFirstName.js';
 import createAllOrdersLink from './services/createAllOrdersLink.js';
 
 var rowForUserList = async (order) => {

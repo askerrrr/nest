@@ -1,6 +1,6 @@
 import rowForListOfActiveOrders from './services/row/rowForListOfActiveOrders.js';
 
-async function getOrderList() {
+var getOrderList = async () => {
   try {
     var pathParts = window.location.pathname.split('/');
     var userId = pathParts.at(-1);
@@ -21,6 +21,6 @@ async function getOrderList() {
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 getOrderList();

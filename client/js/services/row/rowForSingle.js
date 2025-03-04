@@ -4,7 +4,6 @@ import getItemUrl from './services/getItemUrl.js';
 import getOrderId from './services/getOrderId.js';
 import getUserInfo from './services/getUserInfo.js';
 import closePopUp from '../checkbox/closePopUp.js';
-import createTableHead from './services/tableHead.js';
 import getOrderDate from './services/getOrderDate.js';
 import getDescription from './services/getDescription.js';
 import formForOpenPopUp from '../checkbox/formForOpenPopUp.js';
@@ -12,6 +11,7 @@ import getCurrentOrderStatus from './services/getCurrentOrdeStatus.js';
 import createDeleteOrderForm from '../different/formForDeleteOrder.js';
 import createDownloadFileLink from './services/createDownloadFileLink.js';
 import formForSetOrderStatus from '../checkbox/formForSetOrderStatus.js';
+import createTableHeadForOrder from './services/createTableHeadForOrder.js';
 import createBackToOrdersButton from './services/createBackToOrdersButton.js';
 
 export default async function rowForSingle(orders) {
@@ -40,7 +40,7 @@ export default async function rowForSingle(orders) {
   tbody.append(tr);
   tbody.id = orderId;
 
-  var thead = createTableHead(orders);
+  var thead = createTableHeadForOrder(orders);
 
   var table = document.getElementById('table');
   table.append(thead, tbody);

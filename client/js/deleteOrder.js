@@ -1,4 +1,4 @@
-export default async function deleteOrder(userId, orderId) {
+var deleteOrder = async (userId, orderId) => {
   try {
     var url = '/orderinfo/api/delete/' + userId + '/' + orderId;
 
@@ -17,4 +17,6 @@ export default async function deleteOrder(userId, orderId) {
   } catch (err) {
     console.log(err);
   }
-}
+};
+
+export default deleteOrder;

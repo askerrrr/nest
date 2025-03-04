@@ -1,7 +1,7 @@
 import rowForSingle from './services/row/rowForSingle.js';
 import rowForMultiple from './services/row/rowForMultiple.js';
 
-async function getOrderInfo() {
+var getOrderInfo = async () => {
   try {
     var pathParts = window.location.pathname.split('/');
     var userId = pathParts.at(-1);
@@ -24,6 +24,6 @@ async function getOrderInfo() {
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 getOrderInfo();

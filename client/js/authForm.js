@@ -1,4 +1,4 @@
-async function formHandler() {
+var formHandler = async () => {
   var form = document.getElementById('auth-form');
 
   return form.addEventListener('submit', async (e) => {
@@ -26,6 +26,6 @@ async function formHandler() {
       ? (window.location.href = '/')
       : (window.location.href = '/auth/login');
   });
-}
+};
 
 formHandler();

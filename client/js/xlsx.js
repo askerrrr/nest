@@ -1,6 +1,6 @@
 import rowForXLSX from './services/row/rowForXLSX.js';
 
-async function getXlsxDataInTable() {
+var getXlsxDataInTable = async () => {
   try {
     var pathParts = window.location.pathname.split('/');
 
@@ -26,6 +26,6 @@ async function getXlsxDataInTable() {
       window.location.href = '/orderinfo/orders/order/' + orderId;
     }
   }
-}
+};
 
 getXlsxDataInTable();

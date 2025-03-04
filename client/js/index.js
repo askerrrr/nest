@@ -1,6 +1,6 @@
 import rowForUserList from './services/row/rowForUserList.js';
 
-async function GetUsers() {
+var GetUsers = async () => {
   try {
     var response = await fetch('/api/users');
 
@@ -16,6 +16,6 @@ async function GetUsers() {
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 GetUsers();

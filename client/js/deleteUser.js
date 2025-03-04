@@ -1,4 +1,4 @@
-export default async function deleteUser(userId) {
+var deleteUser = async (userId) => {
   try {
     var url = '/orderinfo/api/delete/' + userId;
 
@@ -17,4 +17,6 @@ export default async function deleteUser(userId) {
   } catch (err) {
     console.log(err);
   }
-}
+};
+
+export default deleteUser;

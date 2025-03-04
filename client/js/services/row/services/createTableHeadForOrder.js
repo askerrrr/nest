@@ -1,4 +1,4 @@
-var createTableHead = (orders) => {
+var createTableHeadForOrder = (orders) => {
   var phone = document.createElement('th');
   phone.append('Телефон');
 
@@ -54,4 +54,4 @@ var createTableHead = (orders) => {
   return thead;
 };
 
-export default createTableHead;
+export default createTableHeadForOrder;

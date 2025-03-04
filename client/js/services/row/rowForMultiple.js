@@ -3,13 +3,13 @@ import getOrderId from './services/getOrderId.js';
 import closePopUp from '../checkbox/closePopUp.js';
 import getUserInfo from './services/getUserInfo.js';
 import getOrderDate from './services/getOrderDate.js';
-import createTableHead from './services/tableHead.js';
 import formForOpenPopUp from '../checkbox/formForOpenPopUp.js';
 import createXlsxFileLink from './services/createXlsxFileLink.js';
 import createDeleteOrderForm from '../different/formForDeleteOrder.js';
 import getCurrentOrderStatus from './services/getCurrentOrdeStatus.js';
 import createDownloadFileLink from './services/createDownloadFileLink.js';
 import formForSetOrderStatus from '../checkbox/formForSetOrderStatus.js';
+import createTableHeadForOrder from './services/createTableHeadForOrder.js';
 import createBackToOrdersButton from './services/createBackToOrdersButton.js';
 
 var rowForMultiple = async (orders) => {
@@ -34,7 +34,7 @@ var rowForMultiple = async (orders) => {
   tbody.append(tr);
   tbody.id = orderId;
 
-  var thead = createTableHead(orders);
+  var thead = createTableHeadForOrder(orders);
 
   var table = document.getElementById('table');
   table.append(thead, tbody);
