@@ -25,6 +25,7 @@ export class XlsxController {
     var orderId = param.orderId;
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
+    //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
     var items = await this.itemCollection.getItems(userId, orderId);
     var itemId = await this.itemCollection.getItemId(userId, orderId);
@@ -48,7 +49,7 @@ export class XlsxController {
       param.orderId,
     );
 
-    //'C:\\Users\\Adm\\Desktop\\510709571140.xlsx',
+    //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
     var fileIsExists = await this.xlsxService.checkFileExists(filePath);
 

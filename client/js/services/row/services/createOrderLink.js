@@ -1,14 +1,16 @@
-var createBackToOrderButton = async (userId, orderId) => {
+var createOrderLink = async (userId, orderId) => {
   var btn = document.createElement('button');
-  btn.append('Назад');
+  btn.append(orderId);
 
   var form = document.createElement('form');
 
   form.append(btn);
-  form.className = 'backToOrders';
   form.action = '/orderinfo/orders/order/' + userId + '/' + orderId;
 
-  return form;
+  var td = document.createElement('td');
+  td.append(form);
+
+  return td;
 };
 
-export default createBackToOrderButton;
+export default createOrderLink;

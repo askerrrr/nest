@@ -17,7 +17,7 @@ export class OrderController {
     return this.orderService.getOrderData(param.orderId);
   }
 
-  @Get('/orders/order/:orderId')
+  @Get('/orders/order/:userId/:orderId')
   async getOrderFile(@Res() res: Response) {
     return res.sendFile(
       join(__dirname, '..', '..', 'client', 'html', 'userOrder.html'),
