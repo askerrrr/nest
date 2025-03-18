@@ -30,6 +30,7 @@
     "@nestjs/typeorm": "^11.0.0",
     "cookie-parser": "^1.4.7",
     "exceljs": "^4.4.0",
+    "helmet": "^8.1.0",
     "jszip": "^3.10.1",
     "mongoose": "^8.10.1",
     "reflect-metadata": "^0.2.2",
