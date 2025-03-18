@@ -9,10 +9,7 @@ export class AuthController {
 
   @Get('login')
   async getAuthForm(@Res() res: Response) {
-    console.log(__dirname);
-    return res.sendFile(
-      join(__dirname, '/../../src/client/html/authForm.html'),
-    );
+    return res.sendFile(join(__dirname, '../../src/client/html/authForm.html'));
   }
   @Post('login/check')
   async checkLogin(@Body() body: Object, @Res({ passthrough: true }) res) {
