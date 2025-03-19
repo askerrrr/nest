@@ -9,43 +9,42 @@ export class ItemCollectionService {
   ) {}
 
   async getItemId(userId, orderId) {
-    var user = await this.itemCollection.findOne({ userId }).exec();
-
-    var order = user?.orders.find((e) => e.order.id == orderId);
-    var itemId: any[string] = order?.order.itemId;
+    var { orders }: any = await this.itemCollection.findOne({ userId }).exec();
+    var { order } = orders.find((e) => e.order.id == orderId);
+    var { itemId } = order;
 
     return itemId;
   }
 
   async getItems(userId, orderId) {
-    var document = await this.itemCollection.findOne({ userId }).exec();
-    var result = document?.orders.find((e) => e.order.id == orderId);
-
-    var items: any[string] = result?.order.items;
+    var { orders }: any = await this.itemCollection.findOne({ userId }).exec();
+    var { order } = orders.find((e) => e.order.id == orderId);
+    var { items } = order;
 
     return items;
   }
 
-  async updateItemId(userId, orderId, index, newItemId) {
-    var itemsId = await this.getItemId(userId, orderId);
-
-    itemsId[index] = newItemId;
-
-    await this.itemCollection.updateOne(
+  async updateItemId(userId, orderId, itemIDs) {
+    var result = await this.itemCollection.updateOne(
       { userId, 'orders.order.id': orderId },
       {
-        $set: { 'orders.$.order.itemId': itemsId },
+        $set: { 'orders.$.order.itemId': itemIDs },
       },
     );
+
+    return result.modifiedCount;
   }
 
   async updateItemStatus(userId, orderId, items) {
-    await this.itemCollection.updateOne(
+    var result = await this.itemCollection.updateOne(
       { userId, 'orders.order.id': orderId },
       {
         $set: { 'orders.$.order.items': items },
       },
     );
+    console.log('result: ', result);
+
+    return result.modifiedCount;
   }
 
   async createItemStatus(user) {
@@ -62,21 +61,19 @@ export class ItemCollectionService {
       },
     );
 
-    var items = url.map((item, index) => {
-      {
-        if (item?.startsWith('http')) {
-          return item.split('://')[1] + ':::' + 0;
-        } else {
-          return 'неопознанная ссылка' + index + ':::' + 0;
-        }
-      }
-    });
+    var items = url.map((e, i) =>
+      e?.startsWith('http')
+        ? e.split('://')[1] + ':::' + 0 + ':::' + 0
+        : 'неопознанная ссылка' + i + ':::' + 0 + ':::' + 0,
+    );
 
-    return await this.itemCollection.updateOne(
+    var result = await this.itemCollection.updateOne(
       { userId: userId, 'orders.order.id': orderId },
       {
         $set: { 'orders.$.order.items': items },
       },
     );
+
+    return result.modifiedCount;
   }
 }

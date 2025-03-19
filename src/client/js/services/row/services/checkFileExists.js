@@ -1,5 +1,5 @@
-var checkFileExists = async ( requestAddress) => {
-  var response = await fetch(requestAddress);
+var checkFileExists = async (url) => {
+  var response = await fetch(url);
 
   var json = await response.json();
 

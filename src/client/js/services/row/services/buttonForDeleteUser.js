@@ -1,30 +1,30 @@
-import deleteUser from '../../../deleteUser.js';
+import deleteUser from "../../../deleteUser.js";
 
 var buttonForDeleteUser = async (userId) => {
-  var btn = document.createElement('button');
-  btn.type = 'submit';
-  btn.append('Удалить');
+  var btn = document.createElement("button");
+  btn.type = "submit";
+  btn.append("Удалить");
 
-  btn.addEventListener('click', async (e) => {
+  btn.addEventListener("click", async (e) => {
     e.preventDefault();
 
     var tbody = document.getElementById(userId);
 
-    var table = document.getElementById('homepage');
+    var table = document.getElementById("homepage");
     table.removeChild(tbody);
 
-    alert('Пользователь был удален');
+    alert("Пользователь был удален");
 
-    window.location.href = '/orderinfo/users';
+    window.location.href = "/orderinfo/users";
 
     return deleteUser(userId);
   });
 
-  var form = document.createElement('form');
-  form.action = '/orderinfo/delete/' + userId;
+  var form = document.createElement("form");
+  form.action = "/orderinfo/delete/" + userId;
   form.append(btn);
 
-  var td = document.createElement('td');
+  var td = document.createElement("td");
   td.append(form);
 
   return td;

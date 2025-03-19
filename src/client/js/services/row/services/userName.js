@@ -1,5 +1,5 @@
 var getUserName = async (userName) => {
-  var td = document.createElement('td');
+  var td = document.createElement("td");
   td.append(userName);
 
   return td;

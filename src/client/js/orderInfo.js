@@ -1,29 +1,27 @@
-import rowForSingle from './services/row/rowForSingle.js';
-import rowForMultiple from './services/row/rowForMultiple.js';
+import rowForSingle from "./services/row/rowForSingle.js";
+import rowForMultiple from "./services/row/rowForMultiple.js";
 
 var getOrderInfo = async () => {
-  try {
-    var pathParts = window.location.pathname.split('/');
-    var userId = pathParts.at(-1);
+  var pathParts = window.location.pathname.split("/");
 
-    var url = '/orderinfo/api/order/' + userId;
+  var userId = pathParts.at(-2);
+  var orderId = pathParts.at(-1);
 
-    var response = await fetch(url);
+  var url = "/orderinfo/api/order/" + userId + "/" + orderId;
 
-    if (!response.ok) {
-      var err = await response.text();
-      console.log(err);
-      return;
-    }
+  var response = await fetch(url);
 
-    var orders = await response.json();
-
-    return orders.order.type == 'single'
-      ? await rowForSingle(orders)
-      : await rowForMultiple(orders);
-  } catch (err) {
-    console.log(err);
+  if (!response.ok) {
+    var err = await response.text();
+    alert("error: ", err);
+    return;
   }
+
+  var { order } = await response.json();
+
+  return order.type == "single"
+    ? await rowForSingle(order)
+    : await rowForMultiple(order);
 };
 
-getOrderInfo();
+getOrderInfo().catch((err) => alert("error: ", err));

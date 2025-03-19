@@ -1,5 +1,5 @@
 var getPhone = async (phone) => {
-  var td = document.createElement('td');
+  var td = document.createElement("td");
   td.append(phone);
 
   return td;

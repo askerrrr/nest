@@ -1,15 +1,22 @@
+import { Response } from 'express';
 import { ItemStatusService } from './item-status.service';
-import { Get, Param, Body, Patch, Controller } from '@nestjs/common';
+import { Get, Param, Body, Patch, Res, Controller } from '@nestjs/common';
 
-@Controller('itemstatus')
-export class ItemStatusController {
+@Controller('purchasedstatus')
+export class PurchasedStatusController {
   constructor(private readonly itemStatusService: ItemStatusService) {}
 
   @Patch()
-  async changeItemStatus(@Body() body) {
+  async changePurchasedtatus(@Body() body, @Res() res: Response) {
     var { userId, orderId, item } = body;
 
-    return this.itemStatusService.changeItemStatus(userId, orderId, item);
+    var responseStatus = await this.itemStatusService.changePurchasedStatus(
+      userId,
+      orderId,
+      item,
+    );
+
+    res.sendStatus(responseStatus);
   }
 
   @Get('/:userId/:orderId')

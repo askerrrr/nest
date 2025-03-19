@@ -1,30 +1,33 @@
-import getTotalSum from './services/getTotalSum.js';
-import getPriceOfEach from './services/getItemPrice.js';
-import getUrlFromXLSX from './services/getUrlFromXLSX.js';
-import getSizeFromXLSX from './services/getSizeFromXLSX.js';
-import { getItemId, setItemId } from './services/ItemId.js';
-import changeItemStatus from './services/changeItemStatus.js';
-import getImageFromXLSX from './services/getImageFromXLSX.js';
-import getQuantityFromXLSX from './services/getQuantityFromXLSX.js';
-import createTableHeadToXLSX from './services/createTableHeadToXLSX.js';
-import createBackToOrderButton from './services/createBackToOrderButton.js';
+import getItemId from "./services/getItemId.js";
+import setItemId from "./services/setItemId.js";
+import getTotalSum from "./services/getTotalSum.js";
+import getPriceOfEach from "./services/getItemPrice.js";
+import getUrlFromXLSX from "./services/getUrlFromXLSX.js";
+import getSizeFromXLSX from "./services/getSizeFromXLSX.js";
+import getImageFromXLSX from "./services/getImageFromXLSX.js";
+import getQuantityFromXLSX from "./services/getQuantityFromXLSX.js";
+import changeDeliveryStatus from "./services/changeDeliveryStatus.js";
+import changePurchasedStatus from "./services/changePurchasedStatus.js";
+import createTableHeadToXLSX from "./services/createTableHeadToXLSX.js";
+import createBackToOrderButton from "./services/createBackToOrderButton.js";
 
 var rowForXLSX = async (sheetData, userId, orderId) => {
   var thead = createTableHeadToXLSX();
-  var tbody = document.createElement('tbody');
-  var table = document.createElement('table');
+  var tbody = document.createElement("tbody");
+  var table = document.createElement("table");
 
-  sheetData.forEach(async (item, index) => {
-    var img = await getImageFromXLSX(item.img);
-    var url = await getUrlFromXLSX(item.url);
-    var qty = await getQuantityFromXLSX(item.qty);
-    var size = await getSizeFromXLSX(item.size);
-    var itemId = await getItemId(item.id);
-    var itemPrice = await getPriceOfEach(item.itemPrice);
-    var totalSum = await getTotalSum(item.totalSum);
-    var itemStatus = await changeItemStatus(userId, orderId, item.item);
+  sheetData.forEach(async (e, index) => {
+    var img = await getImageFromXLSX(e.img);
+    var url = await getUrlFromXLSX(e.url);
+    var qty = await getQuantityFromXLSX(e.qty);
+    var size = await getSizeFromXLSX(e.size);
+    var itemId = await getItemId(e.id);
+    var itemPrice = await getPriceOfEach(e.itemPrice);
+    var totalSum = await getTotalSum(e.totalSum);
+    var purchasedStatus = await changePurchasedStatus(userId, orderId, e.item);
+    var deliveryStatus = await changeDeliveryStatus(userId, orderId, e.item);
 
-    var tr = document.createElement('tr');
+    var tr = document.createElement("tr");
     tr.append(
       img,
       url,
@@ -32,9 +35,10 @@ var rowForXLSX = async (sheetData, userId, orderId) => {
       size,
       itemPrice,
       totalSum,
-      itemStatus,
+      purchasedStatus,
+      deliveryStatus,
       itemId,
-      await setItemId(userId, orderId, index),
+      await setItemId(userId, orderId, index)
     );
 
     tbody.append(tr);
@@ -45,7 +49,7 @@ var rowForXLSX = async (sheetData, userId, orderId) => {
 
   var backToOrderButton = await createBackToOrderButton(userId, orderId);
 
-  var body = document.getElementById('body');
+  var body = document.getElementById("body");
 
   body.append(backToOrderButton, table);
 

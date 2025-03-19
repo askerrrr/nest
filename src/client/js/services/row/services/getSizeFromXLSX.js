@@ -1,8 +1,8 @@
 var getQuantityFromXLSX = async (size) => {
-  var td = document.createElement('td');
+  var td = document.createElement("td");
 
   if (size.length == 0) {
-    td.append('Пусто');
+    td.append("Пусто");
 
     return td;
   }

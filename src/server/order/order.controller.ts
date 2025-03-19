@@ -15,7 +15,7 @@ export class OrderController {
     return await this.orderService.getUserData(userId);
   }
 
-  @Get('api/order/:orderId')
+  @Get('api/order/:userId/:orderId')
   async getOrder(@Param() param) {
     var { orderId } = param;
 
@@ -33,11 +33,35 @@ export class OrderController {
   async getOrderList(@Param() param, @Res() res: Response) {
     var { userId } = param;
 
-    var orders = await this.orderService.getOrderList(userId);
+    var activeOrders = await this.orderService.getActiveOrders(userId);
+    var completedOrders = await this.orderService.getCompletedOrders(userId);
 
-    return orders
-      ? res.sendFile(join(__dirname, '../../src/client/html/ordersList.html'))
-      : res.sendFile(join(__dirname, '../../src/client/html/noOrders.html'));
+    var active = join(__dirname, '../../src/client/html/activeOrders.html');
+    var completed = join(
+      __dirname,
+      '../../src/client/html/completedOrders.html',
+    );
+    var noOrders = join(__dirname, '../../src/client/html/noOrders.html');
+
+    if (
+      activeOrders?.length &&
+      (completedOrders?.length || !completedOrders?.length)
+    ) {
+      res.sendFile(active);
+    } else if (!activeOrders?.length && completedOrders?.length) {
+      res.sendFile(completed);
+    } else if (!activeOrders?.length && !completedOrders?.length) {
+      res.sendFile(noOrders);
+    }
+  }
+
+  @Get('/api/completed/:userId')
+  async getCompletedOrders(@Param() param) {
+    var { userId } = param;
+
+    var completedOrders = this.orderService.getCompletedOrders(userId);
+
+    return { userId, completedOrders };
   }
 
   @Delete('api/delete/:userId')

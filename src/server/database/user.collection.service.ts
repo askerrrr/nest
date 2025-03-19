@@ -29,6 +29,25 @@ export class UserCollectionService {
     return await this.user.findOne({ userId }).exec();
   }
 
+  async getActiveOrders(userId) {
+    var { orders }: any = await this.user.findOne({ userId }).exec();
+
+    var activeOrders = orders.filter(
+      (e) => e.order.orderStatus !== 'order-is-completed:6',
+    );
+
+    return activeOrders;
+  }
+
+  async getCompletedOrders(userId) {
+    var { orders }: any = await this.user.findOne({ userId }).exec();
+
+    var completedOrders = orders.filter(
+      (e) => e.order.orderStatus == 'order-is-completed:6',
+    );
+
+    return completedOrders;
+  }
   async addNewOrder(order) {
     return await this.user.updateOne(
       { userId: order.userId },
@@ -46,23 +65,26 @@ export class UserCollectionService {
   }
 
   async deleteOrder(userId, orderId) {
-    return await this.user.updateOne(
+    var result = await this.user.updateOne(
       { userId, 'orders.order.id': orderId },
       {
         $pull: { orders: { 'order.id': orderId } },
       },
     );
+
+    return result.modifiedCount;
   }
 
   async deleteUser(userId) {
-    await this.user.deleteOne({ userId });
+    var result = await this.user.deleteOne({ userId });
+
+    return result.deletedCount;
   }
 
   async findFilePath(userId, orderId) {
-    var document = await this.user.findOne({ userId }).exec();
-
-    var result = document?.orders.find((e) => e.order.id == orderId);
-    var filePath: any = result?.order.file.path;
+    var { orders }: any = await this.user.findOne({ userId }).exec();
+    var { order } = orders.find((e) => e.order.id == orderId);
+    var filePath = order.file.path;
 
     return filePath;
   }
@@ -72,11 +94,9 @@ export class UserCollectionService {
   }
 
   async getCurrentOrderStatus(userId, orderId) {
-    var document = await this.user.findOne({ userId }).exec();
-
-    var result = document?.orders.find((e) => e.order.id == orderId);
-
-    var orderStatus = result?.order.orderStatus;
+    var { orders }: any = await this.user.findOne({ userId }).exec();
+    var { order } = orders.find((e) => e.order.id == orderId);
+    var { orderStatus } = order;
 
     return orderStatus;
   }

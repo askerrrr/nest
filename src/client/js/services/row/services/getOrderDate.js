@@ -1,5 +1,5 @@
 var getOrderDate = async (orderDate) => {
-  var td = document.createElement('td');
+  var td = document.createElement("td");
   td.append(orderDate);
 
   return td;

@@ -1,13 +1,13 @@
 var createOrderLink = async (userId, orderId) => {
-  var btn = document.createElement('button');
+  var btn = document.createElement("button");
   btn.append(orderId);
 
-  var form = document.createElement('form');
+  var form = document.createElement("form");
 
   form.append(btn);
-  form.action = '/orderinfo/orders/order/' + userId + '/' + orderId;
+  form.action = "/orderinfo/orders/order/" + userId + "/" + orderId;
 
-  var td = document.createElement('td');
+  var td = document.createElement("td");
   td.append(form);
 
   return td;

@@ -3,13 +3,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { UtilsModule } from 'src/server/services/Utils';
 import { ItemStatusService } from './item-status.service';
-import { ItemStatusController } from './item-status.controller';
 import { User, UserSchema } from 'src/server/schemas/user.schema';
 import { Item, ItemSchema } from 'src/server/schemas/item.schema';
 import { DatabaseModule } from 'src/server/database/database.module';
+import { DeliveryStatusController } from './delivery-status.controller';
+import { PurchasedStatusController } from './purchased-status.controller';
 
 @Module({
-  controllers: [ItemStatusController],
+  controllers: [DeliveryStatusController, PurchasedStatusController],
   providers: [ItemStatusService],
   imports: [
     UtilsModule,

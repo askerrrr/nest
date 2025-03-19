@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
 
-import { UtilsForItemStatus } from 'src/server/services/utilsForItemStatus';
+import { ItemStatusService } from '../item-status/item-status.service';
 import { UserCollectionService } from 'src/server/database/user.collection.service';
 
 @Injectable()
 export class OrderStatusService {
   constructor(
     private userCollection: UserCollectionService,
-    private utilsForItemStatus: UtilsForItemStatus,
+    private itemStatusService: ItemStatusService,
   ) {}
   async getOrderStatus(userId, orderId) {
-    var document = await this.userCollection.getUserData(userId, orderId);
+    var { orders }: any = await this.userCollection.getUserData(
+      userId,
+      orderId,
+    );
 
-    var orderData = document?.orders.find((e) => e.order.id == orderId);
-    var orderStatus = orderData?.order.orderStatus;
+    var { order } = orders.find((e) => e.order.id == orderId);
+    var { orderStatus } = order;
 
     return { orderStatus };
   }
@@ -25,11 +28,7 @@ export class OrderStatusService {
 
     var orderStatus = statusValue + ':' + statusId;
 
-    await this.utilsForItemStatus.sendOrderStatusUpdate(
-      userId,
-      orderId,
-      orderStatus,
-    );
+    await this.itemStatusService.sendOrderStatus(userId, orderId, orderStatus);
     await this.userCollection.updateOrderStatus(userId, orderId, status);
   }
 }

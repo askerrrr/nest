@@ -1,21 +1,21 @@
 var getUrlFromXLSX = async (url) => {
-  var btn = document.createElement('button');
-  btn.textContent = 'ссылка';
+  var btn = document.createElement("button");
+  btn.textContent = "ссылка";
 
-  var td = document.createElement('td');
+  var td = document.createElement("td");
   if (!url?.length) {
-    td.append('Пусто');
+    td.append("Пусто");
     return td;
   }
 
-  var a = document.createElement('a');
+  var a = document.createElement("a");
   a.href = url;
-  a.target = '_blank';
+  a.target = "_blank";
   a.append(btn);
 
-  var td = document.createElement('td');
+  var td = document.createElement("td");
   if (!url?.length) {
-    td.append('Пусто');
+    td.append("Пусто");
     return td;
   }
 

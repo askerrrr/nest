@@ -15,17 +15,28 @@ export class OrderService {
   }
 
   async getOrderData(orderId) {
-    var document = await this.userCollection.getOrderData(orderId);
-    var order = document?.orders.find((e) => e.order.id == orderId);
+    var { orders }: any = await this.userCollection.getOrderData(orderId);
+    var order = orders.find((e) => e.order.id == orderId);
     return order;
   }
 
   async getOrderList(userId) {
-    var document = await this.userCollection.getUser(userId);
+    var { orders }: any = await this.userCollection.getUser(userId);
 
-    return document?.orders.length;
+    return orders.length;
   }
 
+  async getActiveOrders(userId) {
+    var activeOrders = await this.userCollection.getActiveOrders(userId);
+
+    return activeOrders;
+  }
+
+  async getCompletedOrders(userId) {
+    var completedOrders = await this.userCollection.getCompletedOrders(userId);
+
+    return completedOrders;
+  }
   async deleteUser(userId) {
     await this.userCollection.deleteUser(userId);
     await rm('/var/www/userFiles/' + userId);
@@ -35,7 +46,7 @@ export class OrderService {
     await this.userCollection.deleteOrder(userId, orderId);
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
-    await rm(filePath!);
+    await rm(filePath);
     await this.utils.deleteUserDataFromBot(userId, orderId);
   }
 }
