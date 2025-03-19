@@ -14,7 +14,9 @@ export class BotApiController {
       await this.botApiService.validateAuthHeader(authHeader);
 
     if (validAuthHeader) {
-      return await this.botApiService.createUser(body.userId);
+      var { userId } = body;
+
+      return await this.botApiService.createUser(userId);
     }
   }
 
@@ -38,7 +40,9 @@ export class BotApiController {
       await this.botApiService.validateAuthHeader(authHeader);
 
     if (validAuthHeader) {
-      return await this.botApiService.getOrderDetails(param.userId);
+      var { userId } = param;
+
+      return await this.botApiService.getOrderDetails(userId);
     }
   }
 }

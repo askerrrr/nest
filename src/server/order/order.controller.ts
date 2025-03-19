@@ -10,12 +10,16 @@ export class OrderController {
 
   @Get('api/:userId')
   async getUser(@Param() param) {
-    return await this.orderService.getUserData(param.userId);
+    var { userId } = param;
+
+    return await this.orderService.getUserData(userId);
   }
 
   @Get('api/order/:orderId')
   async getOrder(@Param() param) {
-    return this.orderService.getOrderData(param.orderId);
+    var { orderId } = param;
+
+    return this.orderService.getOrderData(orderId);
   }
 
   @Get('/orders/order/:userId/:orderId')
@@ -27,7 +31,8 @@ export class OrderController {
 
   @Get('orders/:userId')
   async getOrderList(@Param() param, @Res() res: Response) {
-    var userId = param.userId;
+    var { userId } = param;
+
     var orders = await this.orderService.getOrderList(userId);
 
     return orders
@@ -37,11 +42,15 @@ export class OrderController {
 
   @Delete('api/delete/:userId')
   async deleteUser(@Param() param) {
-    return await this.orderService.deleteUser(param.userId);
+    var { userId } = param;
+
+    return await this.orderService.deleteUser(userId);
   }
 
   @Delete('api/delete/:userId/:orderId')
   async deleteOrder(@Param() param) {
-    return await this.orderService.deleteUserOrder(param.userId, param.orderId);
+    var { userId, orderId } = param;
+
+    return await this.orderService.deleteUserOrder(userId, orderId);
   }
 }

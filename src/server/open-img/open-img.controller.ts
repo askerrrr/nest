@@ -9,7 +9,9 @@ export class OpenImgController {
 
   @Get()
   async sendImg(@Param() param, @Res() res: Response) {
-    var filePath = await this.imgService.openImg(param.userId, param.orderId);
+    var { userId, orderId } = param;
+
+    var filePath = await this.imgService.openImg(userId, orderId);
 
     res.sendFile(filePath, (err) => {
       if (err) {

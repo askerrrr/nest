@@ -7,18 +7,18 @@ export class ItemStatusController {
 
   @Patch()
   async changeItemStatus(@Body() body) {
-    return this.itemStatusService.changeItemStatus(
-      body.userId,
-      body.orderId,
-      body.item,
-    );
+    var { userId, orderId, item } = body;
+
+    return this.itemStatusService.changeItemStatus(userId, orderId, item);
   }
 
   @Get('/:userId/:orderId')
   async getCurrentOrderStatus(@Param() param) {
+    var { userId, orderId } = param;
+
     var currentOrderStatus = await this.itemStatusService.getCurrentOrderStatus(
-      param.userId,
-      param.orderId,
+      userId,
+      orderId,
     );
 
     return { currentOrderStatus };

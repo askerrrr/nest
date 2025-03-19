@@ -6,11 +6,8 @@ export class ItemIdController {
   constructor(private readonly itemIdService: ItemIdService) {}
   @Patch()
   async updateItemId(@Body() body) {
-    await this.itemIdService.updateItemId(
-      body.userId,
-      body.orderId,
-      body.index,
-      body.itemId,
-    );
+    var { userId, orderId, index, itemId } = body;
+
+    await this.itemIdService.updateItemId(userId, orderId, index, itemId);
   }
 }

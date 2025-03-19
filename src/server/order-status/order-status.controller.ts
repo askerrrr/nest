@@ -7,9 +7,11 @@ export class OrderStatusController {
   constructor(private readonly orderStatusService: OrderStatusService) {}
   @Get('api/:userId/:orderId')
   async getOrderStatus(@Param() param) {
+    var { userId, orderId } = param;
+
     var currentOrderStatus = await this.orderStatusService.getOrderStatus(
-      param.userId,
-      param.orderId,
+      userId,
+      orderId,
     );
 
     return currentOrderStatus;
@@ -17,10 +19,11 @@ export class OrderStatusController {
 
   @Patch('/:userId/:orderId/:status')
   async changeOrderStatus(@Param() param) {
+    var { userId, orderId, status } = param;
     return await this.orderStatusService.changeOrderStatus(
-      param.userId,
-      param.orderId,
-      param.status,
+      userId,
+      orderId,
+      status,
     );
   }
 }

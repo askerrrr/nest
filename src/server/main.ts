@@ -15,3 +15,4 @@ import { RootModule } from './root/root.module';
   app.use(cookieParser());
   await app.listen(process.env.PORT ?? 3000);
 })();
+
