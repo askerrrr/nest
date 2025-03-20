@@ -9,14 +9,14 @@ export class PurchasedStatusController {
   constructor(private readonly itemStatusService: ItemStatusService) {}
 
   @Patch()
-  async changePurchasedtatus(@Body() body: ItemStatusDto, @Res() res: Response) {
+  async changePurchasedtatus(
+    @Body() body: ItemStatusDto,
+    @Res() res: Response,
+  ) {
     var { userId, orderId, item } = body;
 
-    var responseStatus = await this.itemStatusService.changePurchasedStatus(
-      userId,
-      orderId,
-      item,
-    );
+    var responseStatus: number =
+      await this.itemStatusService.changePurchasedStatus(userId, orderId, item);
 
     res.sendStatus(responseStatus);
   }
@@ -25,10 +25,8 @@ export class PurchasedStatusController {
   async getCurrentOrderStatus(@Param() param) {
     var { userId, orderId } = param;
 
-    var currentOrderStatus = await this.itemStatusService.getCurrentOrderStatus(
-      userId,
-      orderId,
-    );
+    var currentOrderStatus: string =
+      await this.itemStatusService.getCurrentOrderStatus(userId, orderId);
 
     return { currentOrderStatus };
   }

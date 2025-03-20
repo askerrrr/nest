@@ -1,16 +1,16 @@
-import rowForListOfActiveOrders from "./services/row/rowForListOfActiveOrders.js";
+import rowForListOfActiveOrders from './services/row/rowForListOfActiveOrders.js';
 
 var getOrderList = async () => {
-  var pathParts = window.location.pathname.split("/");
+  var pathParts = window.location.pathname.split('/');
   var userId = pathParts.at(-1);
 
-  var url = "/orderinfo/api/" + userId;
+  var url = '/orderinfo/api/' + userId;
 
   var response = await fetch(url);
 
   if (!response.ok) {
     var err = await response.text();
-    alert("error: ", err);
+    alert('error: ', response.status);
     return;
   }
 
@@ -19,4 +19,4 @@ var getOrderList = async () => {
   await rowForListOfActiveOrders(orders);
 };
 
-getOrderList().catch((err) => alert("error: ", err));
+getOrderList().catch((err) => alert('error: ', err));

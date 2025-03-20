@@ -7,9 +7,16 @@ import { Controller, Patch, Body } from '@nestjs/common';
 export class ItemIdController {
   constructor(private readonly itemIdService: ItemIdService) {}
   @Patch()
-  async updateItemId(@Body() body: ItemDto) {
+  async updateItemId(@Body() body: ItemDto): Promise<number> {
     var { userId, orderId, index, itemId } = body;
 
-    await this.itemIdService.updateItemId(userId, orderId, index, itemId);
+    var successfullUpdate: number = await this.itemIdService.updateItemId(
+      userId,
+      orderId,
+      index,
+      itemId,
+    );
+
+    return successfullUpdate;
   }
 }

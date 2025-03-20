@@ -16,12 +16,16 @@ export class DownloadFileController {
   }
 
   @Get('check/:userId/:orderId')
-  async checkFileExists(@Param() param) {
+  async checkFileExists(@Param() param): Promise<object> {
     var { userId, orderId } = param;
 
-    var filePath = await this.downloadFileService.getFilePath(userId, orderId);
+    var filePath: string = await this.downloadFileService.getFilePath(
+      userId,
+      orderId,
+    );
 
-    var fileIsExists = await this.downloadFileService.checkFileExists(filePath);
+    var fileIsExists: boolean =
+      await this.downloadFileService.checkFileExists(filePath);
 
     return { fileIsExists };
   }

@@ -12,14 +12,18 @@ export class OrderController {
   async getUser(@Param() param) {
     var { userId } = param;
 
-    return await this.orderService.getUserData(userId);
+    var user = await this.orderService.getUser(userId);
+
+    return user;
   }
 
-  @Get('api/order/:userId/:orderId')
+  @Get('/api/order/:userId/:orderId')
   async getOrder(@Param() param) {
-    var { orderId } = param;
+    var { userId, orderId } = param;
 
-    return this.orderService.getOrderData(orderId);
+    var order = await this.orderService.getOrder(userId, orderId);
+
+    return order;
   }
 
   @Get('/orders/order/:userId/:orderId')
@@ -54,25 +58,27 @@ export class OrderController {
   }
 
   @Get('/api/completed/:userId')
-  async getCompletedOrders(@Param() param) {
+  async getCompletedOrders(@Param() param): Promise<object> {
     var { userId } = param;
 
-    var completedOrders = this.orderService.getCompletedOrders(userId);
+    var completedOrders = await this.orderService.getCompletedOrders(userId);
 
     return { userId, completedOrders };
   }
 
   @Delete('api/delete/:userId')
-  async deleteUser(@Param() param) {
+  async deleteUser(@Param() param): Promise<number> {
     var { userId } = param;
 
-    return await this.orderService.deleteUser(userId);
+    var result = await this.orderService.deleteUser(userId);
+    return result;
   }
 
   @Delete('api/delete/:userId/:orderId')
-  async deleteOrder(@Param() param) {
+  async deleteOrder(@Param() param): Promise<number> {
     var { userId, orderId } = param;
 
-    return await this.orderService.deleteUserOrder(userId, orderId);
+    var result = await this.orderService.deleteUserOrder(userId, orderId);
+    return result;
   }
 }

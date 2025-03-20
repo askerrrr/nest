@@ -15,11 +15,8 @@ export class DeliveryStatusController {
   ) {
     var { userId, orderId, item } = body;
 
-    var responseStatus = await this.itemStatusService.changeDeliveredStatus(
-      userId,
-      orderId,
-      item,
-    );
+    var responseStatus: number =
+      await this.itemStatusService.changeDeliveredStatus(userId, orderId, item);
 
     res.sendStatus(responseStatus);
   }
@@ -28,10 +25,8 @@ export class DeliveryStatusController {
   async getCurrentOrderStatus(@Param() param) {
     var { userId, orderId } = param;
 
-    var currentOrderStatus = await this.itemStatusService.getCurrentOrderStatus(
-      userId,
-      orderId,
-    );
+    var currentOrderStatus: string =
+      await this.itemStatusService.getCurrentOrderStatus(userId, orderId);
 
     return { currentOrderStatus };
   }

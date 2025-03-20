@@ -20,19 +20,19 @@ export class XlsxController {
   }
 
   @Get('/api/:userId/:orderId')
-  async getXLSXData(@Param() param) {
+  async getXLSXData(@Param() param): Promise<object> {
     var userId = param.userId;
     var orderId = param.orderId;
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
-    var items = await this.itemCollection.getItems(userId, orderId);
-    var itemId = await this.itemCollection.getItemId(userId, orderId);
-    var imgData = await this.xlsxService.getImageFromXLSX(filePath);
-    var xlsxData = await this.xlsxService.getDataFromXLSX(filePath);
+    var items: string[] = await this.itemCollection.getItems(userId, orderId);
+    var itemId: string[] = await this.itemCollection.getItemId(userId, orderId);
+    var imgData: object = await this.xlsxService.getImageFromXLSX(filePath);
+    var xlsxData: object = await this.xlsxService.getDataFromXLSX(filePath);
 
-    var combinedData = this.xlsxService.combineData(
+    var combinedData: object = this.xlsxService.combineData(
       xlsxData,
       imgData,
       items,
@@ -43,7 +43,7 @@ export class XlsxController {
   }
 
   @Get('check/:userId/:orderId')
-  async checkFileExists(@Param() param) {
+  async checkFileExists(@Param() param): Promise<object> {
     var filePath = await this.userCollection.findFilePath(
       param.userId,
       param.orderId,
@@ -51,7 +51,8 @@ export class XlsxController {
 
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
-    var fileIsExists = await this.xlsxService.checkFileExists(filePath);
+    var fileIsExists: boolean =
+      await this.xlsxService.checkFileExists(filePath);
 
     return { fileIsExists };
   }

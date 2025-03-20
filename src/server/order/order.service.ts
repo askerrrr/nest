@@ -1,4 +1,3 @@
-import { rm } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 
 import { UtilsForOrder } from 'src/server/services/utilsForOrder';
@@ -10,20 +9,20 @@ export class OrderService {
     private utils: UtilsForOrder,
     private userCollection: UserCollectionService,
   ) {}
-  async getUserData(userId) {
-    return await this.userCollection.getUser(userId);
+  async getUser(userId) {
+    var user = await this.userCollection.getUser(userId);
+
+    return user;
   }
 
-  async getOrderData(orderId) {
-    var { orders }: any = await this.userCollection.getOrderData(orderId);
-    var order = orders.find((e) => e.order.id == orderId);
-    return order;
-  }
-
-  async getOrderList(userId) {
+  async getOrder(userId, orderId): Promise<object> {
     var { orders }: any = await this.userCollection.getUser(userId);
+    console.log('orders: ', orders);
 
-    return orders.length;
+    console.log('typeof order: ', typeof orders);
+    var order: object = orders.find((e) => e.order.id == orderId);
+
+    return order;
   }
 
   async getActiveOrders(userId) {
@@ -37,16 +36,34 @@ export class OrderService {
 
     return completedOrders;
   }
-  async deleteUser(userId) {
-    await this.userCollection.deleteUser(userId);
-    await rm('/var/www/userFiles/' + userId);
+
+  async deleteUser(userId): Promise<number> {
+    var isUserDeletedFromDB = await this.userCollection.deleteUser(userId);
+    var isUserFolderDeleted = await this.utils.deleteUserFolder(userId);
+    var successfullResponse = await this.utils.sendDeleteUserRequest(userId);
+
+    return successfullResponse && isUserDeletedFromDB && isUserFolderDeleted
+      ? 200
+      : 304;
   }
 
-  async deleteUserOrder(userId, orderId) {
+  async deleteUserOrder(userId, orderId): Promise<number> {
     await this.userCollection.deleteOrder(userId, orderId);
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
-    await rm(filePath);
-    await this.utils.deleteUserDataFromBot(userId, orderId);
+
+    var isFileDeleted = await this.utils.deleteOrderFile(filePath);
+
+    var successfullResponse = await this.utils.sendDeleteOrderRequest(
+      userId,
+      orderId,
+    );
+
+    var isDeletedFromDB = await this.userCollection.deleteOrder(
+      userId,
+      orderId,
+    );
+
+    return successfullResponse && isFileDeleted && isDeletedFromDB ? 200 : 304;
   }
 }

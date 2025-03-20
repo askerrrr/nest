@@ -10,19 +10,24 @@ export class OrderStatusService {
     private itemStatusService: ItemStatusService,
   ) {}
   async getOrderStatus(userId, orderId) {
-    var { orders }: any = await this.userCollection.getUserData(
+    var orderStatus: string = await this.userCollection.getCurrentOrderStatus(
       userId,
       orderId,
     );
 
-    var { order } = orders.find((e) => e.order.id == orderId);
-    var { orderStatus } = order;
-
     return { orderStatus };
   }
 
-  async changeOrderStatus(userId, orderId, status) {
-    await this.itemStatusService.sendOrderStatus(userId, orderId, status);
-    await this.userCollection.updateOrderStatus(userId, orderId, status);
+  async changeOrderStatus(userId, orderId, status): Promise<number> {
+    var successfullResponse: boolean =
+      await this.itemStatusService.sendOrderStatus(userId, orderId, status);
+
+    var succesfullUpdate: number = await this.userCollection.updateOrderStatus(
+      userId,
+      orderId,
+      status,
+    );
+
+    return successfullResponse && succesfullUpdate ? 200 : 304;
   }
 }

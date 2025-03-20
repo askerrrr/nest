@@ -7,7 +7,7 @@ import { access, readFile, constants } from 'fs/promises';
 export class XlsxService {
   constructor() {}
 
-  async getImageFromXLSX(filePath) {
+  async getImageFromXLSX(filePath): Promise<object> {
     var fileData = await readFile(filePath);
 
     var zip = await JSZip.loadAsync(fileData);
@@ -16,7 +16,9 @@ export class XlsxService {
       fileName.startsWith('xl/media/'),
     );
 
-    if (mediaFiles.length == 0) return;
+    if (mediaFiles.length == 0) {
+      return {};
+    }
 
     var buffer = await Promise.all(
       mediaFiles.map(
@@ -24,23 +26,25 @@ export class XlsxService {
       ),
     );
 
-    var base64 = buffer.map((buf) => Buffer.from(buf).toString('base64'));
+    var base64: object = buffer.map((buf) =>
+      Buffer.from(buf).toString('base64'),
+    );
 
     return base64;
   }
 
-  async getDataFromXLSX(filePath) {
+  async getDataFromXLSX(filePath): Promise<object> {
     var wb = new Exceljs.Workbook();
 
     await wb.xlsx.readFile(filePath);
 
     var ws: any = wb.getWorksheet('Лист1');
 
-    var url: any = [];
-    var qty: any = [];
-    var size: any = [];
-    var totalSum: any = [];
-    var itemPrice: any = [];
+    var url: string[] = [];
+    var qty: string[] = [];
+    var size: string[] = [];
+    var totalSum: string[] = [];
+    var itemPrice: string[] = [];
 
     ws.getColumn(2).eachCell((b) => url.push(b.text || ''));
     ws.getColumn(3).eachCell((c) => qty.push(c.text || ''));
@@ -54,12 +58,14 @@ export class XlsxService {
     totalSum = totalSum.slice(0, 1);
     itemPrice.shift();
 
-    return [url, qty, size, totalSum, itemPrice];
+    var xlsxData: object = [url, qty, size, totalSum, itemPrice];
+
+    return xlsxData;
   }
 
-  async combineData(data, image, items, itemId) {
+  async combineData(data, image, items, itemId): Promise<object> {
     var [url, qty, size, totalSum, itemPrice] = data;
-    var fileData: any = [];
+    var fileData: object[] = [];
 
     for (let i = 0; i < url.length; i++) {
       fileData.push({
@@ -77,8 +83,8 @@ export class XlsxService {
     return fileData;
   }
 
-  async checkFileExists(filePath) {
-    var fileIsExists = await access(filePath, constants.F_OK)
+  async checkFileExists(filePath): Promise<boolean> {
+    var fileIsExists: boolean = await access(filePath, constants.F_OK)
       .then(() => true)
       .catch(() => false);
 

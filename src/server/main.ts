@@ -9,10 +9,7 @@ import { RootModule } from './root/root.module';
     helmet.contentSecurityPolicy({
       useDefaults: true,
       directives: {
-        'img-src': ["'self'"],
-        'media-src': ["'self'"],
-        'style-src': ["'self'"],  
-        'sctipt-src': ["'self'"],
+        'default-src': ["'self'"],
       },
     }),
   );

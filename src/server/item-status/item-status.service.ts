@@ -10,19 +10,19 @@ export class ItemStatusService {
     private userCollection: UserCollectionService,
   ) {}
 
-  async allItemsArePurchased(items) {
+  async allItemsArePurchased(items): Promise<boolean> {
     var itemStatus = items?.map((item) => item.split(':::')[1]);
 
     return itemStatus?.every((status) => status == '1');
   }
 
-  async allItemsAreDelivered(items) {
+  async allItemsAreDelivered(items): Promise<boolean> {
     var itemStatus = items?.map((item) => item.split(':::')[2]);
 
     return itemStatus?.every((status) => status == '1');
   }
 
-  async sendOrderStatus(userId, orderId, orderStatus) {
+  async sendOrderStatus(userId, orderId, orderStatus): Promise<boolean> {
     var response = await fetch('env.bot_server_ip', {
       method: 'PATCH',
       headers: {
@@ -37,14 +37,19 @@ export class ItemStatusService {
       }),
     });
 
-    return response.status;
+    return response.status == 200;
   }
 
-  async getCurrentOrderStatus(userId, orderId) {
-    return await this.userCollection.getCurrentOrderStatus(userId, orderId);
+  async getCurrentOrderStatus(userId, orderId): Promise<string> {
+    var orderStatus = await this.userCollection.getCurrentOrderStatus(
+      userId,
+      orderId,
+    );
+
+    return orderStatus;
   }
 
-  async updateItemInArray(userId, orderId, newItem) {
+  async updateItemInArray(userId, orderId, newItem): Promise<string[]> {
     var items = await this.itemCollection.getItems(userId, orderId);
 
     var itemValues = items.map((e) => e.split(':::')[0]);
@@ -58,89 +63,88 @@ export class ItemStatusService {
     return items;
   }
 
-  async changePurchasedStatus(userId, orderId, newItem) {
+  async changePurchasedStatus(userId, orderId, newItem): Promise<number> {
     var items = await this.updateItemInArray(userId, orderId, newItem);
 
-    var succesfullUpdate = await this.itemCollection.updateItemStatus(
-      userId,
-      orderId,
-      items,
-    );
+    var succesfullUpdateItemStatus: number =
+      await this.itemCollection.updateItemStatus(userId, orderId, items);
 
-    if (!succesfullUpdate) {
+    if (!succesfullUpdateItemStatus) {
       return 304;
     }
 
-    var isAllItemsArePurchased = await this.allItemsArePurchased(items);
+    var isAllItemsArePurchased: boolean =
+      await this.allItemsArePurchased(items);
 
     if (isAllItemsArePurchased) {
-      var currentOrderStatus = await this.userCollection.getCurrentOrderStatus(
+      var currentOrderStatus = await this.getCurrentOrderStatus(
         userId,
         orderId,
       );
 
       if (currentOrderStatus == 'in-processing:1') {
-        await this.userCollection.updateOrderStatus(
+        var succesfullUpdateOrderStatus: number =
+          await this.userCollection.updateOrderStatus(
+            userId,
+            orderId,
+            'purchased:2',
+          );
+
+        var successfullResponse: boolean = await this.sendOrderStatus(
           userId,
           orderId,
           'purchased:2',
         );
 
-        var responseStatus: any = await this.sendOrderStatus(
-          userId,
-          orderId,
-          'purchased:2',
-        );
-        if (responseStatus == 200) {
-          return responseStatus;
-        } else {
-          return 304;
-        }
+        return successfullResponse && succesfullUpdateOrderStatus ? 200 : 304;
+      } else {
+        return 304;
       }
     } else {
       return 200;
     }
   }
 
-  async changeDeliveredStatus(userId, orderId, newItem) {
-    var items = await this.updateItemInArray(userId, orderId, newItem);
-
-    var succesfullUpdate = await this.itemCollection.updateItemStatus(
+  async changeDeliveredStatus(userId, orderId, newItem): Promise<number> {
+    var items: string[] = await this.updateItemInArray(
       userId,
       orderId,
-      items,
+      newItem,
     );
 
-    if (!succesfullUpdate) {
+    var succesfullUpdateItemStatus: number =
+      await this.itemCollection.updateItemStatus(userId, orderId, items);
+
+    if (!succesfullUpdateItemStatus) {
       return 304;
     }
 
-    var isAllItemsArePurchased = await this.allItemsAreDelivered(items);
+    var isAllItemsArePurchased: boolean =
+      await this.allItemsAreDelivered(items);
 
     if (isAllItemsArePurchased) {
-      var currentOrderStatus = await this.userCollection.getCurrentOrderStatus(
+      var currentOrderStatus = await this.getCurrentOrderStatus(
         userId,
         orderId,
       );
 
       if (currentOrderStatus == 'purchased:2') {
-        await this.userCollection.updateOrderStatus(
+        var succesfullUpdateOrderStatus: number =
+          await this.userCollection.updateOrderStatus(
+            userId,
+            orderId,
+            'china-warehouse:3',
+          );
+
+        var successfullResponse: boolean = await this.sendOrderStatus(
           userId,
           orderId,
           'china-warehouse:3',
         );
 
-        var responseStatus: any = await this.sendOrderStatus(
-          userId,
-          orderId,
-          'china-warehouse:3',
-        );
-
-        if (responseStatus == 200) {
-          return responseStatus;
-        } else {
-          return 304;
-        }
+        return successfullResponse && succesfullUpdateOrderStatus ? 200 : 304;
+      } else {
+        return 304;
       }
     } else {
       return 200;

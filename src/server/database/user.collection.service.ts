@@ -8,29 +8,20 @@ import { User, UserDocument } from 'src/server/schemas/user.schema';
 export class UserCollectionService {
   constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
 
-  async getAllUsers() {
-    return await this.user.find({}).exec();
-  }
-
-  async getUserData(userId, orderId) {
-    return await this.user
-      .findOne({
-        userId,
-        'orders.order.id': orderId,
-      })
-      .exec();
-  }
-
-  async getOrderData(orderId) {
-    return this.user.findOne({ 'orders.order.id': orderId }).exec();
-  }
-
   async getUser(userId) {
-    return await this.user.findOne({ userId }).exec();
+    var user = await this.user.findOne({ userId }).exec();
+
+    return user;
+  }
+
+  async getUsers() {
+    var users = await this.user.find({}).exec();
+
+    return users;
   }
 
   async getActiveOrders(userId) {
-    var { orders }: any = await this.user.findOne({ userId }).exec();
+    var { orders }: any = await this.getUser(userId);
 
     var activeOrders = orders.filter(
       (e) => e.order.orderStatus !== 'order-is-completed:6',
@@ -40,7 +31,7 @@ export class UserCollectionService {
   }
 
   async getCompletedOrders(userId) {
-    var { orders }: any = await this.user.findOne({ userId }).exec();
+    var { orders }: any = await this.getUser(userId);
 
     var completedOrders = orders.filter(
       (e) => e.order.orderStatus == 'order-is-completed:6',
@@ -49,10 +40,12 @@ export class UserCollectionService {
     return completedOrders;
   }
   async addNewOrder(order) {
-    return await this.user.updateOne(
+    var result = await this.user.updateOne(
       { userId: order.userId },
       { $push: { orders: { order } } },
     );
+
+    return result.modifiedCount;
   }
 
   async createNewUser(order) {
@@ -82,19 +75,15 @@ export class UserCollectionService {
   }
 
   async findFilePath(userId, orderId) {
-    var { orders }: any = await this.user.findOne({ userId }).exec();
+    var { orders }: any = await this.getUser(userId);
     var { order } = orders.find((e) => e.order.id == orderId);
-    var filePath = order.file.path;
+    var { path } = order.file;
 
-    return filePath;
-  }
-
-  async findUser(userId) {
-    return await this.user.findOne({ userId }).exec();
+    return path;
   }
 
   async getCurrentOrderStatus(userId, orderId) {
-    var { orders }: any = await this.user.findOne({ userId }).exec();
+    var { orders }: any = await this.getUser(userId);
     var { order } = orders.find((e) => e.order.id == orderId);
     var { orderStatus } = order;
 
@@ -102,11 +91,13 @@ export class UserCollectionService {
   }
 
   async updateOrderStatus(userId, orderId, status) {
-    return await this.user.updateOne(
+    var result = await this.user.updateOne(
       { userId, 'orders.order.id': orderId },
       {
         $set: { 'orders.$.order.orderStatus': status },
       },
     );
+
+    return result.modifiedCount;
   }
 }

@@ -10,22 +10,23 @@ export class OrderStatusController {
   async getOrderStatus(@Param() param) {
     var { userId, orderId } = param;
 
-    var currentOrderStatus = await this.orderStatusService.getOrderStatus(
-      userId,
-      orderId,
-    );
+    var currentOrderStatus: object =
+      await this.orderStatusService.getOrderStatus(userId, orderId);
 
     return currentOrderStatus;
   }
 
-  @Patch('/:userId/:orderId/:status')
-  async changeOrderStatus(@Body() body: OrderStatusDto) {
+  @Patch('/')
+  async changeOrderStatus(@Body() body: OrderStatusDto): Promise<number> {
     var { userId, orderId, orderStatus } = body;
 
-    await this.orderStatusService.changeOrderStatus(
-      userId,
-      orderId,
-      orderStatus,
-    );
+    var responseStatus: number =
+      await this.orderStatusService.changeOrderStatus(
+        userId,
+        orderId,
+        orderStatus,
+      );
+
+    return responseStatus;
   }
 }
