@@ -1,3 +1,4 @@
+import { UserDto, OrderDto } from './bot-api.dto';
 import { BotApiService } from './bot-api.service';
 
 import { Get, Body, Post, Param, Headers, Controller } from '@nestjs/common';
@@ -7,21 +8,19 @@ export class BotApiController {
   constructor(private readonly botApiService: BotApiService) {}
 
   @Post('api/users')
-  async createUser(@Body() body, @Headers() headers) {
+  async createUser(@Body() body: UserDto, @Headers() headers) {
     var authHeader = headers.authorization;
 
     var validAuthHeader =
       await this.botApiService.validateAuthHeader(authHeader);
 
     if (validAuthHeader) {
-      var { userId } = body;
-
-      return await this.botApiService.createUser(userId);
+      return await this.botApiService.createUser(body);
     }
   }
 
   @Post('api/order')
-  async createOrder(@Body() body, @Headers() headers) {
+  async createOrder(@Body() body: OrderDto, @Headers() headers) {
     var authHeader = headers.authorization;
 
     var validAuthHeader =

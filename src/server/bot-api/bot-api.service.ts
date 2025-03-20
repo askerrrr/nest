@@ -12,35 +12,38 @@ export class BotApiService {
     private itemCollection: ItemCollectionService,
   ) {}
 
-  async createUser(body) {
+  async createUser(user) {
     var existingDocument = this.userCollection.getUser({
-      userId: body.userId,
+      userId: user.userId,
     });
 
     if (!existingDocument) {
-      await this.userCollection.createNewUser(body);
-      await this.itemCollection.createItemStatus(body);
+      await this.userCollection.createNewUser(user);
+      await this.itemCollection.createItemStatus(user);
     }
   }
 
-  async createOrder(body) {
-    var userId = body.userId;
-    var orderId = body.orderId;
-    var fileUrl = body.telegramApiFileUrl;
+  async createOrder(order) {
+    var { type, userId, orderId, file } = order;
+    var { path, telegramApiFileUrl } = file;
 
     var existingDocument = await this.userCollection.getUser(userId);
 
     if (!existingDocument) {
-      await this.userCollection.createNewUser(body);
-      await this.itemCollection.createItemStatus(body);
+      await this.userCollection.createNewUser(order);
+      await this.itemCollection.createItemStatus(order);
     }
 
-    await this.userCollection.addNewOrder(body);
-    await this.utils.downloadAndSaveFile(userId, orderId, fileUrl, body);
+    await this.userCollection.addNewOrder(order);
+    await this.utils.downloadAndSaveFile(
+      userId,
+      orderId,
+      telegramApiFileUrl,
+      order,
+    );
 
-    if (body.type == 'multiple') {
-      var filePath = body.file.path;
-      // var xlsxData = await this.utils.getDataFromXLSX(filePath)
+    if (type == 'multiple') {
+      // var xlsxData = await this.utils.getDataFromXLSX(path)
       // await this.itemCollection.addItems(userId, orderId, xlsxData);
     }
   }

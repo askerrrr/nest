@@ -10,7 +10,7 @@ export class DownloadFileController {
   async downloadFile(@Param() param, @Res() res: Response) {
     var { userId, orderId } = param;
 
-    var filePath = await this.downloadFileService.downloadFile(userId, orderId);
+    var filePath = await this.downloadFileService.getFilePath(userId, orderId);
 
     res.download(filePath);
   }
@@ -19,7 +19,7 @@ export class DownloadFileController {
   async checkFileExists(@Param() param) {
     var { userId, orderId } = param;
 
-    var filePath = await this.downloadFileService.downloadFile(userId, orderId);
+    var filePath = await this.downloadFileService.getFilePath(userId, orderId);
 
     var fileIsExists = await this.downloadFileService.checkFileExists(filePath);
 

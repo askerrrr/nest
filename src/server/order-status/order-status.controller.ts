@@ -1,5 +1,6 @@
-import { Get, Patch, Param, Controller } from '@nestjs/common';
+import { Get, Body, Patch, Param, Controller } from '@nestjs/common';
 
+import { OrderStatusDto } from './order-status.dto';
 import { OrderStatusService } from './order-status.service';
 
 @Controller('status')
@@ -18,12 +19,13 @@ export class OrderStatusController {
   }
 
   @Patch('/:userId/:orderId/:status')
-  async changeOrderStatus(@Param() param) {
-    var { userId, orderId, status } = param;
-    return await this.orderStatusService.changeOrderStatus(
+  async changeOrderStatus(@Body() body: OrderStatusDto) {
+    var { userId, orderId, orderStatus } = body;
+
+    await this.orderStatusService.changeOrderStatus(
       userId,
       orderId,
-      status,
+      orderStatus,
     );
   }
 }

@@ -5,7 +5,7 @@ import { UserCollectionService } from 'src/server/database/user.collection.servi
 @Injectable()
 export class OpenImgService {
   constructor(private userCollection: UserCollectionService) {}
-  async openImg(userId, orderId) {
+  async getFilePath(userId, orderId) {
     var filePath = await this.userCollection.findFilePath(userId, orderId);
 
     return filePath;

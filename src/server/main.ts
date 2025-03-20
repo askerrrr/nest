@@ -8,11 +8,15 @@ import { RootModule } from './root/root.module';
   app.use(
     helmet.contentSecurityPolicy({
       useDefaults: true,
-      directives: { 'img-src': ["'self'", 'https: data:'] },
+      directives: {
+        'img-src': ["'self'"],
+        'media-src': ["'self'"],
+        'style-src': ["'self'"],  
+        'sctipt-src': ["'self'"],
+      },
     }),
   );
 
   app.use(cookieParser());
   await app.listen(process.env.PORT ?? 3000);
 })();
-

@@ -22,13 +22,7 @@ export class OrderStatusService {
   }
 
   async changeOrderStatus(userId, orderId, status) {
-    var [statusValue, statusId] = status.split(':');
-
-    statusId = statusId.split('').reverse()[0];
-
-    var orderStatus = statusValue + ':' + statusId;
-
-    await this.itemStatusService.sendOrderStatus(userId, orderId, orderStatus);
+    await this.itemStatusService.sendOrderStatus(userId, orderId, status);
     await this.userCollection.updateOrderStatus(userId, orderId, status);
   }
 }

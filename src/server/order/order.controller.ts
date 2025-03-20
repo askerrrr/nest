@@ -24,9 +24,7 @@ export class OrderController {
 
   @Get('/orders/order/:userId/:orderId')
   async getOrderFile(@Res() res: Response) {
-    return res.sendFile(
-      join(__dirname, '../../src/client/html/userOrder.html'),
-    );
+    res.sendFile(join(__dirname, '../../src/client/html/userOrder.html'));
   }
 
   @Get('orders/:userId')
