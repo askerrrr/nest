@@ -13,10 +13,14 @@ export class OpenImgController {
 
     var filePath = await this.imgService.getFilePath(userId, orderId);
 
-    res.sendFile(filePath, (err) => {
-      if (err) {
-        res.status(404).send('Image not found');
-      }
-    });
+    res.sendFile(filePath);
+  }
+
+  @Get('/check/:userId/:orderId')
+  async checkImageExists(@Param() param): Promise<object> {
+    var { userId, orderId } = param;
+
+    var fileIsExists = await this.imgService.checkImageExists(userId, orderId);
+    return { fileIsExists };
   }
 }
