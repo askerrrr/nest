@@ -1,6 +1,15 @@
 import { Response } from 'express';
-import { Get, Param, Body, Patch, Res, Controller } from '@nestjs/common';
+import {
+  Get,
+  Param,
+  Body,
+  Patch,
+  Res,
+  UseGuards,
+  Controller,
+} from '@nestjs/common';
 
+import { AuthGuard } from '../auth/auth.guard';
 import { ItemStatusService } from './item-status.service';
 import { ItemStatusDto, ParamDto } from './item-status.dto';
 
@@ -8,6 +17,7 @@ import { ItemStatusDto, ParamDto } from './item-status.dto';
 export class PurchasedStatusController {
   constructor(private readonly itemStatusService: ItemStatusService) {}
 
+  @UseGuards(AuthGuard)
   @Patch()
   async changePurchasedtatus(
     @Body() body: ItemStatusDto,
@@ -21,6 +31,7 @@ export class PurchasedStatusController {
     res.sendStatus(responseStatus);
   }
 
+  @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
   async getCurrentOrderStatus(@Param() param: ParamDto) {
     var { userId, orderId } = param;

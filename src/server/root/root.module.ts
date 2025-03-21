@@ -1,6 +1,8 @@
 import { join } from 'path';
-import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Module, forwardRef } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { RootService } from './root.service';
@@ -17,9 +19,11 @@ import { ItemStatusModule } from 'src/server/item-status/item-status.module';
 import { OrderStatusModule } from 'src/server/order-status/order-status.module';
 import { DownloadFileModule } from 'src/server/download-docs/download-docs.module';
 
+import { AuthGuard } from '../auth/auth.guard';
+
 @Module({
   controllers: [RootController],
-  providers: [RootService],
+  providers: [RootService, ],//s{ provide: APP_GUARD, useClass: AuthGuard }
   imports: [
     AuthModule,
     XlsxModule,
@@ -31,8 +35,9 @@ import { DownloadFileModule } from 'src/server/download-docs/download-docs.modul
     ItemStatusModule,
     OrderStatusModule,
     DownloadFileModule,
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    forwardRef(() => AuthModule),
     MongooseModule.forRoot('mongodb://localhost/database'),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     ServeStaticModule.forRoot({
       serveRoot: '/',
       rootPath: join(__dirname, '../../src/client'),

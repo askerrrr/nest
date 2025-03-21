@@ -1,5 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 var login = 'Gilgamesh';
 var passwd = 'Acu40929.$';
@@ -9,7 +9,6 @@ export class AuthService {
   constructor(private jwtService: JwtService) {}
 
   async verifyFormData(data) {
-
     if (data.passwd == passwd && data.login == login) {
       return true;
     }
@@ -19,7 +18,7 @@ export class AuthService {
     var validFormData = await this.verifyFormData(data);
 
     if (!validFormData) {
-      throw new UnauthorizedException();
+      return;
     } else {
       var payload = { a: 'login', b: 'passwd' };
       var token = await this.jwtService.signAsync(payload);

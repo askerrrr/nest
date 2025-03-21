@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { AuthModule } from '../auth/auth.module';
 import { UtilsModule } from 'src/server/services/Utils';
 import { ItemStatusService } from './item-status.service';
 import { User, UserSchema } from 'src/server/schemas/user.schema';
@@ -13,6 +14,7 @@ import { PurchasedStatusController } from './purchased-status.controller';
   controllers: [DeliveryStatusController, PurchasedStatusController],
   providers: [ItemStatusService],
   imports: [
+    AuthModule,
     UtilsModule,
     DatabaseModule,
     MongooseModule.forRoot('mongodb://localhost/database'),

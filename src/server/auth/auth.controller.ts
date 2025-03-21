@@ -1,7 +1,9 @@
 import { join } from 'path';
 import { Response } from 'express';
-import { AuthService } from './auth.service';
 import { Get, Res, Post, Body, Controller } from '@nestjs/common';
+
+import { BodyDto } from './auth.guard.dto';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -11,12 +13,16 @@ export class AuthController {
   async getAuthForm(@Res() res: Response) {
     return res.sendFile(join(__dirname, '../../src/client/html/authForm.html'));
   }
+
   @Post('login/check')
-  async checkLogin(@Body() body: Object, @Res({ passthrough: true }) res) {
+  async checkLogin(
+    @Body() body: BodyDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     var token = await this.authService.checkLogin(body);
 
     if (!token) {
-      res.redirect('/auth/login');
+      return res.redirect('/auth/login');
     }
 
     res.cookie('token', token, {

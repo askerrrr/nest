@@ -1,6 +1,7 @@
 import { Response } from 'express';
-import { Get, Param, Res, Controller } from '@nestjs/common';
+import { Get, Res, Param, UseGuards, Controller } from '@nestjs/common';
 
+import { AuthGuard } from '../auth/auth.guard';
 import { ParamDto } from './download-docs.dto';
 import { DownloadFileService } from './download-docs.service';
 
@@ -8,6 +9,7 @@ import { DownloadFileService } from './download-docs.service';
 export class DownloadFileController {
   constructor(private readonly downloadFileService: DownloadFileService) {}
 
+  @UseGuards(AuthGuard)
   @Get(':userId/:orderId')
   async downloadFile(@Param() param: ParamDto, @Res() res: Response) {
     var { userId, orderId } = param;
@@ -17,6 +19,7 @@ export class DownloadFileController {
     res.download(filePath);
   }
 
+  @UseGuards(AuthGuard)
   @Get('check/:userId/:orderId')
   async checkFileExists(@Param() param: ParamDto): Promise<object> {
     var { userId, orderId } = param;

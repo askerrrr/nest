@@ -18,6 +18,7 @@ export class RootController {
       ? res.sendFile(join(__dirname, '../../src/client/index.html'))
       : res.sendFile(join(__dirname, '../../src/client/noUsers.html'));
   }
+
   @UseGuards(AuthGuard)
   @Get('/api/users')
   async getUsers() {

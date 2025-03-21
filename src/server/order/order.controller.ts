@@ -1,14 +1,16 @@
 import { join } from 'path';
 import { Response } from 'express';
-import { Get, Res, Param, Delete, Controller } from '@nestjs/common';
+import { Get, Res, Param, Delete, UseGuards, Controller } from '@nestjs/common';
 
 import { ParamDto } from './order.dto';
 import { OrderService } from './order.service';
+import { AuthGuard } from 'src/server/auth/auth.guard';
 
 @Controller('orderinfo')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @UseGuards(AuthGuard)
   @Get('api/:userId')
   async getUser(@Param() param: ParamDto) {
     var { userId } = param;
@@ -17,7 +19,7 @@ export class OrderController {
 
     return user;
   }
-
+  @UseGuards(AuthGuard)
   @Get('/api/order/:userId/:orderId')
   async getOrder(@Param() param: ParamDto) {
     var { userId, orderId } = param;
@@ -26,12 +28,13 @@ export class OrderController {
 
     return order;
   }
-
+  @UseGuards(AuthGuard)
   @Get('/orders/order/:userId/:orderId')
   async getOrderFile(@Res() res: Response) {
     res.sendFile(join(__dirname, '../../src/client/html/userOrder.html'));
   }
 
+  @UseGuards(AuthGuard)
   @Get('orders/:userId')
   async getOrderList(@Param() param: ParamDto, @Res() res: Response) {
     var { userId } = param;
@@ -55,6 +58,7 @@ export class OrderController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get('/api/completed/:userId')
   async getCompletedOrders(@Param() param: ParamDto): Promise<object> {
     var { userId } = param;
@@ -64,6 +68,7 @@ export class OrderController {
     return { userId, completedOrders };
   }
 
+  @UseGuards(AuthGuard)
   @Delete('api/delete/:userId')
   async deleteUser(@Param() param: ParamDto): Promise<number> {
     var { userId } = param;
@@ -72,6 +77,7 @@ export class OrderController {
     return result;
   }
 
+  @UseGuards(AuthGuard)
   @Delete('api/delete/:userId/:orderId')
   async deleteOrder(@Param() param: ParamDto): Promise<number> {
     var { userId, orderId } = param;

@@ -1,11 +1,14 @@
-import { Get, Body, Patch, Param, Controller } from '@nestjs/common';
+import { Get, Body, Patch, Param, Controller, UseGuards } from '@nestjs/common';
 
+import { AuthGuard } from '../auth/auth.guard';
 import { OrderStatusService } from './order-status.service';
 import { OrderStatusDto, ParamDto } from './order-status.dto';
 
 @Controller('status')
 export class OrderStatusController {
   constructor(private readonly orderStatusService: OrderStatusService) {}
+
+  @UseGuards(AuthGuard)
   @Get('api/:userId/:orderId')
   async getOrderStatus(@Param() param: ParamDto) {
     var { userId, orderId } = param;
@@ -16,6 +19,7 @@ export class OrderStatusController {
     return currentOrderStatus;
   }
 
+  @UseGuards(AuthGuard)
   @Patch('/')
   async changeOrderStatus(@Body() body: OrderStatusDto): Promise<number> {
     var { userId, orderId, orderStatus } = body;

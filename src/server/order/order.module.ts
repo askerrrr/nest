@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { OrderService } from './order.service';
+import { AuthModule } from '../auth/auth.module';
 import { OrderController } from './order.controller';
-import { AuthGuard } from 'src/server/auth/auth.guard';
 import { UtilsModule } from 'src/server/services/Utils';
 import { User, UserSchema } from 'src/server/schemas/user.schema';
 import { DatabaseModule } from 'src/server/database/database.module';
 
 @Module({
   controllers: [OrderController],
-  providers: [OrderService],
+  providers: [OrderService], //{ provide: APP_GUARD, useClass: AuthGuard }
   imports: [
+    AuthModule,
     UtilsModule,
     DatabaseModule,
     MongooseModule.forRoot('mongodb://localhost/database'),
