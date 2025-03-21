@@ -32,16 +32,15 @@ export class BotApiController {
   }
 
   @Get('/api/status/:userId')
-  async fetchOrderDetails(@Param() param, @Headers() headers) {
+  async fetchOrderDetails(@Param('userId') userId: string, @Headers() headers) {
     var authHeader = headers.authorization;
 
     var validAuthHeader =
       await this.botApiService.validateAuthHeader(authHeader);
 
     if (validAuthHeader) {
-      var { userId } = param;
-
-      return await this.botApiService.getOrderDetails(userId);
+      var orderDetails = await this.botApiService.getOrderDetails(userId);
+      return orderDetails;
     }
   }
 }

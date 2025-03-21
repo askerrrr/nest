@@ -3,3 +3,8 @@ export class OrderStatusDto {
   orderId: string;
   orderStatus: string;
 }
+
+export class ParamDto {
+  userId: string;
+  orderId: string;
+}

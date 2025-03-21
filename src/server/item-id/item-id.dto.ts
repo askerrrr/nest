@@ -1,4 +1,4 @@
-export class ItemDto {
+export class ItemIdDto {
   userId: string;
   orderId: string;
   index: string;

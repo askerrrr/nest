@@ -1,4 +1,4 @@
-import { ItemDto } from './item-id.dto';
+import { ItemIdDto } from './item-id.dto';
 import { ItemIdService } from './item-id.service';
 
 import { Controller, Patch, Body } from '@nestjs/common';
@@ -7,7 +7,7 @@ import { Controller, Patch, Body } from '@nestjs/common';
 export class ItemIdController {
   constructor(private readonly itemIdService: ItemIdService) {}
   @Patch()
-  async updateItemId(@Body() body: ItemDto): Promise<number> {
+  async updateItemId(@Body() body: ItemIdDto): Promise<number> {
     var { userId, orderId, index, itemId } = body;
 
     var successfullUpdate: number = await this.itemIdService.updateItemId(

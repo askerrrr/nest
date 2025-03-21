@@ -17,9 +17,7 @@ export class OrderService {
 
   async getOrder(userId, orderId): Promise<object> {
     var { orders }: any = await this.userCollection.getUser(userId);
-    console.log('orders: ', orders);
 
-    console.log('typeof order: ', typeof orders);
     var order: object = orders.find((e) => e.order.id == orderId);
 
     return order;

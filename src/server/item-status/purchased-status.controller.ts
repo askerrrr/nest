@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { Get, Param, Body, Patch, Res, Controller } from '@nestjs/common';
 
-import { ItemStatusDto } from './item-status.dto';
 import { ItemStatusService } from './item-status.service';
+import { ItemStatusDto, ParamDto } from './item-status.dto';
 
 @Controller('purchasedstatus')
 export class PurchasedStatusController {
@@ -22,7 +22,7 @@ export class PurchasedStatusController {
   }
 
   @Get('/:userId/:orderId')
-  async getCurrentOrderStatus(@Param() param) {
+  async getCurrentOrderStatus(@Param() param: ParamDto) {
     var { userId, orderId } = param;
 
     var currentOrderStatus: string =

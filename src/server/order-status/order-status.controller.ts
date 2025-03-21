@@ -1,13 +1,13 @@
 import { Get, Body, Patch, Param, Controller } from '@nestjs/common';
 
-import { OrderStatusDto } from './order-status.dto';
 import { OrderStatusService } from './order-status.service';
+import { OrderStatusDto, ParamDto } from './order-status.dto';
 
 @Controller('status')
 export class OrderStatusController {
   constructor(private readonly orderStatusService: OrderStatusService) {}
   @Get('api/:userId/:orderId')
-  async getOrderStatus(@Param() param) {
+  async getOrderStatus(@Param() param: ParamDto) {
     var { userId, orderId } = param;
 
     var currentOrderStatus: object =

@@ -2,6 +2,7 @@ import { join } from 'path';
 import { Response } from 'express';
 import { Get, Res, Param, Delete, Controller } from '@nestjs/common';
 
+import { ParamDto } from './order.dto';
 import { OrderService } from './order.service';
 
 @Controller('orderinfo')
@@ -9,7 +10,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Get('api/:userId')
-  async getUser(@Param() param) {
+  async getUser(@Param() param: ParamDto) {
     var { userId } = param;
 
     var user = await this.orderService.getUser(userId);
@@ -18,7 +19,7 @@ export class OrderController {
   }
 
   @Get('/api/order/:userId/:orderId')
-  async getOrder(@Param() param) {
+  async getOrder(@Param() param: ParamDto) {
     var { userId, orderId } = param;
 
     var order = await this.orderService.getOrder(userId, orderId);
@@ -32,7 +33,7 @@ export class OrderController {
   }
 
   @Get('orders/:userId')
-  async getOrderList(@Param() param, @Res() res: Response) {
+  async getOrderList(@Param() param: ParamDto, @Res() res: Response) {
     var { userId } = param;
 
     var activeOrders = await this.orderService.getActiveOrders(userId);
@@ -45,10 +46,7 @@ export class OrderController {
     );
     var noOrders = join(__dirname, '../../src/client/html/noOrders.html');
 
-    if (
-      activeOrders?.length &&
-      (completedOrders?.length || !completedOrders?.length)
-    ) {
+    if (activeOrders?.length) {
       res.sendFile(active);
     } else if (!activeOrders?.length && completedOrders?.length) {
       res.sendFile(completed);
@@ -58,7 +56,7 @@ export class OrderController {
   }
 
   @Get('/api/completed/:userId')
-  async getCompletedOrders(@Param() param): Promise<object> {
+  async getCompletedOrders(@Param() param: ParamDto): Promise<object> {
     var { userId } = param;
 
     var completedOrders = await this.orderService.getCompletedOrders(userId);
@@ -67,7 +65,7 @@ export class OrderController {
   }
 
   @Delete('api/delete/:userId')
-  async deleteUser(@Param() param): Promise<number> {
+  async deleteUser(@Param() param: ParamDto): Promise<number> {
     var { userId } = param;
 
     var result = await this.orderService.deleteUser(userId);
@@ -75,7 +73,7 @@ export class OrderController {
   }
 
   @Delete('api/delete/:userId/:orderId')
-  async deleteOrder(@Param() param): Promise<number> {
+  async deleteOrder(@Param() param: ParamDto): Promise<number> {
     var { userId, orderId } = param;
 
     var result = await this.orderService.deleteUserOrder(userId, orderId);

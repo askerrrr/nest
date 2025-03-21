@@ -1,7 +1,8 @@
 import { Response } from 'express';
 import { Get, Res, Param, Controller } from '@nestjs/common';
 
-import { OpenImgService } from './open--img.service';
+import { ParamDto } from './open-img.dto';
+import { OpenImgService } from './open-img.service';
 
 @Controller('image')
 export class OpenImgController {
@@ -17,7 +18,7 @@ export class OpenImgController {
   }
 
   @Get('/check/:userId/:orderId')
-  async checkImageExists(@Param() param): Promise<object> {
+  async checkImageExists(@Param() param: ParamDto): Promise<object> {
     var { userId, orderId } = param;
 
     var fileIsExists = await this.imgService.checkImageExists(userId, orderId);

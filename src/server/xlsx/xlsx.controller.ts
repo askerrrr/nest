@@ -2,6 +2,7 @@ import { join } from 'path';
 import { Response } from 'express';
 import { Get, Controller, Res, Param } from '@nestjs/common';
 
+import { ParamDto } from './xlsx.dto';
 import { XlsxService } from './xlsx.service';
 import { UserCollectionService } from 'src/server/database/user.collection.service';
 import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
@@ -20,7 +21,7 @@ export class XlsxController {
   }
 
   @Get('/api/:userId/:orderId')
-  async getXLSXData(@Param() param): Promise<object> {
+  async getXLSXData(@Param() param: ParamDto): Promise<object> {
     var userId = param.userId;
     var orderId = param.orderId;
 
@@ -43,7 +44,7 @@ export class XlsxController {
   }
 
   @Get('check/:userId/:orderId')
-  async checkFileExists(@Param() param): Promise<object> {
+  async checkFileExists(@Param() param: ParamDto): Promise<object> {
     var filePath = await this.userCollection.findFilePath(
       param.userId,
       param.orderId,
