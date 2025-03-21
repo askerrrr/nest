@@ -1,10 +1,11 @@
 import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
+import { ConfigService } from '@nestjs/config';
 import { RootModule } from './root/root.module';
 
 (async () => {
-  const app = await NestFactory.create(RootModule);
+  var app = await NestFactory.create(RootModule);
 
   app.use(
     helmet.contentSecurityPolicy({
@@ -16,5 +17,12 @@ import { RootModule } from './root/root.module';
   );
 
   app.use(cookieParser());
-  await app.listen(process.env.PORT ?? 3000);
+
+  var configService = app.get(ConfigService);
+  var port = configService.get('PORT');
+  var host = configService.get('HOST');
+
+  await app.listen(port, host, () =>
+    console.log(`Server is running on http://${host}:${port}`),
+  );
 })();

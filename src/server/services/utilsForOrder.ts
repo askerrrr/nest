@@ -28,13 +28,13 @@ export class UtilsForOrder {
   }
 
   async sendDeleteOrderRequest(userId, orderId) {
-    var response = await fetch('env.bot_server_ip', {
+    var response = await fetch(`${process.env.bot_server_order}`, {
       method: 'DELETE',
       body: JSON.stringify({ userId, orderId }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${'env.bearer_token'}`,
+        Authorization: `Bearer ${process.env.bot_secret_key}`,
       },
     });
 
@@ -42,13 +42,13 @@ export class UtilsForOrder {
   }
 
   async sendDeleteUserRequest(userId): Promise<boolean> {
-    var response = await fetch('url', {
+    var response = await fetch(`${process.env.bot_server_user}`, {
       method: 'DELETE',
       body: JSON.stringify({ userId }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + 'token',
+        Authorization: `Bearer ${process.env.bot_secret_key}`,
       },
     });
 

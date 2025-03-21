@@ -23,12 +23,12 @@ export class ItemStatusService {
   }
 
   async sendOrderStatus(userId, orderId, orderStatus): Promise<boolean> {
-    var response = await fetch('env.bot_server_ip', {
+    var response = await fetch(`${process.env.bot_server}`, {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${'env.bearer_token'}`,
+        Authorization: `Bearer ${process.env.bot_secret_key}`,
       },
       body: JSON.stringify({
         userId,

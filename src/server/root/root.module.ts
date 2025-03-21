@@ -34,10 +34,10 @@ import { DownloadFileModule } from 'src/server/download-docs/download-docs.modul
     DownloadFileModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '..env',
+      envFilePath: '.env',
       expandVariables: true,
     }),
-    MongooseModule.forRoot(process.env.mongo_url!),
+    MongooseModule.forRoot(`${process.env.mongo_url}`),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     ServeStaticModule.forRoot({
       serveRoot: '/',

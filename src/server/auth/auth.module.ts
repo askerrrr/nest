@@ -11,7 +11,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
   imports: [
     JwtModule.register({
       global: true,
-      secret: 'asker',
+      secret: process.env.secretKey,
       signOptions: { expiresIn: '1h' },
     }),
     ServeStaticModule.forRoot({
