@@ -1,8 +1,7 @@
 import { join } from 'path';
-import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Module, forwardRef } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { RootService } from './root.service';
@@ -19,11 +18,9 @@ import { ItemStatusModule } from 'src/server/item-status/item-status.module';
 import { OrderStatusModule } from 'src/server/order-status/order-status.module';
 import { DownloadFileModule } from 'src/server/download-docs/download-docs.module';
 
-import { AuthGuard } from '../auth/auth.guard';
-
 @Module({
   controllers: [RootController],
-  providers: [RootService, ],//s{ provide: APP_GUARD, useClass: AuthGuard }
+  providers: [RootService],
   imports: [
     AuthModule,
     XlsxModule,
@@ -35,8 +32,12 @@ import { AuthGuard } from '../auth/auth.guard';
     ItemStatusModule,
     OrderStatusModule,
     DownloadFileModule,
-    forwardRef(() => AuthModule),
-    MongooseModule.forRoot('mongodb://localhost/database'),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '..env',
+      expandVariables: true,
+    }),
+    MongooseModule.forRoot(process.env.mongo_url!),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     ServeStaticModule.forRoot({
       serveRoot: '/',

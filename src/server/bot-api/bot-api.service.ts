@@ -69,7 +69,7 @@ export class BotApiService {
 
     var [authType, token] = authHeader.split(' ');
 
-    if (authType !== 'Bearer' && token !== 'env.auth_token') {
+    if (authType !== 'Bearer' && token !== process.env.bot_secret_key) {
       throw new UnauthorizedException();
     }
 

@@ -5,6 +5,7 @@ import { RootModule } from './root/root.module';
 
 (async () => {
   const app = await NestFactory.create(RootModule);
+
   app.use(
     helmet.contentSecurityPolicy({
       useDefaults: true,
