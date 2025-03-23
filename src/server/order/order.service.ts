@@ -24,13 +24,21 @@ export class OrderService {
   }
 
   async getActiveOrders(userId) {
-    var activeOrders = await this.userCollection.getActiveOrders(userId);
+    var { orders }: any = await this.getUser(userId);
+
+    var activeOrders = orders.filter(
+      (e) => e.order.orderStatus !== 'order-is-completed:6',
+    );
 
     return activeOrders;
   }
 
   async getCompletedOrders(userId) {
-    var completedOrders = await this.userCollection.getCompletedOrders(userId);
+    var { orders }: any = await this.getUser(userId);
+
+    var completedOrders = orders.filter(
+      (e) => e.order.orderStatus == 'order-is-completed:6',
+    );
 
     return completedOrders;
   }

@@ -16,26 +16,6 @@ export class UserCollectionService {
     return await this.user.find({}).exec();
   }
 
-  async getActiveOrders(userId) {
-    var { orders }: any = await this.getUser(userId);
-
-    var activeOrders = orders.filter(
-      (e) => e.order.orderStatus !== 'order-is-completed:6',
-    );
-
-    return activeOrders;
-  }
-
-  async getCompletedOrders(userId) {
-    var { orders }: any = await this.getUser(userId);
-
-    var completedOrders = orders.filter(
-      (e) => e.order.orderStatus == 'order-is-completed:6',
-    );
-
-    return completedOrders;
-  }
-
   async addNewOrder(order) {
     var result = await this.user.updateOne(
       { userId: order.userId },

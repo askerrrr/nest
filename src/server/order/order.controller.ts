@@ -19,6 +19,7 @@ export class OrderController {
     var { userId } = param;
 
     var user = await this.orderService.getUser(userId);
+
     var orderListDto = plainToClass(OrderListDto, user, {
       excludeExtraneousValues: true,
     });
@@ -72,12 +73,20 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Get('api/completed/:userId')
-  async getCompletedOrders(@Param() param: ParamDto): Promise<object> {
+  async getCompletedOrders(@Param() param: ParamDto): Promise<OrderListDto> {
     var { userId } = param;
 
     var completedOrders = await this.orderService.getCompletedOrders(userId);
 
-    return { userId, completedOrders };
+    var completedOrdersDto = plainToClass(
+      OrderListDto,
+      { userId, orders: completedOrders },
+      {
+        excludeExtraneousValues: true,
+      },
+    );
+
+    return completedOrdersDto;
   }
 
   @UseGuards(AuthGuard)

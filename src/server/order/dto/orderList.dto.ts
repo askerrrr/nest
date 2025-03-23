@@ -22,7 +22,7 @@ class Orders {
 @Exclude()
 export class OrderListDto {
   @Expose()
-  readonly userId: string;
+  readonly userId?: string;
 
   @Expose()
   @Type(() => Orders)
