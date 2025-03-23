@@ -1,7 +1,7 @@
-import rowForUserList from "./services/row/rowForUserList.js";
+import rowForUserList from './services/row/rowForUserList.js';
 
 var GetUsers = async () => {
-  var response = await fetch("/api/users");
+  var response = await fetch('/api/users');
 
   if (!response.ok) {
     var err = await response.text();
@@ -14,4 +14,4 @@ var GetUsers = async () => {
   users.forEach(async (user) => await rowForUserList(user));
 };
 
-GetUsers().catch((err) => alert("error: ", err));
+GetUsers().catch((err) => alert('error: ', err));

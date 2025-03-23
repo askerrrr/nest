@@ -20,20 +20,20 @@ export class PurchasedStatusController {
   @UseGuards(AuthGuard)
   @Patch()
   async changePurchasedtatus(
-    @Body() body: ItemStatusDto,
     @Res() res: Response,
-  ) {
+    @Body() body: ItemStatusDto,
+  ): Promise<Response> {
     var { userId, orderId, item } = body;
 
-    var responseStatus: number =
+    var successfullUpdate: boolean =
       await this.itemStatusService.changePurchasedStatus(userId, orderId, item);
 
-    res.sendStatus(responseStatus);
+    return successfullUpdate ? res.sendStatus(200) : res.sendStatus(304);
   }
 
   @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
-  async getCurrentOrderStatus(@Param() param: ParamDto) {
+  async getCurrentOrderStatus(@Param() param: ParamDto): Promise<object> {
     var { userId, orderId } = param;
 
     var currentOrderStatus: string =

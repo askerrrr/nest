@@ -1,35 +1,47 @@
 import { join } from 'path';
 import { Response } from 'express';
+import { plainToClass } from 'class-transformer';
 import { Get, Res, Param, Delete, UseGuards, Controller } from '@nestjs/common';
 
-import { ParamDto } from './order.dto';
+import { ParamDto } from './dto/param.dto';
+import { OrderDto } from './dto/order.dto';
+import { AuthGuard } from '../auth/auth.guard';
 import { OrderService } from './order.service';
-import { AuthGuard } from 'src/server/auth/auth.guard';
+import { OrderListDto } from './dto/orderList.dto';
 
 @Controller('orderinfo')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @UseGuards(AuthGuard)
-  @Get('api/:userId')
-  async getUser(@Param() param: ParamDto) {
+  @Get('api/orderlist/:userId')
+  async getUser(@Param() param: ParamDto): Promise<OrderListDto> {
     var { userId } = param;
 
     var user = await this.orderService.getUser(userId);
+    var orderListDto = plainToClass(OrderListDto, user, {
+      excludeExtraneousValues: true,
+    });
 
-    return user;
+    return orderListDto;
   }
+
   @UseGuards(AuthGuard)
-  @Get('/api/order/:userId/:orderId')
-  async getOrder(@Param() param: ParamDto) {
+  @Get('api/order/:userId/:orderId')
+  async getOrder(@Param() param: ParamDto): Promise<OrderDto> {
     var { userId, orderId } = param;
 
     var order = await this.orderService.getOrder(userId, orderId);
 
-    return order;
+    var orderDto = plainToClass(OrderDto, order, {
+      excludeExtraneousValues: true,
+    });
+
+    return orderDto;
   }
+
   @UseGuards(AuthGuard)
-  @Get('/orders/order/:userId/:orderId')
+  @Get('orders/order/:userId/:orderId')
   async getOrderFile(@Res() res: Response) {
     res.sendFile(join(__dirname, '../../src/client/html/userOrder.html'));
   }
@@ -59,7 +71,7 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('/api/completed/:userId')
+  @Get('api/completed/:userId')
   async getCompletedOrders(@Param() param: ParamDto): Promise<object> {
     var { userId } = param;
 
@@ -70,19 +82,25 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Delete('api/delete/:userId')
-  async deleteUser(@Param() param: ParamDto): Promise<number> {
+  async deleteUser(
+    @Param() param: ParamDto,
+    @Res() res: Response,
+  ): Promise<Response> {
     var { userId } = param;
 
-    var result = await this.orderService.deleteUser(userId);
-    return result;
+    var result: boolean = await this.orderService.deleteUser(userId);
+    return result ? res.sendStatus(200) : res.sendStatus(304);
   }
 
   @UseGuards(AuthGuard)
   @Delete('api/delete/:userId/:orderId')
-  async deleteOrder(@Param() param: ParamDto): Promise<number> {
+  async deleteOrder(
+    @Param() param: ParamDto,
+    @Res() res: Response,
+  ): Promise<Response> {
     var { userId, orderId } = param;
 
     var result = await this.orderService.deleteUserOrder(userId, orderId);
-    return result;
+    return result ? res.sendStatus(200) : res.sendStatus(304);
   }
 }

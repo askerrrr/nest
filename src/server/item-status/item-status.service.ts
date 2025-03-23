@@ -63,14 +63,14 @@ export class ItemStatusService {
     return items;
   }
 
-  async changePurchasedStatus(userId, orderId, newItem): Promise<number> {
+  async changePurchasedStatus(userId, orderId, newItem): Promise<boolean> {
     var items = await this.updateItemInArray(userId, orderId, newItem);
 
     var succesfullUpdateItemStatus: number =
       await this.itemCollection.updateItemStatus(userId, orderId, items);
 
     if (!succesfullUpdateItemStatus) {
-      return 304;
+      return false;
     }
 
     var isAllItemsArePurchased: boolean =
@@ -83,7 +83,7 @@ export class ItemStatusService {
       );
 
       if (currentOrderStatus == 'in-processing:1') {
-        var succesfullUpdateOrderStatus: number =
+        var succesfullUpdateOrderStatus: boolean =
           await this.userCollection.updateOrderStatus(
             userId,
             orderId,
@@ -96,16 +96,16 @@ export class ItemStatusService {
           'purchased:2',
         );
 
-        return successfullResponse && succesfullUpdateOrderStatus ? 200 : 304;
+        return successfullResponse && succesfullUpdateOrderStatus;
       } else {
-        return 304;
+        return false;
       }
     } else {
-      return 200;
+      return true;
     }
   }
 
-  async changeDeliveredStatus(userId, orderId, newItem): Promise<number> {
+  async changeDeliveredStatus(userId, orderId, newItem): Promise<boolean> {
     var items: string[] = await this.updateItemInArray(
       userId,
       orderId,
@@ -116,7 +116,7 @@ export class ItemStatusService {
       await this.itemCollection.updateItemStatus(userId, orderId, items);
 
     if (!succesfullUpdateItemStatus) {
-      return 304;
+      return false;
     }
 
     var isAllItemsArePurchased: boolean =
@@ -129,7 +129,7 @@ export class ItemStatusService {
       );
 
       if (currentOrderStatus == 'purchased:2') {
-        var succesfullUpdateOrderStatus: number =
+        var succesfullUpdateOrderStatus: boolean =
           await this.userCollection.updateOrderStatus(
             userId,
             orderId,
@@ -142,12 +142,12 @@ export class ItemStatusService {
           'china-warehouse:3',
         );
 
-        return successfullResponse && succesfullUpdateOrderStatus ? 200 : 304;
+        return successfullResponse && succesfullUpdateOrderStatus;
       } else {
-        return 304;
+        return false;
       }
     } else {
-      return 200;
+      return true;
     }
   }
 }

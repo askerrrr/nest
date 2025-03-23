@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { mkdir, open } from 'fs/promises';
 
 export class UtilsForBotApi {
@@ -32,10 +32,21 @@ export class UtilsForBotApi {
         writableStream.write(chunk);
       }
 
-      writableStream.on('error', (err) => console.log(path, err));
-      writableStream.on('finish', () => console.log('The file is written'));
+      var successfullDownload = await new Promise((resolve, reject) => {
+        writableStream.on('error', (err) => {
+          console.log(path, err);
+          reject(err);
+        });
 
-      writableStream.end();
+        writableStream.on('finish', () => {
+          console.log('The file is written');
+          resolve(true);
+        });
+
+        writableStream.end();
+      });
+
+      return successfullDownload;
     } catch (err) {
       console.log(err);
     } finally {

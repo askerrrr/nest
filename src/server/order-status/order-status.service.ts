@@ -18,16 +18,16 @@ export class OrderStatusService {
     return { orderStatus };
   }
 
-  async changeOrderStatus(userId, orderId, status): Promise<number> {
+  async changeOrderStatus(userId, orderId, status): Promise<boolean> {
     var successfullResponse: boolean =
       await this.itemStatusService.sendOrderStatus(userId, orderId, status);
 
-    var succesfullUpdate: number = await this.userCollection.updateOrderStatus(
+    var succesfullUpdate: boolean = await this.userCollection.updateOrderStatus(
       userId,
       orderId,
       status,
     );
 
-    return successfullResponse && succesfullUpdate ? 200 : 304;
+    return successfullResponse && succesfullUpdate;
   }
 }

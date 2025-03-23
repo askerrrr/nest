@@ -4,12 +4,11 @@ var getOrderList = async () => {
   var pathParts = window.location.pathname.split('/');
   var userId = pathParts.at(-1);
 
-  var url = '/orderinfo/api/' + userId;
+  var url = '/orderinfo/api/orderlist/' + userId;
 
   var response = await fetch(url);
 
   if (!response.ok) {
-    var err = await response.text();
     alert('error: ', response.status);
     return;
   }

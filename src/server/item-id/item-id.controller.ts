@@ -2,7 +2,8 @@ import { ItemIdDto } from './item-id.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemIdService } from './item-id.service';
 
-import { Body, Patch, UseGuards, Controller } from '@nestjs/common';
+import { Response } from 'express';
+import { Res, Body, Patch, UseGuards, Controller } from '@nestjs/common';
 
 @Controller('itemid')
 export class ItemIdController {
@@ -10,16 +11,19 @@ export class ItemIdController {
 
   @UseGuards(AuthGuard)
   @Patch()
-  async updateItemId(@Body() body: ItemIdDto): Promise<number> {
+  async updateItemId(
+    @Body() body: ItemIdDto,
+    @Res() res: Response,
+  ): Promise<Response> {
     var { userId, orderId, index, itemId } = body;
 
-    var successfullUpdate: number = await this.itemIdService.updateItemId(
+    var successfullUpdate: boolean = await this.itemIdService.updateItemId(
       userId,
       orderId,
       index,
       itemId,
     );
 
-    return successfullUpdate;
+    return successfullUpdate ? res.sendStatus(200) : res.sendStatus(304);
   }
 }

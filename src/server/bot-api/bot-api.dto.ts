@@ -1,23 +1,25 @@
-export class UserDto {
+export class CreateUserDto {
   userId: string;
   firstName: string;
   userName: string;
-  orders: [];
 }
 
-class File {
-  path: string;
-  telegramApiFileUrl: string;
-}
-
-export class OrderDto {
+export class CreateOrderDto {
   id: string;
+  userId: string;
+  firstName: string;
+  userName: string;
+  phone: string;
   date: string;
   type: string;
-  phone: string;
-  userId: string;
-  userName: string;
-  firstName: string;
   orderStatus: string;
-  file: File;
+  file: {
+    path: string;
+    telegramApiFileUrl: string;
+  };
+  itemUrl?: string;
+  description?: {
+    size: string;
+    qty: string | string[];
+  };
 }

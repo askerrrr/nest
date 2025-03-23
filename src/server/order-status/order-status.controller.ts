@@ -1,4 +1,13 @@
-import { Get, Body, Patch, Param, Controller, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
+import {
+  Get,
+  Res,
+  Body,
+  Patch,
+  Param,
+  Controller,
+  UseGuards,
+} from '@nestjs/common';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { OrderStatusService } from './order-status.service';
@@ -10,7 +19,7 @@ export class OrderStatusController {
 
   @UseGuards(AuthGuard)
   @Get('api/:userId/:orderId')
-  async getOrderStatus(@Param() param: ParamDto) {
+  async getOrderStatus(@Param() param: ParamDto): Promise<object> {
     var { userId, orderId } = param;
 
     var currentOrderStatus: object =
@@ -21,16 +30,19 @@ export class OrderStatusController {
 
   @UseGuards(AuthGuard)
   @Patch('/')
-  async changeOrderStatus(@Body() body: OrderStatusDto): Promise<number> {
+  async changeOrderStatus(
+    @Body() body: OrderStatusDto,
+    @Res() res: Response,
+  ): Promise<Response> {
     var { userId, orderId, orderStatus } = body;
 
-    var responseStatus: number =
+    var successfullUpdate: boolean =
       await this.orderStatusService.changeOrderStatus(
         userId,
         orderId,
         orderStatus,
       );
 
-    return responseStatus;
+    return successfullUpdate ? res.sendStatus(200) : res.sendStatus(304);
   }
 }

@@ -1,7 +1,9 @@
 import { join } from 'path';
 import { Response } from 'express';
+import { plainToInstance } from 'class-transformer';
 import { Get, Res, Controller, UseGuards } from '@nestjs/common';
 
+import { UsersDto } from './root.dto';
 import { RootService } from './root.service';
 import { AuthGuard } from 'src/server/auth/auth.guard';
 
@@ -21,8 +23,13 @@ export class RootController {
 
   @UseGuards(AuthGuard)
   @Get('/api/users')
-  async getUsers() {
+  async getUsers(): Promise<UsersDto> {
     var users = await this.rootService.getUsers();
-    return users;
+
+    var usersDto: any = plainToInstance(UsersDto, users, {
+      excludeExtraneousValues: true,
+    });
+
+    return usersDto;
   }
 }

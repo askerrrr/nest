@@ -15,10 +15,10 @@ export class OrderService {
     return user;
   }
 
-  async getOrder(userId, orderId): Promise<object> {
+  async getOrder(userId, orderId) {
     var { orders }: any = await this.userCollection.getUser(userId);
 
-    var order: object = orders.find((e) => e.order.id == orderId);
+    var { order } = orders.find((e) => e.order.id === orderId);
 
     return order;
   }
@@ -35,17 +35,15 @@ export class OrderService {
     return completedOrders;
   }
 
-  async deleteUser(userId): Promise<number> {
+  async deleteUser(userId): Promise<boolean> {
     var isUserDeletedFromDB = await this.userCollection.deleteUser(userId);
     var isUserFolderDeleted = await this.utils.deleteUserFolder(userId);
     var successfullResponse = await this.utils.sendDeleteUserRequest(userId);
 
-    return successfullResponse && isUserDeletedFromDB && isUserFolderDeleted
-      ? 200
-      : 304;
+    return successfullResponse && isUserDeletedFromDB && isUserFolderDeleted;
   }
 
-  async deleteUserOrder(userId, orderId): Promise<number> {
+  async deleteUserOrder(userId, orderId): Promise<boolean> {
     await this.userCollection.deleteOrder(userId, orderId);
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
@@ -62,6 +60,6 @@ export class OrderService {
       orderId,
     );
 
-    return successfullResponse && isFileDeleted && isDeletedFromDB ? 200 : 304;
+    return successfullResponse && isFileDeleted && isDeletedFromDB;
   }
 }

@@ -13,6 +13,14 @@ class File {
 }
 
 @Schema({ _id: false })
+class Description {
+  @Prop()
+  qty: string;
+  @Prop()
+  size?: string;
+}
+
+@Schema({ _id: false })
 class Order {
   @Prop()
   id: string;
@@ -32,8 +40,17 @@ class Order {
   @Prop()
   orderStatus: string;
 
+  @Prop()
+  type: string;
+
   @Prop({ type: File })
   file: File;
+
+  @Prop()
+  itemUrl?: string;
+
+  @Prop({ type: Description })
+  description?: Description;
 }
 
 @Schema({ _id: false })

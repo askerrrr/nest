@@ -1,5 +1,6 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
+import { XlsxService } from '../xlsx/xlsx.service';
 import { UtilsForBotApi } from 'src/server/services/utilsForBotApi';
 import { UserCollectionService } from 'src/server/database/user.collection.service';
 import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
@@ -8,44 +9,64 @@ import { ItemCollectionService } from 'src/server/database/item-status.collectio
 export class BotApiService {
   constructor(
     private utils: UtilsForBotApi,
+    private xlsxService: XlsxService,
     private userCollection: UserCollectionService,
     private itemCollection: ItemCollectionService,
   ) {}
 
-  async createUser(user) {
-    var existingDocument = this.userCollection.getUser({
-      userId: user.userId,
-    });
+  async createUser(userData): Promise<boolean> {
+    var user = await this.userCollection.getUser(userData.userId);
 
-    if (!existingDocument) {
-      await this.userCollection.createNewUser(user);
-      await this.itemCollection.createItemStatus(user);
+    if (user) {
+      return false;
+    } else {
+      var successfullCreateUser =
+        await this.userCollection.createNewUser(userData);
+
+      var successfullCreateItemCollection =
+        await this.itemCollection.createItemStatus(userData);
+
+      return successfullCreateUser && successfullCreateItemCollection;
     }
   }
 
   async createOrder(order) {
-    var { type, userId, orderId, file } = order;
+    var { type, userId, id, file } = order;
+
     var { path, telegramApiFileUrl } = file;
 
-    var existingDocument = await this.userCollection.getUser(userId);
+    var user = await this.userCollection.getUser(userId);
 
-    if (!existingDocument) {
-      await this.userCollection.createNewUser(order);
-      await this.itemCollection.createItemStatus(order);
+    if (!user) {
+      var successfullCreateUser = await this.createUser(order);
+
+      if (!successfullCreateUser) {
+        return false;
+      }
     }
 
-    await this.userCollection.addNewOrder(order);
-    await this.utils.downloadAndSaveFile(
+    var successfullAddNewOrder = await this.userCollection.addNewOrder(order);
+    var successDownloadFile = await this.utils.downloadAndSaveFile(
       userId,
-      orderId,
+      id,
       telegramApiFileUrl,
       order,
     );
 
     if (type == 'multiple') {
-      // var xlsxData = await this.utils.getDataFromXLSX(path)
-      // await this.itemCollection.addItems(userId, orderId, xlsxData);
+      var xlsxData = await this.xlsxService.getDataFromXLSX(path);
+      var successfullAddItems = await this.itemCollection.addItems(
+        userId,
+        id,
+        xlsxData,
+      );
+
+      return (
+        successfullAddItems && successDownloadFile && successfullAddNewOrder
+      );
     }
+
+    return successDownloadFile && successfullAddNewOrder;
   }
 
   async getOrderDetails(userId) {
@@ -63,16 +84,8 @@ export class BotApiService {
   }
 
   async validateAuthHeader(authHeader) {
-    if (!authHeader) {
-      throw new UnauthorizedException();
-    }
+    var [type, token] = authHeader.split(' ');
 
-    var [authType, token] = authHeader.split(' ');
-
-    if (authType !== 'Bearer' && token !== `${process.env.bot_secret_key}`) {
-      throw new UnauthorizedException();
-    }
-
-    return true;
+    return type == 'Bearer' && token == process.env.bot_secret_key;
   }
 }

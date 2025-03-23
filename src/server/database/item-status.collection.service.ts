@@ -32,7 +32,7 @@ export class ItemCollectionService {
       },
     );
 
-    return result.modifiedCount;
+    return result.modifiedCount == 1;
   }
 
   async updateItemStatus(userId, orderId, items) {
@@ -42,13 +42,17 @@ export class ItemCollectionService {
         $set: { 'orders.$.order.items': items },
       },
     );
-    console.log('result: ', result);
 
     return result.modifiedCount;
   }
 
   async createItemStatus(user) {
-    await this.itemCollection.insertOne({ userId: user.userId, orders: [] });
+    var result = await this.itemCollection.insertOne({
+      userId: user.userId,
+      orders: [],
+    });
+
+    return result.id;
   }
 
   async addItems(userId, orderId, xlsxData) {

@@ -9,15 +9,11 @@ export class UserCollectionService {
   constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
 
   async getUser(userId) {
-    var user = await this.user.findOne({ userId }).exec();
-
-    return user;
+    return await this.user.findOne({ userId }).exec();
   }
 
   async getUsers() {
-    var users = await this.user.find({}).exec();
-
-    return users;
+    return await this.user.find({}).exec();
   }
 
   async getActiveOrders(userId) {
@@ -39,6 +35,7 @@ export class UserCollectionService {
 
     return completedOrders;
   }
+
   async addNewOrder(order) {
     var result = await this.user.updateOne(
       { userId: order.userId },
@@ -48,13 +45,15 @@ export class UserCollectionService {
     return result.modifiedCount;
   }
 
-  async createNewUser(order) {
-    await this.user.insertOne({
-      userId: order.userId,
-      firstName: order.firstName,
-      userName: order.userName,
+  async createNewUser(data) {
+    var result = await this.user.insertOne({
+      userId: data.userId,
+      firstName: data.firstName,
+      userName: data.userName,
       orders: [],
     });
+
+    return result.id;
   }
 
   async deleteOrder(userId, orderId) {
@@ -65,13 +64,13 @@ export class UserCollectionService {
       },
     );
 
-    return result.modifiedCount;
+    return result.modifiedCount == 1;
   }
 
   async deleteUser(userId) {
     var result = await this.user.deleteOne({ userId });
 
-    return result.deletedCount;
+    return result.deletedCount == 1;
   }
 
   async findFilePath(userId, orderId) {
@@ -98,6 +97,6 @@ export class UserCollectionService {
       },
     );
 
-    return result.modifiedCount;
+    return result.modifiedCount == 1;
   }
 }
