@@ -3,6 +3,9 @@ import { Type, Expose, Exclude } from 'class-transformer';
 @Exclude()
 class Order {
   @Expose()
+  readonly userId: string;
+
+  @Expose()
   readonly id: string;
 
   @Expose()
