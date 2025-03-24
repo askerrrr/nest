@@ -64,9 +64,9 @@ export class OrderController {
 
     if (activeOrders?.length) {
       res.sendFile(active);
-    } else if (!activeOrders?.length && completedOrders?.length) {
+    } else if (completedOrders?.length) {
       res.sendFile(completed);
-    } else if (!activeOrders?.length && !completedOrders?.length) {
+    } else {
       res.sendFile(noOrders);
     }
   }
