@@ -9,7 +9,7 @@ export class OrderStatusService {
     private userCollection: UserCollectionService,
     private itemStatusService: ItemStatusService,
   ) {}
-  async getOrderStatus(userId, orderId) {
+  async getOrderStatus(userId: string, orderId: string): Promise<object> {
     var orderStatus: string = await this.userCollection.getCurrentOrderStatus(
       userId,
       orderId,
@@ -18,7 +18,11 @@ export class OrderStatusService {
     return { orderStatus };
   }
 
-  async changeOrderStatus(userId, orderId, status): Promise<boolean> {
+  async changeOrderStatus(
+    userId: string,
+    orderId: string,
+    status: string,
+  ): Promise<boolean> {
     var successfullResponse: boolean =
       await this.itemStatusService.sendOrderStatus(userId, orderId, status);
 

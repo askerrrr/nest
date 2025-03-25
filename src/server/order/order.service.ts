@@ -9,13 +9,11 @@ export class OrderService {
     private utils: UtilsForOrder,
     private userCollection: UserCollectionService,
   ) {}
-  async getUser(userId) {
-    var user = await this.userCollection.getUser(userId);
-
-    return user;
+  async getUser(userId: string) {
+    return await this.userCollection.getUser(userId);
   }
 
-  async getOrder(userId, orderId) {
+  async getOrder(userId: string, orderId: string) {
     var { orders }: any = await this.userCollection.getUser(userId);
 
     var { order } = orders.find((e) => e.order.id === orderId);
@@ -23,7 +21,7 @@ export class OrderService {
     return order;
   }
 
-  async getActiveOrders(userId) {
+  async getActiveOrders(userId: string) {
     var { orders }: any = await this.getUser(userId);
 
     var activeOrders = orders.filter(
@@ -33,7 +31,7 @@ export class OrderService {
     return activeOrders;
   }
 
-  async getCompletedOrders(userId) {
+  async getCompletedOrders(userId: string) {
     var { orders }: any = await this.getUser(userId);
 
     var completedOrders = orders.filter(
@@ -43,7 +41,7 @@ export class OrderService {
     return completedOrders;
   }
 
-  async deleteUser(userId): Promise<boolean> {
+  async deleteUser(userId: string): Promise<boolean> {
     var isUserDeletedFromDB = await this.userCollection.deleteUser(userId);
     var isUserFolderDeleted = await this.utils.deleteUserFolder(userId);
     var successfullResponse = await this.utils.sendDeleteUserRequest(userId);
@@ -51,7 +49,7 @@ export class OrderService {
     return successfullResponse && isUserDeletedFromDB && isUserFolderDeleted;
   }
 
-  async deleteUserOrder(userId, orderId): Promise<boolean> {
+  async deleteUserOrder(userId: string, orderId: string): Promise<boolean> {
     await this.userCollection.deleteOrder(userId, orderId);
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);

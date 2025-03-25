@@ -37,7 +37,7 @@ import { DownloadFileModule } from 'src/server/download-docs/download-docs.modul
       envFilePath: '.env',
       expandVariables: true,
     }),
-    MongooseModule.forRoot(`${process.env.mongo_url}`),
+    MongooseModule.forRoot('mongodb://localhost/database'),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     ServeStaticModule.forRoot({
       serveRoot: '/',

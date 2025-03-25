@@ -7,7 +7,7 @@ import { access, readFile, constants } from 'fs/promises';
 export class XlsxService {
   constructor() {}
 
-  async getImageFromXLSX(filePath): Promise<object> {
+  async getImageFromXLSX(filePath: string): Promise<object> {
     var fileData = await readFile(filePath);
 
     var zip = await JSZip.loadAsync(fileData);
@@ -33,7 +33,7 @@ export class XlsxService {
     return base64;
   }
 
-  async getDataFromXLSX(filePath): Promise<object> {
+  async getDataFromXLSX(filePath: string): Promise<string[][]> {
     var wb = new Exceljs.Workbook();
 
     await wb.xlsx.readFile(filePath);
@@ -58,13 +58,13 @@ export class XlsxService {
     totalSum = totalSum.slice(0, 1);
     itemPrice.shift();
 
-    var xlsxData: object = [url, qty, size, totalSum, itemPrice];
+    var xlsxData: string[][] = [url, qty, size, totalSum, itemPrice];
 
     return xlsxData;
   }
 
-  async combineData(data, image, items, itemId): Promise<object> {
-    var [url, qty, size, totalSum, itemPrice] = data;
+  async combineData(data, image, items, itemId) {
+    var [url, qty, size, totalSum, itemPrice]: string[] = data;
     var fileData: object[] = [];
 
     for (let i = 0; i < url.length; i++) {
@@ -83,7 +83,7 @@ export class XlsxService {
     return fileData;
   }
 
-  async checkFileExists(filePath): Promise<boolean> {
+  async checkFileExists(filePath: string): Promise<boolean> {
     var fileIsExists: boolean = await access(filePath, constants.F_OK)
       .then(() => true)
       .catch(() => false);

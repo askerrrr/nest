@@ -8,7 +8,7 @@ import { User, UserDocument } from 'src/server/schemas/user.schema';
 export class UserCollectionService {
   constructor(@InjectModel(User.name) private user: Model<UserDocument>) {}
 
-  async getUser(userId) {
+  async getUser(userId: string) {
     return await this.user.findOne({ userId }).exec();
   }
 
@@ -16,13 +16,13 @@ export class UserCollectionService {
     return await this.user.find({}).exec();
   }
 
-  async addNewOrder(order) {
+  async addNewOrder(orderData): Promise<boolean> {
     var result = await this.user.updateOne(
-      { userId: order.userId },
-      { $push: { orders: { order } } },
+      { userId: orderData.userId },
+      { $push: { orders: { orderData } } },
     );
 
-    return result.modifiedCount;
+    return result.modifiedCount == 1;
   }
 
   async createNewUser(data) {
@@ -36,7 +36,7 @@ export class UserCollectionService {
     return result.id;
   }
 
-  async deleteOrder(userId, orderId) {
+  async deleteOrder(userId: string, orderId: string): Promise<boolean> {
     var result = await this.user.updateOne(
       { userId, 'orders.order.id': orderId },
       {
@@ -47,13 +47,13 @@ export class UserCollectionService {
     return result.modifiedCount == 1;
   }
 
-  async deleteUser(userId) {
+  async deleteUser(userId: string): Promise<boolean> {
     var result = await this.user.deleteOne({ userId });
 
     return result.deletedCount == 1;
   }
 
-  async findFilePath(userId, orderId) {
+  async findFilePath(userId: string, orderId: string): Promise<string> {
     var { orders }: any = await this.getUser(userId);
     var { order } = orders.find((e) => e.order.id == orderId);
     var { path } = order.file;
@@ -61,7 +61,10 @@ export class UserCollectionService {
     return path;
   }
 
-  async getCurrentOrderStatus(userId, orderId) {
+  async getCurrentOrderStatus(
+    userId: string,
+    orderId: string,
+  ): Promise<string> {
     var { orders }: any = await this.getUser(userId);
     var { order } = orders.find((e) => e.order.id == orderId);
     var { orderStatus } = order;
@@ -69,7 +72,11 @@ export class UserCollectionService {
     return orderStatus;
   }
 
-  async updateOrderStatus(userId, orderId, status) {
+  async updateOrderStatus(
+    userId: string,
+    orderId: string,
+    status: string,
+  ): Promise<boolean> {
     var result = await this.user.updateOne(
       { userId, 'orders.order.id': orderId },
       {

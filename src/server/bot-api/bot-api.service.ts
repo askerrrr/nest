@@ -31,9 +31,7 @@ export class BotApiService {
   }
 
   async createOrder(order) {
-    var { type, userId, id, file } = order;
-
-    var { path, telegramApiFileUrl } = file;
+    var { id, type, file, userId } = order;
 
     var user = await this.userCollection.getUser(userId);
 
@@ -45,6 +43,8 @@ export class BotApiService {
       }
     }
 
+    var { path, telegramApiFileUrl } = file;
+
     var successfullAddNewOrder = await this.userCollection.addNewOrder(order);
     var successDownloadFile = await this.utils.downloadAndSaveFile(
       userId,
@@ -55,6 +55,7 @@ export class BotApiService {
 
     if (type == 'multiple') {
       var xlsxData = await this.xlsxService.getDataFromXLSX(path);
+
       var successfullAddItems = await this.itemCollection.addItems(
         userId,
         id,
@@ -69,7 +70,7 @@ export class BotApiService {
     return successDownloadFile && successfullAddNewOrder;
   }
 
-  async getOrderDetails(userId) {
+  async getOrderDetails(userId: string): Promise<object> {
     var document = await this.userCollection.getUser(userId);
     var orderDetails = await this.utils.getOrderDetailsForBot(document);
 
@@ -83,7 +84,7 @@ export class BotApiService {
     return { activeOrders, completedOrders };
   }
 
-  async validateAuthHeader(authHeader) {
+  async validateAuthHeader(authHeader): Promise<boolean> {
     var [type, token] = authHeader.split(' ');
 
     return type == 'Bearer' && token == process.env.bot_secret_key;

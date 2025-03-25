@@ -2,7 +2,7 @@ import { join } from 'path';
 import { Response } from 'express';
 import { Get, Res, Post, Body, Controller } from '@nestjs/common';
 
-import { BodyDto } from './auth.guard.dto';
+import { AuthDataDto } from './auth.guard.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -16,20 +16,22 @@ export class AuthController {
 
   @Post('login/check')
   async checkLogin(
-    @Body() body: BodyDto,
+    @Body() body: AuthDataDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    var token = await this.authService.checkLogin(body);
+    var { login, passwd } = body;
+
+    var token = await this.authService.checkLogin(login, passwd);
 
     if (!token) {
       return res.redirect('/auth/login');
     }
 
-    res.cookie('token', token, {
-      maxAge: 1000 * 60 * 60,
-      httpOnly: true,
-    });
-
-    return { redirect: true };
+    return res
+      .cookie('token', token, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+      })
+      .json({ redirect: true });
   }
 }
