@@ -37,7 +37,7 @@ export class OrderController {
     var orderDto = plainToClass(OrderDto, order, {
       excludeExtraneousValues: true,
     });
-    console.log('order: ', orderDto);
+
     return orderDto;
   }
 

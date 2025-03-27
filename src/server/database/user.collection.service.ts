@@ -16,13 +16,13 @@ export class UserCollectionService {
     return await this.user.find({}).exec();
   }
 
-  async addNewOrder(order) {
+  async addNewOrder(order): Promise<boolean> {
     var result = await this.user.updateOne(
       { userId: order.userId },
       { $push: { orders: { order } } },
     );
 
-    return result.modifiedCount;
+    return result.modifiedCount == 1;
   }
 
   async createNewUser(data) {
@@ -36,7 +36,7 @@ export class UserCollectionService {
     return result.id;
   }
 
-  async deleteOrder(userId, orderId) {
+  async deleteOrder(userId, orderId): Promise<boolean> {
     var result = await this.user.updateOne(
       { userId, 'orders.order.id': orderId },
       {
@@ -47,13 +47,13 @@ export class UserCollectionService {
     return result.modifiedCount == 1;
   }
 
-  async deleteUser(userId) {
+  async deleteUser(userId): Promise<boolean> {
     var result = await this.user.deleteOne({ userId });
 
     return result.deletedCount == 1;
   }
 
-  async findFilePath(userId, orderId) {
+  async findFilePath(userId, orderId): Promise<string> {
     var { orders }: any = await this.getUser(userId);
     var { order } = orders.find((e) => e.order.id == orderId);
     var { path } = order.file;
@@ -61,7 +61,7 @@ export class UserCollectionService {
     return path;
   }
 
-  async getCurrentOrderStatus(userId, orderId) {
+  async getCurrentOrderStatus(userId, orderId): Promise<string> {
     var { orders }: any = await this.getUser(userId);
     var { order } = orders.find((e) => e.order.id == orderId);
     var { orderStatus } = order;
@@ -69,7 +69,7 @@ export class UserCollectionService {
     return orderStatus;
   }
 
-  async updateOrderStatus(userId, orderId, status) {
+  async updateOrderStatus(userId, orderId, status): Promise<boolean> {
     var result = await this.user.updateOne(
       { userId, 'orders.order.id': orderId },
       {

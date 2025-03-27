@@ -5,16 +5,17 @@ import { User, UserSchema } from 'src/server/schemas/user.schema';
 import { Item, ItemSchema } from 'src/server/schemas/item.schema';
 import { UserCollectionService } from './user.collection.service';
 import { ItemCollectionService } from './item-status.collection.service';
+import { AdminCollectionService } from './admin.service';
+import { Admin, AdminSchema } from '../schemas/admin.schema';
 
 @Global()
 @Module({
-  exports: [MongooseModule, UserCollectionService, ItemCollectionService],
+  exports: [UserCollectionService, ItemCollectionService],
   providers: [UserCollectionService, ItemCollectionService],
   imports: [
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-      { name: Item.name, schema: ItemSchema },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
   ],
 })
 export class DatabaseModule {}
+//   { name: Admin.name, schema: AdminSchema },

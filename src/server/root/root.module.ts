@@ -6,17 +6,18 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { RootService } from './root.service';
 import { RootController } from './root.controller';
-import { AuthModule } from 'src/server/auth/auth.module';
-import { XlsxModule } from 'src/server/xlsx/xlsx.module';
+import { AuthModule } from '../auth/auth.module';
+import { XlsxModule } from '../xlsx/xlsx.module';
+import { Item, ItemSchema } from '../schemas/item.schema';
 import { User, UserSchema } from '../schemas/user.schema';
-import { OrderModule } from 'src/server/order/order.module';
-import { ItemIdModule } from 'src/server/item-id/item-id.module';
-import { BotApiModule } from 'src/server/bot-api/bot-api.module';
-import { OpenImgModule } from 'src/server/open-img/open-img.module';
-import { DatabaseModule } from 'src/server/database/database.module';
-import { ItemStatusModule } from 'src/server/item-status/item-status.module';
-import { OrderStatusModule } from 'src/server/order-status/order-status.module';
-import { DownloadFileModule } from 'src/server/download-docs/download-docs.module';
+import { OrderModule } from '../order/order.module';
+import { ItemIdModule } from '../item-id/item-id.module';
+import { BotApiModule } from '../bot-api/bot-api.module';
+import { OpenImgModule } from '../open-img/open-img.module';
+import { DatabaseModule } from '../database/database.module';
+import { ItemStatusModule } from '../item-status/item-status.module';
+import { OrderStatusModule } from '../order-status/order-status.module';
+import { DownloadFileModule } from '../download-docs/download-docs.module';
 
 @Module({
   controllers: [RootController],
@@ -37,8 +38,9 @@ import { DownloadFileModule } from 'src/server/download-docs/download-docs.modul
       envFilePath: '.env',
       expandVariables: true,
     }),
-    MongooseModule.forRoot(`${process.env.mongo_url}`),
+    MongooseModule.forRoot('mongodb://localhost/database'),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
     ServeStaticModule.forRoot({
       serveRoot: '/',
       rootPath: join(__dirname, '../../src/client'),

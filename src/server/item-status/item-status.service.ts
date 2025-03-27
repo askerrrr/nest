@@ -66,7 +66,7 @@ export class ItemStatusService {
   async changePurchasedStatus(userId, orderId, newItem): Promise<boolean> {
     var items = await this.updateItemInArray(userId, orderId, newItem);
 
-    var succesfullUpdateItemStatus: number =
+    var succesfullUpdateItemStatus: boolean =
       await this.itemCollection.updateItemStatus(userId, orderId, items);
 
     if (!succesfullUpdateItemStatus) {
@@ -112,7 +112,7 @@ export class ItemStatusService {
       newItem,
     );
 
-    var succesfullUpdateItemStatus: number =
+    var succesfullUpdateItemStatus: boolean =
       await this.itemCollection.updateItemStatus(userId, orderId, items);
 
     if (!succesfullUpdateItemStatus) {

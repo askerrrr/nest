@@ -10,7 +10,7 @@ export class OpenImgController {
   constructor(private readonly imgService: OpenImgService) {}
 
   @UseGuards(AuthGuard)
-  @Get()
+  @Get('/:userId/:orderId')
   async sendImg(@Param() param, @Res() res: Response) {
     var { userId, orderId } = param;
 

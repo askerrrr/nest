@@ -1,11 +1,12 @@
 import { join } from 'path';
 import { Response } from 'express';
-import { Get, Controller, Res, Param } from '@nestjs/common';
+import { Get, Controller, Res, Param, UseGuards } from '@nestjs/common';
 
 import { ParamDto } from './xlsx.dto';
 import { XlsxService } from './xlsx.service';
 import { UserCollectionService } from 'src/server/database/user.collection.service';
 import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('xlsx')
 export class XlsxController {
@@ -15,11 +16,13 @@ export class XlsxController {
     private readonly userCollection: UserCollectionService,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
   async getXLSXFIle(@Res() res: Response) {
     res.sendFile(join(__dirname, '../../src/client/html/sheet.html'));
   }
 
+  @UseGuards(AuthGuard)
   @Get('/api/:userId/:orderId')
   async getXLSXData(@Param() param: ParamDto): Promise<object> {
     var userId = param.userId;
@@ -43,6 +46,7 @@ export class XlsxController {
     return combinedData;
   }
 
+  @UseGuards(AuthGuard)
   @Get('check/:userId/:orderId')
   async checkFileExists(@Param() param: ParamDto): Promise<object> {
     var filePath = await this.userCollection.findFilePath(

@@ -18,7 +18,7 @@ export class RootController {
 
     return users?.length
       ? res.sendFile(join(__dirname, '../../src/client/index.html'))
-      : res.sendFile(join(__dirname, '../../src/client/noUsers.html'));
+      : res.sendFile(join(__dirname, '../../src/client/html/noUsers.html'));
   }
 
   @UseGuards(AuthGuard)

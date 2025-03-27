@@ -7,7 +7,6 @@ export class RootService {
   constructor(private userCollection: UserCollectionService) {}
 
   async getUsers() {
-    var users = await this.userCollection.getUsers();
-    return users;
+    return await this.userCollection.getUsers();
   }
 }
