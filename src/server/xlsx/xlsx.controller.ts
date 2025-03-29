@@ -2,11 +2,11 @@ import { join } from 'path';
 import { Response } from 'express';
 import { Get, Controller, Res, Param, UseGuards } from '@nestjs/common';
 
-import { ParamDto } from './xlsx.dto';
 import { XlsxService } from './xlsx.service';
+import { AuthGuard } from '../auth/auth.guard';
+import { Params, FIleIsExists, CombinedData } from './xlsx.dto';
 import { UserCollectionService } from 'src/server/database/user.collection.service';
 import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
-import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('xlsx')
 export class XlsxController {
@@ -24,9 +24,8 @@ export class XlsxController {
 
   @UseGuards(AuthGuard)
   @Get('/api/:userId/:orderId')
-  async getXLSXData(@Param() param: ParamDto): Promise<object> {
-    var userId = param.userId;
-    var orderId = param.orderId;
+  async getXLSXData(@Param() param: Params): Promise<object> {
+    var { userId, orderId } = param;
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
@@ -36,7 +35,7 @@ export class XlsxController {
     var imgData: object = await this.xlsxService.getImageFromXLSX(filePath);
     var xlsxData: object = await this.xlsxService.getDataFromXLSX(filePath);
 
-    var combinedData: object = this.xlsxService.combineData(
+    var combinedData: CombinedData[] = await this.xlsxService.combineData(
       xlsxData,
       imgData,
       items,
@@ -48,10 +47,12 @@ export class XlsxController {
 
   @UseGuards(AuthGuard)
   @Get('check/:userId/:orderId')
-  async checkFileExists(@Param() param: ParamDto): Promise<object> {
-    var filePath = await this.userCollection.findFilePath(
-      param.userId,
-      param.orderId,
+  async checkFileExists(@Param() param: Params): Promise<FIleIsExists> {
+    var { userId, orderId } = param;
+
+    var filePath: string = await this.userCollection.findFilePath(
+      userId,
+      orderId,
     );
 
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';

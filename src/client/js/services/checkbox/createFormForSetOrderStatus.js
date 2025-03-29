@@ -1,3 +1,5 @@
+import sendOrderStatus from './sendOrderStatus.js';
+
 var createFormForSetOrderStatus = async (userId, orderId) => {
   return document
     .getElementById('submit-order-status')
@@ -19,20 +21,14 @@ var createFormForSetOrderStatus = async (userId, orderId) => {
 
       document.getElementById('submit-order-status').disabled = true;
 
-      var response = await fetch('/status', {
-        method: 'PATCH',
-        body: JSON.stringify({ userId, orderId, orderStatus }),
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
+      var successfullResponse = await sendOrderStatus(
+        userId,
+        orderId,
+        orderStatus,
+      );
 
-      if (response.status !== 200) {
-        var err = await response.text();
-        alert(
-          'Ошибка при обновлении статуса. Попробуйте еще раз\n\nОшибка: ' + err,
-        );
+      if (!successfullResponse) {
+        alert('Ошибка при обновлении статуса. Попробуйте еще раз.');
 
         fieldset?.remove();
         window.dialog.close();
@@ -40,14 +36,14 @@ var createFormForSetOrderStatus = async (userId, orderId) => {
         btn.disabled = false;
 
         return;
+      } else {
+        alert('Статус успешно обновлен');
+        fieldset?.remove();
+        window.dialog.close();
+        document.getElementById('submit-order-status').disabled = false;
+        btn.disabled = false;
+        window.location.reload();
       }
-
-      alert('Статус успешно обновлен');
-      fieldset?.remove();
-      window.dialog.close();
-      document.getElementById('submit-order-status').disabled = false;
-      btn.disabled = false;
-      window.location.reload();
     });
 };
 

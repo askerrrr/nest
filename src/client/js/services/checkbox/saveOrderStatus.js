@@ -1,23 +1,19 @@
-import renderNextUnmarkedPendingStatus from "./renderNextPendingStatus.js";
-import renderUnmarkedCheckBoxForFirstStatus from "./renderCheckBoxForFirstStatus.js";
+import renderNextUnmarkedPendingStatus from './renderNextPendingStatus.js';
+import getCurrentOrderStatus from '../row/services/getCurrentOrderStatus.js';
+import renderUnmarkedCheckBoxForFirstStatus from './renderCheckBoxForFirstStatus.js';
 
 var saveAndRenderCurrentOrderStatus = async (userId, orderId) => {
   try {
-    var url = "/status/api/" + userId + "/" + orderId;
-    var response = await fetch(url);
+    var orderStatus = await getCurrentOrderStatus(
+      userId,
+      orderId,
+      '/status/api/',
+    );
 
-    if (!response.ok) {
-      var err = await response.text();
-      console.log("response err", err);
-    }
-
-    var json = await response.json();
-    var orderStatus = json.orderStatus;
-
-    let statusId = orderStatus.split(":")[1];
-
+    var statusId = orderStatus.split(':')[1];
+    console.log(orderStatus.split(':'));
     var checkBoxCollection = document.querySelectorAll(
-      `input[name=order-status]`
+      `input[name=order-status]`,
     );
 
     var arrayOfCheckBoxesID = [];
@@ -26,7 +22,7 @@ var saveAndRenderCurrentOrderStatus = async (userId, orderId) => {
       arrayOfCheckBoxesID.push({ statusId: +checkBoxCollection[i].id });
     }
 
-    return orderStatus == "not-accepted-for-processing:0"
+    return orderStatus == 'not-accepted-for-processing:0'
       ? renderUnmarkedCheckBoxForFirstStatus(arrayOfCheckBoxesID)
       : renderNextUnmarkedPendingStatus(arrayOfCheckBoxesID, statusId);
   } catch (err) {

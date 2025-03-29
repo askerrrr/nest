@@ -5,8 +5,16 @@ import { ItemCollectionService } from 'src/server/database/item-status.collectio
 @Injectable()
 export class ItemIdService {
   constructor(private itemCollection: ItemCollectionService) {}
-  async updateItemId(userId, orderId, index, newItemId): Promise<boolean> {
-    var itemIDs = await this.itemCollection.getItemId(userId, orderId);
+  async updateItemId(
+    userId: string,
+    orderId: string,
+    index: string,
+    newItemId: string,
+  ): Promise<boolean> {
+    var itemIDs: string[] = await this.itemCollection.getItemId(
+      userId,
+      orderId,
+    );
 
     itemIDs[index] = newItemId;
 

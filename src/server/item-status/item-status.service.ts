@@ -40,8 +40,11 @@ export class ItemStatusService {
     return response.status == 200;
   }
 
-  async getCurrentOrderStatus(userId, orderId): Promise<string> {
-    var orderStatus = await this.userCollection.getCurrentOrderStatus(
+  async getCurrentOrderStatus(
+    userId: string,
+    orderId: string,
+  ): Promise<string> {
+    var orderStatus: string = await this.userCollection.getCurrentOrderStatus(
       userId,
       orderId,
     );
@@ -50,7 +53,7 @@ export class ItemStatusService {
   }
 
   async updateItemInArray(userId, orderId, newItem): Promise<string[]> {
-    var items = await this.itemCollection.getItems(userId, orderId);
+    var items: string[] = await this.itemCollection.getItems(userId, orderId);
 
     var itemValues = items.map((e) => e.split(':::')[0]);
 
@@ -63,8 +66,16 @@ export class ItemStatusService {
     return items;
   }
 
-  async changePurchasedStatus(userId, orderId, newItem): Promise<boolean> {
-    var items = await this.updateItemInArray(userId, orderId, newItem);
+  async changePurchasedStatus(
+    userId: string,
+    orderId: string,
+    newItem: string,
+  ): Promise<boolean> {
+    var items: string[] = await this.updateItemInArray(
+      userId,
+      orderId,
+      newItem,
+    );
 
     var succesfullUpdateItemStatus: boolean =
       await this.itemCollection.updateItemStatus(userId, orderId, items);
@@ -105,7 +116,11 @@ export class ItemStatusService {
     }
   }
 
-  async changeDeliveredStatus(userId, orderId, newItem): Promise<boolean> {
+  async changeDeliveredStatus(
+    userId: string,
+    orderId: string,
+    newItem: string,
+  ): Promise<boolean> {
     var items: string[] = await this.updateItemInArray(
       userId,
       orderId,

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
 
-import { UtilsForOrder } from 'src/server/services/utilsForOrder';
-import { UserCollectionService } from 'src/server/database/user.collection.service';
+import { OrderDto } from './dto/order.dto';
+import { OrderListDto } from './dto/orderList.dto';
+import { UtilsForOrder } from '../services/utilsForOrder';
+import { UserCollectionService } from '../database/user.collection.service';
 
 @Injectable()
 export class OrderService {
@@ -9,13 +12,16 @@ export class OrderService {
     private utils: UtilsForOrder,
     private userCollection: UserCollectionService,
   ) {}
-  async getUser(userId) {
+
+  async getUser(userId: string): Promise<OrderListDto> {
     var user = await this.userCollection.getUser(userId);
 
-    return user;
+    var userDto = plainToClass(OrderListDto, user);
+
+    return userDto;
   }
 
-  async getOrder(userId, orderId) {
+  async getOrder(userId: string, orderId: string): Promise<OrderDto> {
     var { orders }: any = await this.userCollection.getUser(userId);
 
     var { order } = orders.find((e) => e.order.id === orderId);
@@ -23,8 +29,8 @@ export class OrderService {
     return order;
   }
 
-  async getActiveOrders(userId) {
-    var { orders }: any = await this.getUser(userId);
+  async getActiveOrders(userId: string) {
+    var { orders }: any = await this.userCollection.getUser(userId);
 
     var activeOrders = orders.filter(
       (e) => e.order.orderStatus !== 'order-is-completed:6',
@@ -33,8 +39,8 @@ export class OrderService {
     return activeOrders;
   }
 
-  async getCompletedOrders(userId) {
-    var { orders }: any = await this.getUser(userId);
+  async getCompletedOrders(userId: string) {
+    var { orders }: any = await this.userCollection.getUser(userId);
 
     var completedOrders = orders.filter(
       (e) => e.order.orderStatus == 'order-is-completed:6',
@@ -43,27 +49,33 @@ export class OrderService {
     return completedOrders;
   }
 
-  async deleteUser(userId): Promise<boolean> {
-    var isUserDeletedFromDB = await this.userCollection.deleteUser(userId);
-    var isUserFolderDeleted = await this.utils.deleteUserFolder(userId);
-    var successfullResponse = await this.utils.sendDeleteUserRequest(userId);
+  async deleteUser(userId: string): Promise<boolean> {
+    var isUserDeletedFromDB: boolean =
+      await this.userCollection.deleteUser(userId);
+    var isUserFolderDeleted: boolean =
+      await this.utils.deleteUserFolder(userId);
+    var successfullResponse: boolean =
+      await this.utils.sendDeleteUserRequest(userId);
 
     return successfullResponse && isUserDeletedFromDB && isUserFolderDeleted;
   }
 
-  async deleteUserOrder(userId, orderId): Promise<boolean> {
+  async deleteUserOrder(userId: string, orderId: string): Promise<boolean> {
     await this.userCollection.deleteOrder(userId, orderId);
 
-    var filePath = await this.userCollection.findFilePath(userId, orderId);
-
-    var isFileDeleted = await this.utils.deleteOrderFile(filePath);
-
-    var successfullResponse = await this.utils.sendDeleteOrderRequest(
+    var filePath: string = await this.userCollection.findFilePath(
       userId,
       orderId,
     );
 
-    var isDeletedFromDB = await this.userCollection.deleteOrder(
+    var isFileDeleted: boolean = await this.utils.deleteOrderFile(filePath);
+
+    var successfullResponse: boolean = await this.utils.sendDeleteOrderRequest(
+      userId,
+      orderId,
+    );
+
+    var isDeletedFromDB: boolean = await this.userCollection.deleteOrder(
       userId,
       orderId,
     );

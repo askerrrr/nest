@@ -2,14 +2,17 @@ import { join } from 'path';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AuthController } from './auth.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService],
   imports: [
+    MongooseModule.forRoot('mongodb://localhost/adminData', {
+      connectionName: 'admin',
+    }),
     JwtModule.register({
       global: true,
       secret: process.env.secretKey,

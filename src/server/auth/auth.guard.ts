@@ -14,7 +14,8 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     var request = context.switchToHttp().getRequest();
     var response = context.switchToHttp().getResponse<Response>();
-    var token = request.cookies?.token;
+
+    var { token } = request.cookies;
 
     if (!token) {
       response.redirect('/auth/login');

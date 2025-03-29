@@ -1,26 +1,35 @@
+import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
-
-var login = 'Gilgamesh';
-var passwd = 'Acu40929.$';
+import { AdminData, LoginCredentials } from './auth.guard.dto';
+import { AdminCollectionService } from '../database/admin-collection.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private adminCollectionService: AdminCollectionService,
+  ) {}
 
-  async verifyFormData(data) {
-    if (data.passwd == passwd && data.login == login) {
-      return true;
+  async verifyFormData({ login, passwd }: LoginCredentials): Promise<boolean> {
+    var { hashedLogin, hashedPasswd }: AdminData =
+      await this.adminCollectionService.getAdminData();
+
+    if (!(await argon2.verify(hashedLogin, login))) {
+      return false;
     }
+
+    return await argon2.verify(hashedPasswd, passwd);
   }
 
-  async checkLogin(data) {
-    var validFormData = await this.verifyFormData(data);
+  async checkLogin(data: LoginCredentials): Promise<string | false> {
+    var validFormData: boolean = await this.verifyFormData(data);
 
     if (!validFormData) {
-      return;
+      return false;
     } else {
-      var payload = { a: 'login', b: 'passwd' };
+      var payload = { payload: data.login };
+
       var token = await this.jwtService.signAsync(payload);
 
       return token;

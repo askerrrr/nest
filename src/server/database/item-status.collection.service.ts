@@ -6,10 +6,10 @@ import { Item, ItemDocument } from 'src/server/schemas/item.schema';
 @Injectable()
 export class ItemCollectionService {
   constructor(
-    @InjectModel(Item.name) private itemCollection: Model<ItemDocument>,
+    @InjectModel(Item.name, 'main') private itemCollection: Model<ItemDocument>,
   ) {}
 
-  async getItemId(userId, orderId): Promise<string[]> {
+  async getItemId(userId: string, orderId: string): Promise<string[]> {
     var { orders }: any = await this.itemCollection.findOne({ userId }).exec();
     var { order } = orders.find((e) => e.order.id == orderId);
     var { itemId } = order;
@@ -17,7 +17,7 @@ export class ItemCollectionService {
     return itemId;
   }
 
-  async getItems(userId, orderId): Promise<string[]> {
+  async getItems(userId: string, orderId: string): Promise<string[]> {
     var { orders }: any = await this.itemCollection.findOne({ userId }).exec();
     var { order } = orders.find((e) => e.order.id == orderId);
     var { items } = order;
@@ -25,7 +25,11 @@ export class ItemCollectionService {
     return items;
   }
 
-  async updateItemId(userId, orderId, itemIDs): Promise<boolean> {
+  async updateItemId(
+    userId: string,
+    orderId: string,
+    itemIDs: string[],
+  ): Promise<boolean> {
     var result = await this.itemCollection.updateOne(
       { userId, 'orders.order.id': orderId },
       {
@@ -36,7 +40,11 @@ export class ItemCollectionService {
     return result.modifiedCount == 1;
   }
 
-  async updateItemStatus(userId, orderId, items): Promise<boolean> {
+  async updateItemStatus(
+    userId: string,
+    orderId: string,
+    items: string[],
+  ): Promise<boolean> {
     var result = await this.itemCollection.updateOne(
       { userId, 'orders.order.id': orderId },
       {
@@ -56,9 +64,11 @@ export class ItemCollectionService {
     return result.id;
   }
 
-  async addItems(userId, orderId, xlsxData): Promise<boolean> {
-    var url = xlsxData[0];
-
+  async addItems(
+    userId: string,
+    orderId: string,
+    url: string[],
+  ): Promise<boolean> {
     await this.itemCollection.updateOne(
       { userId: userId },
       {

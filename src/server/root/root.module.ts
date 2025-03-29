@@ -38,9 +38,9 @@ import { DownloadFileModule } from '../download-docs/download-docs.module';
       envFilePath: '.env',
       expandVariables: true,
     }),
-    MongooseModule.forRoot('mongodb://localhost/database'),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
+    MongooseModule.forRoot('mongodb://localhost/database', {
+      connectionName: 'main',
+    }),
     ServeStaticModule.forRoot({
       serveRoot: '/',
       rootPath: join(__dirname, '../../src/client'),

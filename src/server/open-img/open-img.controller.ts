@@ -24,7 +24,11 @@ export class OpenImgController {
   async checkImageExists(@Param() param: ParamDto): Promise<object> {
     var { userId, orderId } = param;
 
-    var fileIsExists = await this.imgService.checkImageExists(userId, orderId);
+    var fileIsExists: boolean = await this.imgService.checkImageExists(
+      userId,
+      orderId,
+    );
+
     return { fileIsExists };
   }
 }

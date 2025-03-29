@@ -22,10 +22,12 @@ export class OrderStatusController {
   async getOrderStatus(@Param() param: ParamDto): Promise<object> {
     var { userId, orderId } = param;
 
-    var currentOrderStatus: object =
-      await this.orderStatusService.getOrderStatus(userId, orderId);
+    var orderStatus: string = await this.orderStatusService.getOrderStatus(
+      userId,
+      orderId,
+    );
 
-    return currentOrderStatus;
+    return { orderStatus };
   }
 
   @UseGuards(AuthGuard)

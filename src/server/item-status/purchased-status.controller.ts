@@ -36,9 +36,9 @@ export class PurchasedStatusController {
   async getCurrentOrderStatus(@Param() param: ParamDto): Promise<object> {
     var { userId, orderId } = param;
 
-    var currentOrderStatus: string =
+    var orderStatus: string =
       await this.itemStatusService.getCurrentOrderStatus(userId, orderId);
 
-    return { currentOrderStatus };
+    return { orderStatus };
   }
 }

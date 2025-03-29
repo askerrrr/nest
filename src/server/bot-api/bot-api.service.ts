@@ -32,33 +32,36 @@ export class BotApiService {
 
   async createOrder(order) {
     var { type, userId, id, file } = order;
-
     var { path, telegramApiFileUrl } = file;
 
     var user = await this.userCollection.getUser(userId);
 
     if (!user) {
-      var successfullCreateUser = await this.createUser(order);
+      var successfullCreateUser: boolean = await this.createUser(order);
 
       if (!successfullCreateUser) {
         return false;
       }
     }
 
-    var successfullAddNewOrder = await this.userCollection.addNewOrder(order);
+    var successfullAddNewOrder: boolean =
+      await this.userCollection.addNewOrder(order);
+
     var successDownloadFile = await this.utils.downloadAndSaveFile(
       userId,
       id,
       telegramApiFileUrl,
-      order,
+      type,
     );
 
     if (type == 'multiple') {
       var xlsxData = await this.xlsxService.getDataFromXLSX(path);
+
+      var url: string[] = xlsxData[0];
       var successfullAddItems = await this.itemCollection.addItems(
         userId,
         id,
-        xlsxData,
+        url,
       );
 
       return (

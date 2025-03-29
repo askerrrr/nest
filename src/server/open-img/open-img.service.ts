@@ -10,16 +10,23 @@ export class OpenImgService {
     private xlsxService: XlsxService,
   ) {}
 
-  async getFilePath(userId, orderId): Promise<string> {
-    var filePath = await this.userCollection.findFilePath(userId, orderId);
+  async getFilePath(userId: string, orderId: string): Promise<string> {
+    var filePath: string = await this.userCollection.findFilePath(
+      userId,
+      orderId,
+    );
 
     return filePath;
   }
 
   async checkImageExists(userId, orderId): Promise<boolean> {
-    var filePath = await this.userCollection.findFilePath(userId, orderId);
+    var filePath: string = await this.userCollection.findFilePath(
+      userId,
+      orderId,
+    );
 
-    var fileIsExists = await this.xlsxService.checkFileExists(filePath);
+    var fileIsExists: boolean =
+      await this.xlsxService.checkFileExists(filePath);
 
     return fileIsExists;
   }

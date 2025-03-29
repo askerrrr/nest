@@ -1,19 +1,19 @@
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { mkdir, open } from 'fs/promises';
 
 export class UtilsForBotApi {
-  async makeUserDir(userId) {
+  async makeUserDir(userId: string) {
     var userDir = join('/var', 'www', 'userFiles', userId);
-    var dirs = ['docs', 'images'];
+    var orderDirs = ['docs', 'images'];
 
     try {
       await mkdir(userDir, { recursive: true });
 
       await Promise.all(
-        dirs.map((dir) => mkdir(userDir + '/' + dir, { recursive: true })),
+        orderDirs.map((dir) => mkdir(userDir + '/' + dir, { recursive: true })),
       );
 
-      return dirs.map((dir) => join(userDir, dir));
+      return orderDirs.map((dir) => join(userDir, dir));
     } catch (err) {
       console.log(err);
     }
@@ -24,7 +24,7 @@ export class UtilsForBotApi {
 
     try {
       fileHandle = await open(path, 'w');
-      var writableStream = fileHandle.createWriteStream();
+      var writableStream = await fileHandle.createWriteStream();
 
       var chunk;
 
@@ -33,10 +33,7 @@ export class UtilsForBotApi {
       }
 
       var successfullDownload = await new Promise((resolve, reject) => {
-        writableStream.on('error', (err) => {
-          console.log(path, err);
-          reject(err);
-        });
+        writableStream.on('error', () => reject(false));
 
         writableStream.on('finish', () => {
           console.log('The file is written');
@@ -48,7 +45,6 @@ export class UtilsForBotApi {
 
       return successfullDownload;
     } catch (err) {
-      console.log(err);
     } finally {
       await fileHandle?.close();
     }
@@ -70,30 +66,30 @@ export class UtilsForBotApi {
     return arr;
   }
 
-  async getFileData(url) {
+  async getFileData(url: string) {
     var response = await fetch(url);
 
     if (!response.ok) {
-      var err = await response.text();
-      console.log(err);
       return;
     }
 
     return response.body;
   }
 
-  async downloadAndSaveFile(userId, fileId, url, order) {
+  async downloadAndSaveFile(userId, fileId, url, orderType) {
     try {
       var userDir: any = await this.makeUserDir(userId);
 
-      var docsPath = join(userDir[0], fileId + '.xlsx');
-      var imagesPath = join(userDir[1], fileId + '.jpg');
+      var docsPath: string = join(userDir[0], fileId + '.xlsx');
+      var imagesPath: string = join(userDir[1], fileId + '.jpg');
 
       var dataStream = await this.getFileData(url);
 
-      return order.type == 'single'
-        ? await this.writeFile(imagesPath, dataStream)
-        : await this.writeFile(docsPath, dataStream);
+      if (orderType == 'single') {
+        return await this.writeFile(imagesPath, dataStream);
+      } else if (orderType == 'muiltiple') {
+        return await this.writeFile(docsPath, dataStream);
+      }
     } catch (err) {
       console.log(
         `Error loading and saving the file ${fileId}. Error : ${err}`,

@@ -110,7 +110,10 @@ export class OrderController {
   ): Promise<Response> {
     var { userId, orderId } = param;
 
-    var result = await this.orderService.deleteUserOrder(userId, orderId);
+    var result: boolean = await this.orderService.deleteUserOrder(
+      userId,
+      orderId,
+    );
     return result ? res.sendStatus(200) : res.sendStatus(304);
   }
 }
