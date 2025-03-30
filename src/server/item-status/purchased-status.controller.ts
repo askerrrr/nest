@@ -11,7 +11,7 @@ import {
 
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemStatusService } from './item-status.service';
-import { ItemStatusDto, ParamDto } from './item-status.dto';
+import { ItemStatusDto, OrderStatus, Params } from './item-status.dto';
 
 @Controller('purchasedstatus')
 export class PurchasedStatusController {
@@ -25,15 +25,18 @@ export class PurchasedStatusController {
   ): Promise<Response> {
     var { userId, orderId, item } = body;
 
-    var successfullUpdate: boolean =
-      await this.itemStatusService.changePurchasedStatus(userId, orderId, item);
+    var successfullUpdate = await this.itemStatusService.changePurchasedStatus(
+      userId,
+      orderId,
+      item,
+    );
 
     return successfullUpdate ? res.sendStatus(200) : res.sendStatus(304);
   }
 
   @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
-  async getCurrentOrderStatus(@Param() param: ParamDto): Promise<object> {
+  async getCurrentOrderStatus(@Param() param: Params): Promise<OrderStatus> {
     var { userId, orderId } = param;
 
     var orderStatus: string =

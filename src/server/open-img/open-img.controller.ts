@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Get, Res, Param, UseGuards, Controller } from '@nestjs/common';
 
-import { ParamDto } from './open-img.dto';
+import { Params, FIleIsExists } from './open-img.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { OpenImgService } from './open-img.service';
 
@@ -11,7 +11,7 @@ export class OpenImgController {
 
   @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
-  async sendImg(@Param() param, @Res() res: Response) {
+  async sendImg(@Param() param, @Res() res: Response): Promise<void> {
     var { userId, orderId } = param;
 
     var filePath = await this.imgService.getFilePath(userId, orderId);
@@ -21,13 +21,10 @@ export class OpenImgController {
 
   @UseGuards(AuthGuard)
   @Get('/check/:userId/:orderId')
-  async checkImageExists(@Param() param: ParamDto): Promise<object> {
+  async checkImageExists(@Param() param: Params): Promise<FIleIsExists> {
     var { userId, orderId } = param;
 
-    var fileIsExists: boolean = await this.imgService.checkImageExists(
-      userId,
-      orderId,
-    );
+    var fileIsExists = await this.imgService.checkImageExists(userId, orderId);
 
     return { fileIsExists };
   }

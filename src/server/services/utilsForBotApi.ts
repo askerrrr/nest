@@ -50,16 +50,16 @@ export class UtilsForBotApi {
     }
   }
 
-  async getOrderDetailsForBot(data) {
+  async getOrderDetailsForBot(orders) {
     var arr: any = [];
 
-    for (var i = 0; i < data?.orders.length; i++) {
+    for (var i = 0; i < orders.length; i++) {
       arr.push({
-        userId: data.userId,
-        id: data.orders[i].order.orderId,
-        date: data.orders[i].order.date,
-        phone: data.orders[i].order.phone,
-        orderStatus: data.orders[i].order.orderStatus,
+        userId: orders[i].order.userId,
+        id: orders[i].order.id,
+        phone: orders[i].order.phone,
+        date: orders[i].order.date,
+        orderStatus: orders[i].order.orderStatus,
       });
     }
 

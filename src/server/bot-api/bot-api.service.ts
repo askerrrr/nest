@@ -19,15 +19,15 @@ export class BotApiService {
 
     if (user) {
       return false;
-    } else {
-      var successfullCreateUser =
-        await this.userCollection.createNewUser(userData);
-
-      var successfullCreateItemCollection =
-        await this.itemCollection.createItemStatus(userData);
-
-      return successfullCreateUser && successfullCreateItemCollection;
     }
+
+    var successfullCreateUser =
+      await this.userCollection.createNewUser(userData);
+
+    var successfullCreateItemCollection =
+      await this.itemCollection.createItemStatus(userData);
+
+    return successfullCreateUser && successfullCreateItemCollection;
   }
 
   async createOrder(order) {
@@ -37,15 +37,14 @@ export class BotApiService {
     var user = await this.userCollection.getUser(userId);
 
     if (!user) {
-      var successfullCreateUser: boolean = await this.createUser(order);
+      var successfullCreateUser = await this.createUser(order);
 
       if (!successfullCreateUser) {
         return false;
       }
     }
 
-    var successfullAddNewOrder: boolean =
-      await this.userCollection.addNewOrder(order);
+    var successfullAddNewOrder = await this.userCollection.addNewOrder(order);
 
     var successDownloadFile = await this.utils.downloadAndSaveFile(
       userId,
@@ -57,7 +56,7 @@ export class BotApiService {
     if (type == 'multiple') {
       var xlsxData = await this.xlsxService.getDataFromXLSX(path);
 
-      var url: string[] = xlsxData[0];
+      var { url } = xlsxData;
       var successfullAddItems = await this.itemCollection.addItems(
         userId,
         id,
@@ -72,13 +71,14 @@ export class BotApiService {
     return successDownloadFile && successfullAddNewOrder;
   }
 
-  async getOrderDetails(userId) {
-    var document = await this.userCollection.getUser(userId);
-    var orderDetails = await this.utils.getOrderDetailsForBot(document);
+  async getOrderDetails(userId): Promise<object> {
+    var { orders }: any = await this.userCollection.getUser(userId);
+    var orderDetails = await this.utils.getOrderDetailsForBot(orders);
 
     var activeOrders = orderDetails.filter(
       (e) => e.status !== 'order-is-completed:6',
     );
+
     var completedOrders = orderDetails.filter(
       (e) => e.status === 'order-is-completed:6',
     );
@@ -86,7 +86,11 @@ export class BotApiService {
     return { activeOrders, completedOrders };
   }
 
-  async validateAuthHeader(authHeader) {
+  async validateAuthHeader(authHeader): Promise<boolean> {
+    if (!authHeader) {
+      return false;
+    }
+
     var [type, token] = authHeader.split(' ');
 
     return type == 'Bearer' && token == process.env.bot_secret_key;

@@ -35,7 +35,7 @@ export class OrderService {
     var activeOrders = orders.filter(
       (e) => e.order.orderStatus !== 'order-is-completed:6',
     );
-
+    console.log(activeOrders);
     return activeOrders;
   }
 
@@ -63,19 +63,16 @@ export class OrderService {
   async deleteUserOrder(userId: string, orderId: string): Promise<boolean> {
     await this.userCollection.deleteOrder(userId, orderId);
 
-    var filePath: string = await this.userCollection.findFilePath(
+    var filePath = await this.userCollection.findFilePath(userId, orderId);
+
+    var isFileDeleted = await this.utils.deleteOrderFile(filePath);
+
+    var successfullResponse = await this.utils.sendDeleteOrderRequest(
       userId,
       orderId,
     );
 
-    var isFileDeleted: boolean = await this.utils.deleteOrderFile(filePath);
-
-    var successfullResponse: boolean = await this.utils.sendDeleteOrderRequest(
-      userId,
-      orderId,
-    );
-
-    var isDeletedFromDB: boolean = await this.userCollection.deleteOrder(
+    var isDeletedFromDB = await this.userCollection.deleteOrder(
       userId,
       orderId,
     );

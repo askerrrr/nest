@@ -28,17 +28,13 @@ export class BotApiController {
     var validAuthHeader =
       await this.botApiService.validateAuthHeader(authHeader);
 
-    if (!authHeader) {
+    if (!validAuthHeader) {
       throw new UnauthorizedException();
     }
 
-    if (validAuthHeader) {
-      var successfullCreateUser = await this.botApiService.createUser(body);
+    var successfullCreateUser = await this.botApiService.createUser(body);
 
-      return successfullCreateUser ? res.sendStatus(200) : res.sendStatus(409);
-    } else {
-      throw new UnauthorizedException();
-    }
+    return successfullCreateUser ? res.sendStatus(200) : res.sendStatus(409);
   }
 
   @Post('order')
@@ -46,19 +42,19 @@ export class BotApiController {
     @Headers() headers,
     @Res() res: Response,
     @Body() body: CreateOrderDto,
-  ) {
+  ): Promise<Response> {
     var authHeader = headers.authorization;
 
     var validAuthHeader =
       await this.botApiService.validateAuthHeader(authHeader);
 
-    if (validAuthHeader) {
-      var successfullCreate = await this.botApiService.createOrder(body);
-
-      return successfullCreate ? res.sendStatus(200) : res.sendStatus(304);
-    } else {
+    if (!validAuthHeader) {
       throw new UnauthorizedException();
     }
+
+    var successfullCreate = await this.botApiService.createOrder(body);
+
+    return successfullCreate ? res.sendStatus(200) : res.sendStatus(304);
   }
 
   @Get('/status/:userId')
@@ -68,9 +64,11 @@ export class BotApiController {
     var validAuthHeader =
       await this.botApiService.validateAuthHeader(authHeader);
 
-    if (validAuthHeader) {
-      var orderDetails = await this.botApiService.getOrderDetails(userId);
-      return orderDetails;
+    if (!validAuthHeader) {
+      throw new UnauthorizedException();
     }
+
+    var orderDetails = await this.botApiService.getOrderDetails(userId);
+    return orderDetails;
   }
 }

@@ -1,10 +1,14 @@
 export class ItemStatusDto {
-  userId: string;
-  orderId: string;
-  item: string;
+  readonly userId: string;
+  readonly orderId: string;
+  readonly item: string;
 }
 
-export class ParamDto {
-  userId: string;
-  orderId: string;
+export class Params {
+  readonly userId: string;
+  readonly orderId: string;
+}
+
+export class OrderStatus {
+  readonly orderStatus: string;
 }

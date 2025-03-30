@@ -3,11 +3,11 @@ import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { RootModule } from './root/root.module';
-import { ValidationPipe } from '@nestjs/common';
 
 (async () => {
   var app = await NestFactory.create(RootModule);
 
+  app.enableCors();
   app.use(
     helmet.contentSecurityPolicy({
       useDefaults: true,
@@ -18,14 +18,6 @@ import { ValidationPipe } from '@nestjs/common';
   );
 
   app.use(cookieParser());
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //    // whitelist: true,
-  //     transform: true,
-  //     enableDebugMessages: true,
-  //     //forbidNonWhitelisted: true,
-  //   }),
-  // );
 
   var configService = app.get(ConfigService);
   var port = configService.get('PORT');

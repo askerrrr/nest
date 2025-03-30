@@ -10,7 +10,7 @@ export class OrderStatusService {
     private itemStatusService: ItemStatusService,
   ) {}
   async getOrderStatus(userId: string, orderId: string): Promise<string> {
-    var orderStatus: string = await this.userCollection.getCurrentOrderStatus(
+    var orderStatus = await this.userCollection.getCurrentOrderStatus(
       userId,
       orderId,
     );
@@ -23,10 +23,13 @@ export class OrderStatusService {
     orderId: string,
     status: string,
   ): Promise<boolean> {
-    var successfullResponse: boolean =
-      await this.itemStatusService.sendOrderStatus(userId, orderId, status);
+    var successfullResponse = await this.itemStatusService.sendOrderStatus(
+      userId,
+      orderId,
+      status,
+    );
 
-    var succesfullUpdate: boolean = await this.userCollection.updateOrderStatus(
+    var succesfullUpdate = await this.userCollection.updateOrderStatus(
       userId,
       orderId,
       status,

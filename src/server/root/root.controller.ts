@@ -13,7 +13,7 @@ export class RootController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async serveIndex(@Res() res: Response) {
+  async serveIndex(@Res() res: Response): Promise<void> {
     var users = await this.rootService.getUsers();
 
     return users?.length

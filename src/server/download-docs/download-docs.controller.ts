@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { Get, Res, Param, UseGuards, Controller } from '@nestjs/common';
 
 import { AuthGuard } from '../auth/auth.guard';
-import { ParamDto } from './download-docs.dto';
+import { FIleIsExists, ParamDto } from './download-docs.dto';
 import { DownloadFileService } from './download-docs.service';
 
 @Controller('download')
@@ -11,26 +11,25 @@ export class DownloadFileController {
 
   @UseGuards(AuthGuard)
   @Get(':userId/:orderId')
-  async downloadFile(@Param() param: ParamDto, @Res() res: Response) {
+  async downloadFile(
+    @Param() param: ParamDto,
+    @Res() res: Response,
+  ): Promise<void> {
     var { userId, orderId } = param;
 
     var filePath = await this.downloadFileService.getFilePath(userId, orderId);
 
-    res.download(filePath);
+    return res.download(filePath);
   }
 
   @UseGuards(AuthGuard)
   @Get('check/:userId/:orderId')
-  async checkFileExists(@Param() param: ParamDto): Promise<object> {
+  async checkFileExists(@Param() param: ParamDto): Promise<FIleIsExists> {
     var { userId, orderId } = param;
 
-    var filePath: string = await this.downloadFileService.getFilePath(
-      userId,
-      orderId,
-    );
+    var filePath = await this.downloadFileService.getFilePath(userId, orderId);
 
-    var fileIsExists: boolean =
-      await this.downloadFileService.checkFileExists(filePath);
+    var fileIsExists = await this.downloadFileService.checkFileExists(filePath);
 
     return { fileIsExists };
   }

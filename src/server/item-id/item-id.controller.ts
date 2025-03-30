@@ -17,7 +17,7 @@ export class ItemIdController {
   ): Promise<Response> {
     var { userId, orderId, index, itemId } = body;
 
-    var successfullUpdate: boolean = await this.itemIdService.updateItemId(
+    var successfullUpdate = await this.itemIdService.updateItemId(
       userId,
       orderId,
       index,

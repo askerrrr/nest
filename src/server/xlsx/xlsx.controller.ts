@@ -18,24 +18,24 @@ export class XlsxController {
 
   @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
-  async getXLSXFIle(@Res() res: Response) {
+  async getXLSXFIle(@Res() res: Response): Promise<void> {
     res.sendFile(join(__dirname, '../../src/client/html/sheet.html'));
   }
 
   @UseGuards(AuthGuard)
   @Get('/api/:userId/:orderId')
-  async getXLSXData(@Param() param: Params): Promise<object> {
+  async getXLSXData(@Param() param: Params): Promise<CombinedData[]> {
     var { userId, orderId } = param;
 
     var filePath = await this.userCollection.findFilePath(userId, orderId);
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
-    var items: string[] = await this.itemCollection.getItems(userId, orderId);
-    var itemId: string[] = await this.itemCollection.getItemId(userId, orderId);
-    var imgData: object = await this.xlsxService.getImageFromXLSX(filePath);
-    var xlsxData: object = await this.xlsxService.getDataFromXLSX(filePath);
+    var items = await this.itemCollection.getItems(userId, orderId);
+    var itemId = await this.itemCollection.getItemId(userId, orderId);
+    var imgData = await this.xlsxService.getImageFromXLSX(filePath);
+    var xlsxData = await this.xlsxService.getDataFromXLSX(filePath);
 
-    var combinedData: CombinedData[] = await this.xlsxService.combineData(
+    var combinedData = await this.xlsxService.combineData(
       xlsxData,
       imgData,
       items,
@@ -57,8 +57,7 @@ export class XlsxController {
 
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
-    var fileIsExists: boolean =
-      await this.xlsxService.checkFileExists(filePath);
+    var fileIsExists = await this.xlsxService.checkFileExists(filePath);
 
     return { fileIsExists };
   }

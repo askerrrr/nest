@@ -27,9 +27,7 @@ export class XlsxService {
       ),
     );
 
-    var base64: string[] = buffer.map((buf) =>
-      Buffer.from(buf).toString('base64'),
-    );
+    var base64 = buffer.map((buf) => Buffer.from(buf).toString('base64'));
 
     return base64;
   }
@@ -86,7 +84,7 @@ export class XlsxService {
   }
 
   async checkFileExists(filePath: string): Promise<boolean> {
-    var fileIsExists: boolean = await access(filePath, constants.F_OK)
+    var fileIsExists = await access(filePath, constants.F_OK)
       .then(() => true)
       .catch(() => false);
 

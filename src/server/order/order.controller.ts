@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { plainToClass } from 'class-transformer';
 import { Get, Res, Param, Delete, UseGuards, Controller } from '@nestjs/common';
 
-import { ParamDto } from './dto/param.dto';
+import { Params } from './dto/param.dto';
 import { OrderDto } from './dto/order.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { OrderService } from './order.service';
@@ -15,7 +15,7 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Get('api/orderlist/:userId')
-  async getUser(@Param() param: ParamDto): Promise<OrderListDto> {
+  async getUser(@Param() param: Params): Promise<OrderListDto> {
     var { userId } = param;
 
     var user = await this.orderService.getUser(userId);
@@ -29,7 +29,7 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Get('api/order/:userId/:orderId')
-  async getOrder(@Param() param: ParamDto): Promise<OrderDto> {
+  async getOrder(@Param() param: Params): Promise<OrderDto> {
     var { userId, orderId } = param;
 
     var order = await this.orderService.getOrder(userId, orderId);
@@ -43,13 +43,16 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Get('orders/order/:userId/:orderId')
-  async getOrderFile(@Res() res: Response) {
+  async getOrderFile(@Res() res: Response): Promise<void> {
     res.sendFile(join(__dirname, '../../src/client/html/userOrder.html'));
   }
 
   @UseGuards(AuthGuard)
   @Get('orders/:userId')
-  async getOrderList(@Param() param: ParamDto, @Res() res: Response) {
+  async getOrderList(
+    @Param() param: Params,
+    @Res() res: Response,
+  ): Promise<void> {
     var { userId } = param;
 
     var activeOrders = await this.orderService.getActiveOrders(userId);
@@ -73,7 +76,7 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Get('api/completed/:userId')
-  async getCompletedOrders(@Param() param: ParamDto): Promise<OrderListDto> {
+  async getCompletedOrders(@Param() param: Params): Promise<OrderListDto> {
     var { userId } = param;
 
     var completedOrders = await this.orderService.getCompletedOrders(userId);
@@ -86,34 +89,35 @@ export class OrderController {
       },
     );
 
-    console.log('completed:', completedOrdersDto);
     return completedOrdersDto;
   }
 
   @UseGuards(AuthGuard)
   @Delete('api/delete/:userId')
   async deleteUser(
-    @Param() param: ParamDto,
+    @Param() param: Params,
     @Res() res: Response,
   ): Promise<Response> {
     var { userId } = param;
 
-    var result: boolean = await this.orderService.deleteUser(userId);
-    return result ? res.sendStatus(200) : res.sendStatus(304);
+    var isUserDeleted = await this.orderService.deleteUser(userId);
+
+    return isUserDeleted ? res.sendStatus(200) : res.sendStatus(304);
   }
 
   @UseGuards(AuthGuard)
   @Delete('api/delete/:userId/:orderId')
   async deleteOrder(
-    @Param() param: ParamDto,
+    @Param() param: Params,
     @Res() res: Response,
   ): Promise<Response> {
     var { userId, orderId } = param;
 
-    var result: boolean = await this.orderService.deleteUserOrder(
+    var isOrderDeleted = await this.orderService.deleteUserOrder(
       userId,
       orderId,
     );
-    return result ? res.sendStatus(200) : res.sendStatus(304);
+
+    return isOrderDeleted ? res.sendStatus(200) : res.sendStatus(304);
   }
 }
