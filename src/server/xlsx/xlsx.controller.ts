@@ -5,16 +5,10 @@ import { Get, Controller, Res, Param, UseGuards } from '@nestjs/common';
 import { XlsxService } from './xlsx.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { Params, FIleIsExists, CombinedData } from './xlsx.dto';
-import { UserCollectionService } from 'src/server/database/user.collection.service';
-import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
 
 @Controller('xlsx')
 export class XlsxController {
-  constructor(
-    private readonly xlsxService: XlsxService,
-    private readonly itemCollection: ItemCollectionService,
-    private readonly userCollection: UserCollectionService,
-  ) {}
+  constructor(private readonly xlsxService: XlsxService) {}
 
   @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
@@ -27,11 +21,11 @@ export class XlsxController {
   async getXLSXData(@Param() param: Params): Promise<CombinedData[]> {
     var { userId, orderId } = param;
 
-    var filePath = await this.userCollection.findFilePath(userId, orderId);
+    var filePath = await this.xlsxService.getFilePath(userId, orderId);
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
-    var items = await this.itemCollection.getItems(userId, orderId);
-    var itemId = await this.itemCollection.getItemId(userId, orderId);
+    var items = await this.xlsxService.getItems(userId, orderId);
+    var itemId = await this.xlsxService.getItemId(userId, orderId);
     var imgData = await this.xlsxService.getImageFromXLSX(filePath);
     var xlsxData = await this.xlsxService.getDataFromXLSX(filePath);
 
@@ -50,10 +44,7 @@ export class XlsxController {
   async checkFileExists(@Param() param: Params): Promise<FIleIsExists> {
     var { userId, orderId } = param;
 
-    var filePath: string = await this.userCollection.findFilePath(
-      userId,
-      orderId,
-    );
+    var filePath: string = await this.xlsxService.getFilePath(userId, orderId);
 
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 

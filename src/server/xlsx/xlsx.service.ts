@@ -1,12 +1,17 @@
 import * as JSZip from 'jszip';
 import * as Exceljs from 'exceljs';
 import { Injectable } from '@nestjs/common';
-import { access, readFile, constants } from 'fs/promises';
 import { CombinedData, XlsxData } from './xlsx.dto';
+import { access, readFile, constants } from 'fs/promises';
+import { UserCollectionService } from 'src/server/database/user.collection.service';
+import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
 
 @Injectable()
 export class XlsxService {
-  constructor() {}
+  constructor(
+    private readonly itemCollection: ItemCollectionService,
+    private readonly userCollection: UserCollectionService,
+  ) {}
 
   async getImageFromXLSX(filePath: string): Promise<string[]> {
     var fileData = await readFile(filePath);
@@ -89,5 +94,17 @@ export class XlsxService {
       .catch(() => false);
 
     return fileIsExists;
+  }
+
+  async getFilePath(userId, orderId): Promise<string> {
+    return await this.userCollection.findFilePath(userId, orderId);
+  }
+
+  async getItemId(userId, orderId): Promise<string[]> {
+    return await this.itemCollection.getItemId(userId, orderId);
+  }
+
+  async getItems(userId, orderId): Promise<string[]> {
+    return await this.itemCollection.getItems(userId, orderId);
   }
 }
