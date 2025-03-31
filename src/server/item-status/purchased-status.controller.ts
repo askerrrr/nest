@@ -9,9 +9,10 @@ import {
   Controller,
 } from '@nestjs/common';
 
+import { ParamDto } from '../dto/app.dtos';
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemStatusService } from './item-status.service';
-import { ItemStatusDto, OrderStatus, Params } from './item-status.dto';
+import { ItemStatusDto, OrderStatus } from './item-status.dto';
 
 @Controller('purchasedstatus')
 export class PurchasedStatusController {
@@ -36,7 +37,7 @@ export class PurchasedStatusController {
 
   @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
-  async getCurrentOrderStatus(@Param() param: Params): Promise<OrderStatus> {
+  async getCurrentOrderStatus(@Param() param: ParamDto): Promise<OrderStatus> {
     var { userId, orderId } = param;
 
     var orderStatus: string =

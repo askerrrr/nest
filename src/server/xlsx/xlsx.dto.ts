@@ -1,8 +1,3 @@
-export class Params {
-  readonly userId: string;
-  readonly orderId: string;
-}
-
 export class FIleIsExists {
   readonly fileIsExists: boolean;
 }

@@ -4,6 +4,7 @@ import { XlsxService } from '../xlsx/xlsx.service';
 import { UtilsForBotApi } from 'src/server/services/utilsForBotApi';
 import { UserCollectionService } from 'src/server/database/user.collection.service';
 import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
+import { CreateOrderDto } from './bot-api.dto';
 
 @Injectable()
 export class BotApiService {

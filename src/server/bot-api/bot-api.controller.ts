@@ -1,3 +1,4 @@
+import { ParamDto } from '../dto/app.dtos';
 import { BotApiService } from './bot-api.service';
 import { CreateUserDto, CreateOrderDto } from './bot-api.dto';
 
@@ -58,7 +59,7 @@ export class BotApiController {
   }
 
   @Get('/status/:userId')
-  async fetchOrderDetails(@Param('userId') userId: string, @Headers() headers) {
+  async fetchOrderDetails(@Param() param: ParamDto, @Headers() headers) {
     var authHeader = headers.authorization;
 
     var validAuthHeader =
@@ -68,7 +69,10 @@ export class BotApiController {
       throw new UnauthorizedException();
     }
 
+    var { userId } = param;
+
     var orderDetails = await this.botApiService.getOrderDetails(userId);
+
     return orderDetails;
   }
 }

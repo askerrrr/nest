@@ -1,8 +1,9 @@
 import { Response } from 'express';
 import { Get, Res, Param, UseGuards, Controller } from '@nestjs/common';
 
+import { ParamDto } from '../dto/app.dtos';
 import { AuthGuard } from '../auth/auth.guard';
-import { FIleIsExists, ParamDto } from './download-docs.dto';
+import { FIleIsExists } from './download-docs.dto';
 import { DownloadFileService } from './download-docs.service';
 
 @Controller('download')

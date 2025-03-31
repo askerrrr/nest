@@ -2,9 +2,10 @@ import { join } from 'path';
 import { Response } from 'express';
 import { Get, Controller, Res, Param, UseGuards } from '@nestjs/common';
 
+import { ParamDto } from '../dto/app.dtos';
 import { XlsxService } from './xlsx.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { Params, FIleIsExists, CombinedData } from './xlsx.dto';
+import { FIleIsExists, CombinedData } from './xlsx.dto';
 
 @Controller('xlsx')
 export class XlsxController {
@@ -13,12 +14,12 @@ export class XlsxController {
   @UseGuards(AuthGuard)
   @Get('/:userId/:orderId')
   async getXLSXFIle(@Res() res: Response): Promise<void> {
-    res.sendFile(join(__dirname, '../../src/client/html/sheet.html'));
+    return res.sendFile(join(__dirname, '../../src/client/html/sheet.html'));
   }
 
   @UseGuards(AuthGuard)
   @Get('/api/:userId/:orderId')
-  async getXLSXData(@Param() param: Params): Promise<CombinedData[]> {
+  async getXLSXData(@Param() param: ParamDto): Promise<CombinedData[]> {
     var { userId, orderId } = param;
 
     var filePath = await this.xlsxService.getFilePath(userId, orderId);
@@ -41,7 +42,7 @@ export class XlsxController {
 
   @UseGuards(AuthGuard)
   @Get('check/:userId/:orderId')
-  async checkFileExists(@Param() param: Params): Promise<FIleIsExists> {
+  async checkFileExists(@Param() param: ParamDto): Promise<FIleIsExists> {
     var { userId, orderId } = param;
 
     var filePath: string = await this.xlsxService.getFilePath(userId, orderId);
