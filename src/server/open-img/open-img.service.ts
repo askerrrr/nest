@@ -6,28 +6,20 @@ import { UserCollectionService } from 'src/server/database/user.collection.servi
 @Injectable()
 export class OpenImgService {
   constructor(
-    private userCollection: UserCollectionService,
     private xlsxService: XlsxService,
+    private userCollection: UserCollectionService,
   ) {}
 
   async getFilePath(userId: string, orderId: string): Promise<string> {
-    var filePath: string = await this.userCollection.findFilePath(
-      userId,
-      orderId,
-    );
-
-    return filePath;
+    return await this.userCollection.findFilePath(userId, orderId);
   }
 
-  async checkImageExists(userId, orderId): Promise<boolean> {
+  async checkImageExists(userId: string, orderId: string): Promise<boolean> {
     var filePath: string = await this.userCollection.findFilePath(
       userId,
       orderId,
     );
 
-    var fileIsExists: boolean =
-      await this.xlsxService.checkFileExists(filePath);
-
-    return fileIsExists;
+    return await this.xlsxService.checkFileExists(filePath);
   }
 }

@@ -10,12 +10,7 @@ export class OrderStatusService {
     private itemStatusService: ItemStatusService,
   ) {}
   async getOrderStatus(userId: string, orderId: string): Promise<string> {
-    var orderStatus = await this.userCollection.getCurrentOrderStatus(
-      userId,
-      orderId,
-    );
-
-    return orderStatus;
+    return await this.userCollection.getCurrentOrderStatus(userId, orderId);
   }
 
   async changeOrderStatus(

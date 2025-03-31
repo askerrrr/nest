@@ -4,12 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
-import { RootService } from './root.service';
-import { RootController } from './root.controller';
 import { AuthModule } from '../auth/auth.module';
 import { XlsxModule } from '../xlsx/xlsx.module';
-import { Item, ItemSchema } from '../schemas/item.schema';
-import { User, UserSchema } from '../schemas/user.schema';
 import { OrderModule } from '../order/order.module';
 import { ItemIdModule } from '../item-id/item-id.module';
 import { BotApiModule } from '../bot-api/bot-api.module';
@@ -18,6 +14,10 @@ import { DatabaseModule } from '../database/database.module';
 import { ItemStatusModule } from '../item-status/item-status.module';
 import { OrderStatusModule } from '../order-status/order-status.module';
 import { DownloadFileModule } from '../download-docs/download-docs.module';
+
+import { RootService } from './root.service';
+
+import { RootController } from './root.controller';
 
 @Module({
   controllers: [RootController],

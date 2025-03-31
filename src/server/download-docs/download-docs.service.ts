@@ -7,19 +7,12 @@ import { UserCollectionService } from 'src/server/database/user.collection.servi
 export class DownloadFileService {
   constructor(private userCollection: UserCollectionService) {}
   async getFilePath(userId: string, orderId: string): Promise<string> {
-    var filePath: string = await this.userCollection.findFilePath(
-      userId,
-      orderId,
-    );
-
-    return filePath;
+    return await this.userCollection.findFilePath(userId, orderId);
   }
 
   async checkFileExists(filePath: string): Promise<boolean> {
-    var fileIsExists: boolean = await access(filePath, constants.F_OK)
+    return await access(filePath, constants.F_OK)
       .then(() => true)
       .catch(() => false);
-
-    return fileIsExists;
   }
 }

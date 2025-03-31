@@ -35,7 +35,7 @@ export class OrderService {
     var activeOrders = orders.filter(
       (e) => e.order.orderStatus !== 'order-is-completed:6',
     );
-    console.log(activeOrders);
+
     return activeOrders;
   }
 

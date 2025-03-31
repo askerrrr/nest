@@ -1,6 +1,6 @@
 export class Params {
   userId: string;
-  orderId?: string;
+  orderId: string;
 }
 
 export class FIleIsExists {

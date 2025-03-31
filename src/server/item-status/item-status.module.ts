@@ -10,5 +10,6 @@ import { PurchasedStatusController } from './purchased-status.controller';
   controllers: [DeliveryStatusController, PurchasedStatusController],
   providers: [ItemStatusService],
   imports: [AuthModule, UtilsModule],
+  exports: [ItemStatusService],
 })
 export class ItemStatusModule {}

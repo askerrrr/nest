@@ -7,5 +7,6 @@ import { XlsxController } from './xlsx.controller';
   providers: [XlsxService],
   controllers: [XlsxController],
   imports: [AuthModule],
+  exports: [XlsxService],
 })
 export class XlsxModule {}

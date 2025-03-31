@@ -4,11 +4,11 @@ import { AuthModule } from '../auth/auth.module';
 import { UtilsModule } from 'src/server/services/Utils';
 import { OrderStatusService } from './order-status.service';
 import { OrderStatusController } from './order-status.controller';
-import { ItemStatusService } from '../item-status/item-status.service';
+import { ItemStatusModule } from '../item-status/item-status.module';
 
 @Module({
   controllers: [OrderStatusController],
-  providers: [OrderStatusService, ItemStatusService],
-  imports: [AuthModule, UtilsModule],
+  providers: [OrderStatusService],
+  imports: [AuthModule, UtilsModule, ItemStatusModule],
 })
 export class OrderStatusModule {}
