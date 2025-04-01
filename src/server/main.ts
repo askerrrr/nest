@@ -3,10 +3,16 @@ import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { RootModule } from './root/root.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 
 (async () => {
-  var app = await NestFactory.create(RootModule);
+  var app = await NestFactory.create(RootModule, {
+    logger: new ConsoleLogger({
+      colors: true,
+      timestamp: false,
+      logLevels: ['error', 'fatal', 'warn'],
+    }),
+  });
 
   app.enableCors();
   app.use(
