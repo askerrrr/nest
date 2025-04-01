@@ -15,9 +15,7 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Get('/api/orderlist/:userId')
-  async getUser(@Param() param: ParamDto): Promise<OrderListDto> {
-    var { userId } = param;
-
+  async getUser(@Param('userId') userId: string): Promise<OrderListDto> {
     var user = await this.orderService.getUser(userId);
 
     var orderListDto = plainToClass(OrderListDto, user, {
@@ -53,10 +51,8 @@ export class OrderController {
   @Get('/orders/:userId')
   async getOrderList(
     @Res() res: Response,
-    @Param() param: ParamDto,
+    @Param('userId') userId: string,
   ): Promise<void> {
-    var { userId } = param;
-
     var activeOrders = await this.orderService.getActiveOrders(userId);
     var completedOrders = await this.orderService.getCompletedOrders(userId);
 
@@ -78,9 +74,9 @@ export class OrderController {
 
   @UseGuards(AuthGuard)
   @Get('/api/completed/:userId')
-  async getCompletedOrders(@Param() param: ParamDto): Promise<OrderListDto> {
-    var { userId } = param;
-
+  async getCompletedOrders(
+    @Param('userId') userId: string,
+  ): Promise<OrderListDto> {
     var completedOrders = await this.orderService.getCompletedOrders(userId);
 
     var completedOrdersDto = plainToClass(
@@ -98,10 +94,8 @@ export class OrderController {
   @Delete('/api/delete/:userId')
   async deleteUser(
     @Res() res: Response,
-    @Param() param: ParamDto,
+    @Param('userId') userId: string,
   ): Promise<Response> {
-    var { userId } = param;
-
     var isUserDeleted = await this.orderService.deleteUser(userId);
 
     return isUserDeleted ? res.sendStatus(200) : res.sendStatus(304);

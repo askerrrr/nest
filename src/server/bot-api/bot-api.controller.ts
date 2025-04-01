@@ -65,7 +65,7 @@ export class BotApiController {
   @Get('/status/:userId')
   async fetchOrderDetails(
     @Headers() headers,
-    @Param() param: ParamDto,
+    @Param('userId') userId: string,
   ): Promise<OrdersDto> {
     var authHeader = headers.authorization;
 
@@ -75,8 +75,6 @@ export class BotApiController {
     if (!validAuthHeader) {
       throw new UnauthorizedException();
     }
-
-    var { userId } = param;
 
     var ordersDetails = await this.botApiService.getOrdersDetails(userId);
     var ordersDto = plainToClass(OrdersDto, ordersDetails);
