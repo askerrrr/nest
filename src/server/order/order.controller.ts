@@ -14,7 +14,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @UseGuards(AuthGuard)
-  @Get('api/orderlist/:userId')
+  @Get('/api/orderlist/:userId')
   async getUser(@Param() param: ParamDto): Promise<OrderListDto> {
     var { userId } = param;
 
@@ -28,7 +28,7 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('api/order/:userId/:orderId')
+  @Get('/api/order/:userId/:orderId')
   async getOrder(@Param() param: ParamDto): Promise<OrderDto> {
     var { userId, orderId } = param;
 
@@ -42,7 +42,7 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('orders/order/:userId/:orderId')
+  @Get('/orders/order/:userId/:orderId')
   async getOrderFile(@Res() res: Response): Promise<void> {
     return res.sendFile(
       join(__dirname, '../../src/client/html/userOrder.html'),
@@ -50,7 +50,7 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('orders/:userId')
+  @Get('/orders/:userId')
   async getOrderList(
     @Res() res: Response,
     @Param() param: ParamDto,
@@ -77,7 +77,7 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('api/completed/:userId')
+  @Get('/api/completed/:userId')
   async getCompletedOrders(@Param() param: ParamDto): Promise<OrderListDto> {
     var { userId } = param;
 
@@ -95,7 +95,7 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard)
-  @Delete('api/delete/:userId')
+  @Delete('/api/delete/:userId')
   async deleteUser(
     @Res() res: Response,
     @Param() param: ParamDto,
@@ -108,7 +108,7 @@ export class OrderController {
   }
 
   @UseGuards(AuthGuard)
-  @Delete('api/delete/:userId/:orderId')
+  @Delete('/api/delete/:userId/:orderId')
   async deleteOrder(
     @Res() res: Response,
     @Param() param: ParamDto,

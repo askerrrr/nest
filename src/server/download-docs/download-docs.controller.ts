@@ -11,10 +11,10 @@ export class DownloadFileController {
   constructor(private readonly downloadFileService: DownloadFileService) {}
 
   @UseGuards(AuthGuard)
-  @Get(':userId/:orderId')
+  @Get('/:userId/:orderId')
   async downloadFile(
-    @Param() param: ParamDto,
     @Res() res: Response,
+    @Param() param: ParamDto,
   ): Promise<void> {
     var { userId, orderId } = param;
 
@@ -24,7 +24,7 @@ export class DownloadFileController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('check/:userId/:orderId')
+  @Get('/check/:userId/:orderId')
   async checkFileExists(@Param() param: ParamDto): Promise<FIleIsExists> {
     var { userId, orderId } = param;
 

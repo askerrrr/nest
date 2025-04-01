@@ -32,7 +32,7 @@ export class XlsxController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('check/:userId/:orderId')
+  @Get('/check/:userId/:orderId')
   async checkFileExists(@Param() param: ParamDto): Promise<FIleIsExists> {
     var { userId, orderId } = param;
 

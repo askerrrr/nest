@@ -22,7 +22,7 @@ import { plainToClass } from 'class-transformer';
 export class BotApiController {
   constructor(private readonly botApiService: BotApiService) {}
 
-  @Post('users')
+  @Post('/users')
   async createUser(
     @Headers() headers,
     @Res() res: Response,
@@ -42,7 +42,7 @@ export class BotApiController {
     return successfullCreateUser ? res.sendStatus(200) : res.sendStatus(409);
   }
 
-  @Post('order')
+  @Post('/order')
   async createOrder(
     @Headers() headers,
     @Res() res: Response,

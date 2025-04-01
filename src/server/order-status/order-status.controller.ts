@@ -33,7 +33,7 @@ export class OrderStatusController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('api/:userId/:orderId')
+  @Get('/api/:userId/:orderId')
   async getOrderStatus(@Param() param: ParamDto): Promise<OrderStatusDto> {
     var { userId, orderId } = param;
 

@@ -11,12 +11,12 @@ import { LoginCredentials } from './dto/loginCredentials-dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('login')
+  @Get('/login')
   async getAuthForm(@Res() res: Response): Promise<void> {
     return res.sendFile(join(__dirname, '../../src/client/html/authForm.html'));
   }
 
-  @Post('login/check')
+  @Post('/login/check')
   async checkLogin(
     @Body() body: LoginCredentials,
     @Res({ passthrough: true }) res: Response,
