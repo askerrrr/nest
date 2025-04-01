@@ -1,8 +1,10 @@
-import { ParamDto } from '../dto/app.dtos';
 import { BotApiService } from './bot-api.service';
-import { CreateUserDto, CreateOrderDto } from './bot-api.dto';
 
-import { Response } from 'express';
+import { ParamDto } from '../dto/app.dtos';
+import { OrdersDto } from './dto/ordersDto';
+import { CreateUserDto } from './dto/createUser-dto';
+import { CreateOrderDto } from './dto/createOrder-dto';
+
 import {
   Get,
   Res,
@@ -13,6 +15,8 @@ import {
   Controller,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Response } from 'express';
+import { plainToClass } from 'class-transformer';
 
 @Controller('bot/api')
 export class BotApiController {
@@ -53,13 +57,16 @@ export class BotApiController {
       throw new UnauthorizedException();
     }
 
-    var successfullCreate = await this.botApiService.createOrder(body);
+    var successfullCreateOrder = await this.botApiService.createOrder(body);
 
-    return successfullCreate ? res.sendStatus(200) : res.sendStatus(304);
+    return successfullCreateOrder ? res.sendStatus(200) : res.sendStatus(304);
   }
 
   @Get('/status/:userId')
-  async fetchOrderDetails(@Param() param: ParamDto, @Headers() headers) {
+  async fetchOrderDetails(
+    @Headers() headers,
+    @Param() param: ParamDto,
+  ): Promise<OrdersDto> {
     var authHeader = headers.authorization;
 
     var validAuthHeader =
@@ -71,8 +78,9 @@ export class BotApiController {
 
     var { userId } = param;
 
-    var orderDetails = await this.botApiService.getOrderDetails(userId);
+    var ordersDetails = await this.botApiService.getOrdersDetails(userId);
+    var ordersDto = plainToClass(OrdersDto, ordersDetails);
 
-    return orderDetails;
+    return ordersDto;
   }
 }

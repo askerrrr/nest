@@ -4,7 +4,7 @@ import { plainToClass } from 'class-transformer';
 import { OrderDto } from './dto/order.dto';
 import { OrderListDto } from './dto/orderList.dto';
 import { UtilsForOrder } from '../services/utilsForOrder';
-import { UserCollectionService } from '../database/user.collection.service';
+import { UserCollectionService } from '../database/user-collection/user.collection.service';
 
 @Injectable()
 export class OrderService {

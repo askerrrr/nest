@@ -2,10 +2,12 @@ import { join } from 'path';
 import { Response } from 'express';
 import { Get, Controller, Res, Param, UseGuards } from '@nestjs/common';
 
-import { ParamDto } from '../dto/app.dtos';
 import { XlsxService } from './xlsx.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { FIleIsExists, CombinedData } from './xlsx.dto';
+
+import { ParamDto } from '../dto/app.dtos';
+import { FIleIsExists } from './dto/fileIsExists-dto';
+import { CombinedData } from './dto/combinedData-dto';
 
 @Controller('xlsx')
 export class XlsxController {
@@ -22,20 +24,9 @@ export class XlsxController {
   async getXLSXData(@Param() param: ParamDto): Promise<CombinedData[]> {
     var { userId, orderId } = param;
 
-    var filePath = await this.xlsxService.getFilePath(userId, orderId);
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
-    var items = await this.xlsxService.getItems(userId, orderId);
-    var itemId = await this.xlsxService.getItemId(userId, orderId);
-    var imgData = await this.xlsxService.getImageFromXLSX(filePath);
-    var xlsxData = await this.xlsxService.getDataFromXLSX(filePath);
-
-    var combinedData = await this.xlsxService.combineData(
-      xlsxData,
-      imgData,
-      items,
-      itemId,
-    );
+    var combinedData = await this.xlsxService.combineData(userId, orderId);
 
     return combinedData;
   }
@@ -45,11 +36,9 @@ export class XlsxController {
   async checkFileExists(@Param() param: ParamDto): Promise<FIleIsExists> {
     var { userId, orderId } = param;
 
-    var filePath: string = await this.xlsxService.getFilePath(userId, orderId);
-
     //var filePath = 'C:\\Users\\Adm\\Desktop\\510709571140.xlsx';
 
-    var fileIsExists = await this.xlsxService.checkFileExists(filePath);
+    var fileIsExists = await this.xlsxService.checkFileExists(userId, orderId);
 
     return { fileIsExists };
   }

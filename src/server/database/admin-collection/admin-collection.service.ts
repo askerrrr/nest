@@ -1,8 +1,8 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { AdminData } from './dto/admin-data';
 import { InjectModel } from '@nestjs/mongoose';
-import { AdminData } from './admin-collection.dto';
-import { Admin, AdminDocument } from '../schemas/admin.schema';
+import { Admin, AdminDocument } from '../../schemas/admin.schema';
 
 @Injectable()
 export class AdminCollectionService {

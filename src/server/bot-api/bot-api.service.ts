@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
+import { CreateOrderDto } from './dto/createOrder-dto';
+import { CreateUserDto } from './dto/createUser-dto';
+
 import { XlsxService } from '../xlsx/xlsx.service';
 import { UtilsForBotApi } from 'src/server/services/utilsForBotApi';
-import { UserCollectionService } from 'src/server/database/user.collection.service';
-import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
-import { CreateOrderDto } from './bot-api.dto';
+import { UserCollectionService } from 'src/server/database/user-collection/user.collection.service';
+import { ItemCollectionService } from 'src/server/database/item-collection/item-status.collection.service';
 
 @Injectable()
 export class BotApiService {
@@ -15,7 +17,7 @@ export class BotApiService {
     private itemCollection: ItemCollectionService,
   ) {}
 
-  async createUser(userData): Promise<boolean> {
+  async createUser(userData: CreateUserDto): Promise<boolean> {
     var user = await this.userCollection.getUser(userData.userId);
 
     if (user) {
@@ -31,9 +33,8 @@ export class BotApiService {
     return successfullCreateUser && successfullCreateItemCollection;
   }
 
-  async createOrder(order) {
+  async createOrder(order: CreateOrderDto): Promise<boolean> {
     var { type, userId, id, file } = order;
-    var { path, telegramApiFileUrl } = file;
 
     var user = await this.userCollection.getUser(userId);
 
@@ -45,14 +46,11 @@ export class BotApiService {
       }
     }
 
-    var successfullAddNewOrder = await this.userCollection.addNewOrder(order);
+    var successfullCreateOrder = await this.userCollection.createOrder(order);
 
-    var successDownloadFile = await this.utils.downloadAndSaveFile(
-      userId,
-      id,
-      telegramApiFileUrl,
-      type,
-    );
+    var { path, telegramApiFileUrl } = file;
+
+    await this.utils.downloadAndSaveFile(userId, id, telegramApiFileUrl, type);
 
     if (type == 'multiple') {
       var xlsxData = await this.xlsxService.getDataFromXLSX(path);
@@ -64,16 +62,15 @@ export class BotApiService {
         url,
       );
 
-      return (
-        successfullAddItems && successDownloadFile && successfullAddNewOrder
-      );
+      return successfullAddItems && successfullCreateOrder;
     }
 
-    return successDownloadFile && successfullAddNewOrder;
+    return successfullCreateOrder;
   }
 
-  async getOrderDetails(userId): Promise<object> {
+  async getOrdersDetails(userId: string): Promise<object> {
     var { orders }: any = await this.userCollection.getUser(userId);
+
     var orderDetails = await this.utils.getOrderDetailsForBot(orders);
 
     var activeOrders = orderDetails.filter(

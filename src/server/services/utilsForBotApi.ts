@@ -19,14 +19,14 @@ export class UtilsForBotApi {
     }
   }
 
-  async writeFile(path, data) {
-    var fileHandle;
+  async writeFile(path: string, data: any) {
+    var fileHandle: any;
 
     try {
       fileHandle = await open(path, 'w');
       var writableStream = await fileHandle.createWriteStream();
 
-      var chunk;
+      var chunk: any;
 
       for await (chunk of data) {
         writableStream.write(chunk);
@@ -44,7 +44,8 @@ export class UtilsForBotApi {
       });
 
       return successfullDownload;
-    } catch (err) {
+    } catch {
+      return false;
     } finally {
       await fileHandle?.close();
     }

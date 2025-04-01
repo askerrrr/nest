@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { XlsxService } from '../xlsx/xlsx.service';
-import { UserCollectionService } from 'src/server/database/user.collection.service';
+import { UserCollectionService } from '../database/user-collection/user.collection.service';
 
 @Injectable()
 export class OpenImgService {
@@ -15,11 +15,6 @@ export class OpenImgService {
   }
 
   async checkImageExists(userId: string, orderId: string): Promise<boolean> {
-    var filePath: string = await this.userCollection.findFilePath(
-      userId,
-      orderId,
-    );
-
-    return await this.xlsxService.checkFileExists(filePath);
+    return await this.xlsxService.checkFileExists(userId, orderId);
   }
 }

@@ -2,9 +2,9 @@ import { Response } from 'express';
 import { Get, Res, Param, UseGuards, Controller } from '@nestjs/common';
 
 import { ParamDto } from '../dto/app.dtos';
-import { FIleIsExists } from './open-img.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { OpenImgService } from './open-img.service';
+import { FIleIsExists } from '../xlsx/dto/fileIsExists-dto';
 
 @Controller('image')
 export class OpenImgController {

@@ -3,7 +3,7 @@ import { Get, Res, Param, UseGuards, Controller } from '@nestjs/common';
 
 import { ParamDto } from '../dto/app.dtos';
 import { AuthGuard } from '../auth/auth.guard';
-import { FIleIsExists } from './download-docs.dto';
+import { FIleIsExists } from '../xlsx/dto/fileIsExists-dto';
 import { DownloadFileService } from './download-docs.service';
 
 @Controller('download')

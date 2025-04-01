@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { plainToInstance } from 'class-transformer';
 import { Get, Res, Controller, UseGuards } from '@nestjs/common';
 
-import { UsersDto } from './root.dto';
+import { UsersDto } from './dto/users-dto';
 import { RootService } from './root.service';
 import { AuthGuard } from 'src/server/auth/auth.guard';
 

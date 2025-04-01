@@ -9,18 +9,32 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { ParamDto } from '../dto/app.dtos';
 import { AuthGuard } from '../auth/auth.guard';
 import { OrderStatusService } from './order-status.service';
-import { OrderStatusDto } from './order-status.dto';
+
+import { ParamDto } from '../dto/app.dtos';
+import { OrderStatusDto } from './dto/orderStatus-dto';
+import { NewOrderStatusDto } from './dto/newOrderStatus-dto';
 
 @Controller('status')
 export class OrderStatusController {
   constructor(private readonly orderStatusService: OrderStatusService) {}
 
   @UseGuards(AuthGuard)
+  @Patch()
+  async changeOrderStatus(
+    @Res() res: Response,
+    @Body() body: NewOrderStatusDto,
+  ): Promise<Response> {
+    var successfullUpdate: boolean =
+      await this.orderStatusService.changeOrderStatus(body);
+
+    return successfullUpdate ? res.sendStatus(200) : res.sendStatus(304);
+  }
+
+  @UseGuards(AuthGuard)
   @Get('api/:userId/:orderId')
-  async getOrderStatus(@Param() param: ParamDto): Promise<object> {
+  async getOrderStatus(@Param() param: ParamDto): Promise<OrderStatusDto> {
     var { userId, orderId } = param;
 
     var orderStatus: string = await this.orderStatusService.getOrderStatus(
@@ -29,23 +43,5 @@ export class OrderStatusController {
     );
 
     return { orderStatus };
-  }
-
-  @UseGuards(AuthGuard)
-  @Patch('/')
-  async changeOrderStatus(
-    @Res() res: Response,
-    @Body() body: OrderStatusDto,
-  ): Promise<Response> {
-    var { userId, orderId, orderStatus } = body;
-
-    var successfullUpdate: boolean =
-      await this.orderStatusService.changeOrderStatus(
-        userId,
-        orderId,
-        orderStatus,
-      );
-
-    return successfullUpdate ? res.sendStatus(200) : res.sendStatus(304);
   }
 }

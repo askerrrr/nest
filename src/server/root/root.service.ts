@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserCollectionService } from 'src/server/database/user.collection.service';
+import { UserCollectionService } from 'src/server/database/user-collection/user.collection.service';
 
 @Injectable()
 export class RootService {

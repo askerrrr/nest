@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
+import { ItemCollectionService } from 'src/server/database/item-collection/item-status.collection.service';
 
 @Injectable()
 export class ItemIdService {

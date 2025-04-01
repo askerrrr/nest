@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { ItemStatusService } from '../item-status/item-status.service';
-import { UserCollectionService } from 'src/server/database/user.collection.service';
+import { UserCollectionService } from 'src/server/database/user-collection/user.collection.service';
+
+import { NewOrderStatusDto } from './dto/newOrderStatus-dto';
 
 @Injectable()
 export class OrderStatusService {
@@ -10,24 +12,24 @@ export class OrderStatusService {
     private itemStatusService: ItemStatusService,
   ) {}
   async getOrderStatus(userId: string, orderId: string): Promise<string> {
-    return await this.userCollection.getCurrentOrderStatus(userId, orderId);
+    return await this.userCollection.getOrderStatus(userId, orderId);
   }
 
-  async changeOrderStatus(
-    userId: string,
-    orderId: string,
-    status: string,
-  ): Promise<boolean> {
+  async changeOrderStatus({
+    userId,
+    orderId,
+    orderStatus,
+  }: NewOrderStatusDto): Promise<boolean> {
     var successfullResponse = await this.itemStatusService.sendOrderStatus(
       userId,
       orderId,
-      status,
+      orderStatus,
     );
 
     var succesfullUpdate = await this.userCollection.updateOrderStatus(
       userId,
       orderId,
-      status,
+      orderStatus,
     );
 
     return successfullResponse && succesfullUpdate;

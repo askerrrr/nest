@@ -1,29 +1,29 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserCollectionService } from 'src/server/database/user.collection.service';
-import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
+import { UserCollectionService } from '../database/user-collection/user.collection.service';
+import { ItemCollectionService } from '../database/item-collection/item-status.collection.service';
 
 @Injectable()
 export class ItemStatusService {
   constructor(
-    private itemCollection: ItemCollectionService,
-    private userCollection: UserCollectionService,
+    private readonly itemCollection: ItemCollectionService,
+    private readonly userCollection: UserCollectionService,
   ) {}
 
-  async allItemsArePurchased(items): Promise<boolean> {
+  async allItemsArePurchased(items: string[]): Promise<boolean> {
     var itemStatus = items?.map((item) => item.split(':::')[1]);
 
     return itemStatus?.every((status) => status == '1');
   }
 
-  async allItemsAreDelivered(items): Promise<boolean> {
+  async allItemsAreDelivered(items: string[]): Promise<boolean> {
     var itemStatus = items?.map((item) => item.split(':::')[2]);
 
     return itemStatus?.every((status) => status == '1');
   }
 
   async sendOrderStatus(userId, orderId, orderStatus): Promise<boolean> {
-    var response = await fetch(`${process.env.bot_server}`, {
+    var response = await fetch(process.env.bot_server + '', {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
@@ -40,16 +40,8 @@ export class ItemStatusService {
     return response.status == 200;
   }
 
-  async getCurrentOrderStatus(
-    userId: string,
-    orderId: string,
-  ): Promise<string> {
-    var orderStatus: string = await this.userCollection.getCurrentOrderStatus(
-      userId,
-      orderId,
-    );
-
-    return orderStatus;
+  async getOrderStatus(userId: string, orderId: string): Promise<string> {
+    return await this.userCollection.getOrderStatus(userId, orderId);
   }
 
   async updateItemInArray(userId, orderId, newItem): Promise<string[]> {
@@ -88,10 +80,7 @@ export class ItemStatusService {
       await this.allItemsArePurchased(items);
 
     if (isAllItemsArePurchased) {
-      var currentOrderStatus = await this.getCurrentOrderStatus(
-        userId,
-        orderId,
-      );
+      var currentOrderStatus = await this.getOrderStatus(userId, orderId);
 
       if (currentOrderStatus == 'in-processing:1') {
         var succesfullUpdateOrderStatus: boolean =
@@ -138,10 +127,7 @@ export class ItemStatusService {
       await this.allItemsAreDelivered(items);
 
     if (isAllItemsArePurchased) {
-      var currentOrderStatus = await this.getCurrentOrderStatus(
-        userId,
-        orderId,
-      );
+      var currentOrderStatus = await this.getOrderStatus(userId, orderId);
 
       if (currentOrderStatus == 'purchased:2') {
         var succesfullUpdateOrderStatus: boolean =

@@ -1,8 +1,9 @@
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
-import { AdminData, LoginCredentials } from './auth.guard.dto';
-import { AdminCollectionService } from '../database/admin-collection.service';
+import { AdminData } from './dto/adminData-dto';
+import { LoginCredentials } from './dto/loginCredentials-dto';
+import { AdminCollectionService } from '../database/admin-collection/admin-collection.service';
 
 @Injectable()
 export class AuthService {

@@ -1,4 +1,4 @@
-import { ItemIdDto } from './item-id.dto';
+import { ItemIdDto } from './dto/itemId.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { ItemIdService } from './item-id.service';
 

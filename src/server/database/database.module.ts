@@ -1,12 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { Admin, AdminSchema } from '../schemas/admin.schema';
 import { User, UserSchema } from 'src/server/schemas/user.schema';
 import { Item, ItemSchema } from 'src/server/schemas/item.schema';
-import { UserCollectionService } from './user.collection.service';
-import { ItemCollectionService } from './item-status.collection.service';
-import { Admin, AdminSchema } from '../schemas/admin.schema';
-import { AdminCollectionService } from './admin-collection.service';
+
+import { UserCollectionService } from './user-collection/user.collection.service';
+import { AdminCollectionService } from './admin-collection/admin-collection.service';
+import { ItemCollectionService } from './item-collection/item-status.collection.service';
 
 @Global()
 @Module({

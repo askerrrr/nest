@@ -3,7 +3,3 @@ export class ItemStatusDto {
   readonly orderId: string;
   readonly item: string;
 }
-
-export class OrderStatus {
-  readonly orderStatus: string;
-}

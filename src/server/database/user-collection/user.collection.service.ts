@@ -2,7 +2,8 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { UserData, OrderData } from './user.collection.dto';
+import { CreateUserDto } from './dto/createUserDto';
+import { CreateOrderDto } from './dto/createOrderDto';
 import { User, UserDocument } from 'src/server/schemas/user.schema';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class UserCollectionService {
     return await this.user.find({}).exec();
   }
 
-  async addNewOrder(order: OrderData): Promise<boolean> {
+  async createOrder(order: CreateOrderDto): Promise<boolean> {
     var result = await this.user.updateOne(
       { userId: order.userId },
       { $push: { orders: { order } } },
@@ -28,7 +29,7 @@ export class UserCollectionService {
     return result.modifiedCount == 1;
   }
 
-  async createNewUser(data: UserData) {
+  async createNewUser(data: CreateUserDto) {
     var result = await this.user.insertOne({
       userId: data.userId,
       firstName: data.firstName,
@@ -64,10 +65,7 @@ export class UserCollectionService {
     return path;
   }
 
-  async getCurrentOrderStatus(
-    userId: string,
-    orderId: string,
-  ): Promise<string> {
+  async getOrderStatus(userId: string, orderId: string): Promise<string> {
     var { orders }: any = await this.user.findOne({ userId }).exec();
     var { order } = orders.find((e) => e.order.id == orderId);
     var { orderStatus } = order;

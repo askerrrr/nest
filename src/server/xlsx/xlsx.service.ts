@@ -3,8 +3,8 @@ import * as Exceljs from 'exceljs';
 import { Injectable } from '@nestjs/common';
 import { CombinedData, XlsxData } from './xlsx.dto';
 import { access, readFile, constants } from 'fs/promises';
-import { UserCollectionService } from 'src/server/database/user.collection.service';
-import { ItemCollectionService } from 'src/server/database/item-status.collection.service';
+import { UserCollectionService } from 'src/server/database/user-collection/user.collection.service';
+import { ItemCollectionService } from 'src/server/database/item-collection/item-status.collection.service';
 
 @Injectable()
 export class XlsxService {
@@ -37,7 +37,11 @@ export class XlsxService {
     return base64;
   }
 
-  async getColumnData(columnNumber, ws, skipFirst = true): Promise<string[]> {
+  async getColumnData(
+    columnNumber: number,
+    ws: any,
+    skipFirst: boolean = true,
+  ): Promise<string[]> {
     var data: string[] = [];
 
     var column = ws.getColumn(columnNumber);
@@ -67,44 +71,40 @@ export class XlsxService {
     return { url, qty, size, totalSum, itemPrice };
   }
 
-  async combineData(xlsxData, image, items, itemId): Promise<CombinedData[]> {
-    var { url, qty, size, totalSum, itemPrice }: XlsxData = xlsxData;
+  async combineData(userId: string, orderId: string): Promise<CombinedData[]> {
+    var filePath = await this.userCollection.findFilePath(userId, orderId);
 
-    var fileData: CombinedData[] = [];
+    var xlsxData = await this.getDataFromXLSX(filePath);
 
-    for (let i = 0; i < url.length; i++) {
-      fileData.push({
+    var imageData = await this.getImageFromXLSX(filePath);
+    var items = await this.itemCollection.getItems(userId, orderId);
+    var itemId = await this.itemCollection.getItemId(userId, orderId);
+
+    var data: CombinedData[] = [];
+
+    for (let i = 0; i < xlsxData.url.length; i++) {
+      data.push({
         id: itemId[i],
-        url: url[i],
-        qty: qty[i],
-        size: size[i],
-        img: image[i],
+        url: xlsxData.url[i],
+        qty: xlsxData.qty[i],
+        size: xlsxData.size[i],
+        img: imageData[i],
         item: items[i],
-        itemPrice: itemPrice[i],
-        totalSum: totalSum[i],
+        itemPrice: xlsxData.itemPrice[i],
+        totalSum: xlsxData.totalSum[i],
       });
     }
 
-    return fileData;
+    return data;
   }
 
-  async checkFileExists(filePath: string): Promise<boolean> {
+  async checkFileExists(userId: string, orderId: string): Promise<boolean> {
+    var filePath = await this.userCollection.findFilePath(userId, orderId);
+
     var fileIsExists = await access(filePath, constants.F_OK)
       .then(() => true)
       .catch(() => false);
 
     return fileIsExists;
-  }
-
-  async getFilePath(userId, orderId): Promise<string> {
-    return await this.userCollection.findFilePath(userId, orderId);
-  }
-
-  async getItemId(userId, orderId): Promise<string[]> {
-    return await this.itemCollection.getItemId(userId, orderId);
-  }
-
-  async getItems(userId, orderId): Promise<string[]> {
-    return await this.itemCollection.getItems(userId, orderId);
   }
 }
