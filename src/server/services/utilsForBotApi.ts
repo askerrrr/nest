@@ -3,21 +3,17 @@ import { Readable } from 'stream';
 import { mkdir, open } from 'fs/promises';
 
 export class UtilsForBotApi {
-  async makeUserDir(userId: string): Promise<string[] | false> {
+  async makeUserDir(userId: string): Promise<string[]> {
     var userDir = join('/var', 'www', 'userFiles', userId);
     var orderDirs = ['docs', 'images'];
 
-    try {
-      await mkdir(userDir, { recursive: true });
+    await mkdir(userDir, { recursive: true });
 
-      await Promise.all(
-        orderDirs.map((dir) => mkdir(userDir + '/' + dir, { recursive: true })),
-      );
+    await Promise.all(
+      orderDirs.map((dir) => mkdir(userDir + '/' + dir, { recursive: true })),
+    );
 
-      return orderDirs.map((dir) => join(userDir, dir));
-    } catch {
-      return false;
-    }
+    return orderDirs.map((dir) => join(userDir, dir));
   }
 
   async writeFile(path: string, readableStream: any): Promise<boolean> {
