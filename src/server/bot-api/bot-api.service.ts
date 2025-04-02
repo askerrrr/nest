@@ -50,7 +50,7 @@ export class BotApiService {
 
     var { path, telegramApiFileUrl } = file;
 
-    await this.utils.downloadAndSaveFile(userId, id, telegramApiFileUrl, type);
+    await this.utils.downloadOrderFile(userId, id, telegramApiFileUrl, type);
 
     if (type == 'multiple') {
       var xlsxData = await this.xlsxService.getDataFromXLSX(path);
@@ -74,11 +74,11 @@ export class BotApiService {
     var orderDetails = await this.utils.getOrderDetailsForBot(orders);
 
     var activeOrders = orderDetails.filter(
-      (e) => e.status !== 'order-is-completed:6',
+      (e) => e.orderStatus !== 'order-is-completed:6',
     );
 
     var completedOrders = orderDetails.filter(
-      (e) => e.status === 'order-is-completed:6',
+      (e) => e.orderStatus === 'order-is-completed:6',
     );
 
     return { activeOrders, completedOrders };

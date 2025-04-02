@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { Readable } from 'stream';
 import { mkdir, open } from 'fs/promises';
 
 export class UtilsForBotApi {
@@ -19,36 +20,43 @@ export class UtilsForBotApi {
     }
   }
 
-  async writeFile(path: string, data: any) {
+  async writeFile(path: string, readableStream: any): Promise<boolean> {
     var fileHandle: any;
+    var successWrite: boolean;
 
     try {
       fileHandle = await open(path, 'w');
       var writableStream = await fileHandle.createWriteStream();
 
+      readableStream.on('error', (e: any) => writableStream.destroy(e));
+
       var chunk: any;
 
-      for await (chunk of data) {
-        writableStream.write(chunk);
+      for await (chunk of readableStream) {
+        var canWrite = writableStream.write(chunk);
+
+        if (!canWrite) {
+          await new Promise((resolve) => writableStream('drain', resolve));
+        }
       }
 
-      var successfullDownload = await new Promise((resolve, reject) => {
+      successWrite = await new Promise((resolve, reject) => {
         writableStream.on('error', () => reject(false));
 
-        writableStream.on('finish', () => {
+        writableStream.once('finish', () => {
           console.log('The file is written');
-          resolve(true);
+          return resolve(true);
         });
 
         writableStream.end();
       });
-
-      return successfullDownload;
-    } catch {
+    } catch (err) {
       return false;
     } finally {
       await fileHandle?.close();
     }
+
+    return successWrite;
   }
 
   async getOrderDetailsForBot(orders) {
@@ -67,34 +75,38 @@ export class UtilsForBotApi {
     return arr;
   }
 
-  async getFileData(url: string) {
-    var response = await fetch(url);
+  async getFileData(url: string): Promise<Readable | false> {
+    var response: any = await fetch(url);
 
     if (!response.ok) {
-      return;
+      return false;
     }
 
-    return response.body;
+    return Readable.fromWeb(response.body);
   }
 
-  async downloadAndSaveFile(userId, fileId, url, orderType) {
+  async downloadOrderFile(
+    userId: string,
+    fileId: string,
+    url: string,
+    orderType: string,
+  ): Promise<boolean> {
     try {
       var userDir: any = await this.makeUserDir(userId);
 
       var docsPath: string = join(userDir[0], fileId + '.xlsx');
       var imagesPath: string = join(userDir[1], fileId + '.jpg');
 
-      var dataStream = await this.getFileData(url);
+      var readableStream = await this.getFileData(url);
 
-      if (orderType == 'single') {
-        return await this.writeFile(imagesPath, dataStream);
-      } else if (orderType == 'muiltiple') {
-        return await this.writeFile(docsPath, dataStream);
-      }
+      return orderType == 'single'
+        ? await this.writeFile(imagesPath, readableStream)
+        : await this.writeFile(docsPath, readableStream);
     } catch (err) {
       console.log(
         `Error loading and saving the file ${fileId}. Error : ${err}`,
       );
+      return false;
     }
   }
 }
