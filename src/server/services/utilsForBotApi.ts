@@ -3,7 +3,7 @@ import { Readable } from 'stream';
 import { mkdir, open } from 'fs/promises';
 
 export class UtilsForBotApi {
-  async makeUserDir(userId: string) {
+  async makeUserDir(userId: string): Promise<string[] | false> {
     var userDir = join('/var', 'www', 'userFiles', userId);
     var orderDirs = ['docs', 'images'];
 
@@ -15,8 +15,8 @@ export class UtilsForBotApi {
       );
 
       return orderDirs.map((dir) => join(userDir, dir));
-    } catch (err) {
-      console.log(err);
+    } catch {
+      return false;
     }
   }
 
