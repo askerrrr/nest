@@ -16,12 +16,7 @@ import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 
   app.enableCors();
   app.use(
-    helmet.contentSecurityPolicy({
-      useDefaults: true,
-      directives: {
-        'default-src': ["'self'"],
-      },
-    }),
+    helmet.contentSecurityPolicy({ directives: { defaultSrs: ["'self'"] } }),
   );
 
   app.use(cookieParser());
