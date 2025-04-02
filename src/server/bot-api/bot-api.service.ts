@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateOrderDto } from './dto/createOrder-dto';
+import { OrdersDto } from './dto/ordersDto';
 import { CreateUserDto } from './dto/createUser-dto';
+import { CreateOrderDto } from './dto/createOrder-dto';
 
 import { XlsxService } from '../xlsx/xlsx.service';
 import { UtilsForBotApi } from 'src/server/services/utilsForBotApi';
@@ -68,7 +69,7 @@ export class BotApiService {
     return successfullCreateOrder;
   }
 
-  async getOrdersDetails(userId: string): Promise<object> {
+  async getOrdersDetails(userId: string): Promise<OrdersDto> {
     var { orders }: any = await this.userCollection.getUser(userId);
 
     var orderDetails = await this.utils.getOrderDetailsForBot(orders);
