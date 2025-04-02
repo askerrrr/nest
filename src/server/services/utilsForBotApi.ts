@@ -28,7 +28,7 @@ export class UtilsForBotApi {
       fileHandle = await open(path, 'w');
       var writableStream = await fileHandle.createWriteStream();
 
-      readableStream.on('error', (e: any) => writableStream.destroy(e));
+      readableStream.on('error', () => writableStream.destroy());
 
       var chunk: any;
 
@@ -36,12 +36,12 @@ export class UtilsForBotApi {
         var canWrite = writableStream.write(chunk);
 
         if (!canWrite) {
-          await new Promise((resolve) => writableStream('drain', resolve));
+          await new Promise((resolve) => writableStream.once('drain', resolve));
         }
       }
 
       successWrite = await new Promise((resolve, reject) => {
-        writableStream.on('error', () => reject(false));
+        writableStream.once('error', () => reject(false));
 
         writableStream.once('finish', () => {
           console.log('The file is written');
