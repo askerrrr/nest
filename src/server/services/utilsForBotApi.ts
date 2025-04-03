@@ -1,22 +1,24 @@
-import { join } from 'path';
-import { Readable } from 'stream';
-import { mkdir, open } from 'fs/promises';
+import { Readable } from 'node:stream';
+import { mkdir, open } from 'node:fs/promises';
 
 export class UtilsForBotApi {
-  async makeUserDir(userId: string): Promise<string[]> {
-    var userDir = join('/var', 'www', 'userFiles', userId);
-    var orderDirs = ['docs', 'images'];
-
-    await mkdir(userDir, { recursive: true });
-
-    await Promise.all(
-      orderDirs.map((dir) => mkdir(userDir + '/' + dir, { recursive: true })),
-    );
-
-    return orderDirs.map((dir) => join(userDir, dir));
+  getUserPath(path: string): string {
+    return path.split('/').slice(0, -1).join('/');
   }
 
-  async writeFile(path: string, readableStream: any): Promise<boolean> {
+  async makeUserDir(path: string): Promise<boolean> {
+    var userDir = this.getUserPath(path);
+
+    try {
+      var result = await mkdir(userDir, { recursive: true });
+
+      return result || result == undefined ? true : false;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  async writeFile(path: string, readableStream: Readable): Promise<boolean> {
     var fileHandle: any;
     var successWrite: boolean;
 
@@ -81,27 +83,22 @@ export class UtilsForBotApi {
     return Readable.fromWeb(response.body);
   }
 
-  async downloadOrderFile(
-    userId: string,
-    fileId: string,
-    url: string,
-    orderType: string,
-  ): Promise<boolean> {
+  async downloadOrderFile(url: string, path: string): Promise<boolean> {
     try {
-      var userDir: any = await this.makeUserDir(userId);
+      var userDir: boolean = await this.makeUserDir(path);
 
-      var docsPath: string = join(userDir[0], fileId + '.xlsx');
-      var imagesPath: string = join(userDir[1], fileId + '.jpg');
+      if (!userDir) {
+        return false;
+      }
 
       var readableStream = await this.getFileData(url);
 
-      return orderType == 'single'
-        ? await this.writeFile(imagesPath, readableStream)
-        : await this.writeFile(docsPath, readableStream);
+      if (!readableStream) {
+        return false;
+      }
+
+      return await this.writeFile(path, readableStream);
     } catch (err) {
-      console.log(
-        `Error loading and saving the file ${fileId}. Error : ${err}`,
-      );
       return false;
     }
   }

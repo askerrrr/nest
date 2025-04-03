@@ -51,7 +51,7 @@ export class BotApiService {
 
     var { path, telegramApiFileUrl } = file;
 
-    await this.utils.downloadOrderFile(userId, id, telegramApiFileUrl, type);
+    await this.utils.downloadOrderFile(telegramApiFileUrl, path);
 
     if (type == 'multiple') {
       var xlsxData = await this.xlsxService.getDataFromXLSX(path);
