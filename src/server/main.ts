@@ -4,9 +4,10 @@ import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { RootModule } from './root/root.module';
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app.module';
 
 (async () => {
-  var app = await NestFactory.create(RootModule, {
+  var app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({
       colors: true,
       timestamp: false,
